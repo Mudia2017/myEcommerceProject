@@ -1,0 +1,139 @@
+{% extends 'eShopperAmuwo/amuwo_main.html' %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS FOR PAGENATION -->
+{% load static %}
+{% block content %}
+
+<style>
+   
+</style>
+
+<div style="margin-top: 4rem; margin-bottom: 3rem;">
+
+    <div style="background-color: rgb(246, 166, 171); display: flex;">
+        <span style="width: 90%; background-color: rgb(238, 124, 127); display: flex;">
+            <span style="width: 80%; background-color: rgb(93, 82, 105);">
+                <h3 style="color: rgb(246, 166, 171); padding: 2%;">{{ category.category }}</h3>
+            </span>
+        </span>
+    </div>
+
+    <div style="display: flex; ">
+        <div style="width: 25%; margin-right: 2%; ">
+            <label style="font-weight: 700;">Shop by Category</label>
+            <br>
+            
+            {% for category in categories %}
+            <hr style="margin: 0px;">
+            <div style="width: 100%; display: flex; justify-content: space-between;">
+                
+                <a style="font-size: 14px; " href="{% url 'amuwoCategoryShop' category.id %}">{{ category }}</a>
+                <br>
+               
+            </div>
+            
+            {% endfor %}
+        </div>
+        
+            
+        <div style="width: 75%;">
+            <label style="font-size: 20px; font-weight: 700; padding-left: 0%; display: flex;">Category Items</label>
+            <div class="row " style="width: 90%; margin-left: 5%;">
+                
+                {% for categoryProduct in categoryProducts %}
+                <div class="col-lg-4" >
+                    <a href="{% url 'product_detail' categoryProduct.id %}">
+                        <img style="width: 15rem; height: 13rem; object-fit: contain;" src="{{ categoryProduct.imageURL }}" class="img-thumbnail" alt="...">
+                        <br>
+                        <small style="color: black;">{{ categoryProduct.name | truncatechars:37 }}</small>
+                    </a>
+                    <hr style="margin: 0%;">
+                    
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        <div>
+                            {% if categoryProduct.mfgDate %}
+                            <small >Mfg: {{categoryProduct.mfgDate}}</small>
+                            <br >
+                            <small >Exp: {{categoryProduct.expDate}}</small>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if categoryProduct.out_of_stock %}
+                            <label class="badge badge-danger" style=" margin-bottom: 0px; ">Out of Stock</label>
+                            <br>
+                            {% else %}
+                            <br>
+                            {% endif %}
+
+                            {% if categoryProduct.discount > 0 %}
+                            <span style="font-size: 12px; color: gray;">Was: </span><label style="font-size: 12px; font-weight: 500; color: gray; text-decoration: line-through;">&#8358; {{ categoryProduct.price }}</label>
+                            <!-- <span style="font-size: 12px;">(0.09 % off)</span> -->
+                            {% else %}
+                            <label style="font-size: 12px; font-weight: 500; ">&#8358; {{ categoryProduct.price }}</label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        <div>
+                            <button data-product="{{ categoryProduct.id }}" data-action="add" data-value="{{ categoryProduct.out_of_stock }}"
+                            class="btn btn-outline-secondary add-btn btn-sm update-cart">
+                            Add to Cart
+                            </button>
+
+                            <a class="btn btn-outline-success btn-sm view-product" href="{% url 'product_detail' categoryProduct.id %}">View</a>
+                        </div>
+
+                        <div>
+                            {% if categoryProduct.discount > 0 %}
+                            <label style="font-size: 12px; font-weight: 500;">&#8358; {{ categoryProduct.new_price }}</label>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- &emsp; -->
+                {% endfor %}
+                
+
+                {% if not categoryProducts %}
+
+                <center><p style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 13%;">
+                    No product for the selected category</p></center>
+
+                {% endif %}
+
+                
+            </div>
+
+            
+            <br>
+            <div class="paginator">
+                <span class="step-links">
+                    {% if categoryProducts.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% my_url categoryProducts.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ categoryProducts.number }} of {{ categoryProducts.paginator.num_pages }}
+                    </span>
+
+                    {% if categoryProducts.has_next %}
+                        <a href="{% my_url categoryProducts.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% my_url categoryProducts.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+
+            </div>
+
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

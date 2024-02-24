@@ -1,0 +1,24 @@
+{% extends 'eShopperAmuwo/amuwo_main.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="d-flex row justify-content-center align-items-center py-md-5 py-3">
+        <div class="col-12">
+            <form action="" method="POST">
+                <h4 style="margin-top: 4rem;">Enter amount</h4>
+                <hr>
+                {% csrf_token %}
+                {{ payment_form }}
+
+                <p>
+                    
+                    <input class="btn btn-primary" type="submit" value="submit">
+                </p>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

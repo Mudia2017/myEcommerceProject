@@ -1,0 +1,483 @@
+{% extends 'homePage/homepage.html' %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS FOR PAGENATION -->
+{% load static %}
+{% block content %}
+
+<style>
+    .customBadge {
+        font-size: 10px;
+        display: flex;
+        background-color: #FF2400;
+        color: white;
+        font-weight: 700;
+        padding: 0px 3px 0px 3px;
+        border-radius: 5px;
+    }
+    /* START OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+    .hover-underline-animation {
+        display: inline-block;
+        position: relative;
+        color: #0087ca;
+    }
+
+    .hover-underline-animation:after {
+        content: '';
+        position: absolute;
+        width: 90%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #0087ca;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+
+    .hover-underline-animation:hover:after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+    .hover-underline-animation:hover {
+        color: rgb(34, 118, 173);
+    }
+
+        /* END OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+    
+        .link_decoration {
+        font-size: 18px;
+        font-family: Niramit;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-decoration: none;
+        padding-bottom: 5px;
+    }
+
+    .mainContainer {
+        /* background-color: brown; */
+        padding-top: 3.8rem;
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+    }
+    .innerNavbar {
+        width: 100vw; 
+        height: 11.7vh; 
+        background-color: rgb(246, 166, 171);; 
+        position: fixed;
+        z-index: 99;
+    }
+    .innerNavbar h3 {
+        color: rgb(246, 166, 171); 
+        padding: 2%;
+        
+    }
+
+    .contentMainRow {
+        display: flex;
+        position: static;
+        width: 100%;
+        height: 100%;
+        /* background-color: wheat; */
+        padding-top: 11.7vh;
+        /* padding-left: 10px; */
+        /* top: 23.4vh;
+        height: calc(100% - 23.4vh); */
+    }
+    .leftSubMenu {
+        width: 25%;
+        height: 100%;
+        background: linear-gradient(-60deg in hsl shorter hue, #fff, 70%, thistle);
+        position: relative;
+        overflow-y: scroll;
+        padding-left: 10px;
+    }
+    
+    .textDeco {
+        color: gray;
+        text-decoration: none;
+    }
+    .textDeco:hover {
+        color: rgb(34, 118, 173);
+    }
+    .textclip2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+    }
+    .leftSubMenu div {
+        padding-bottom: 12px;
+    }
+    .contentRight {
+        width: 75%;
+        height: 100%;
+        position: relative;
+        overflow-y: scroll;
+        padding-left: 10px;
+    }
+    .contentRight_firstRow {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .dropdownlist {
+       width: 100%;
+       display: block;
+       padding: 0%;
+       margin: 0%;
+       border: none;
+       background-color: transparent;
+   }
+
+   .form-check:hover {
+       background-color: lightgray;
+   }
+   /* none */
+   .appliedFilterList {
+        margin-left: 5%;
+        padding: 1% 7% 1% 7%;
+        border: none;
+        border-radius: 20%;
+        font-size: 11px;
+        background-color: lightsteelblue;
+   }
+   .dropdown-item {
+        font-size: 11px;
+    }
+    /* none */
+
+    .contentRight_secondRow {
+        display: flex;
+        justify-content: space-between;
+        padding-right: 5px;
+    }
+</style>
+
+<div class="mainContainer">
+
+    <div class="innerNavbar">
+        <span style="width: 90%; background-color: rgb(238, 124, 127); display: flex; height: 100%;">
+            <span style="width: 80%; background-color: rgb(93, 82, 105);">
+                <h3 >{{ categoryName }}</h3>
+            </span>
+        </span>
+    </div>
+
+    <div class="contentMainRow">
+        <div class="leftSubMenu">
+            <h3 class="textclip2" >{{ parentCategory.category }}</h3>
+            <hr style="margin-right: 4px;">
+            {% for childCatList in childrenCatList %}
+            
+            <div >
+                {% if childCatList.id != categoryName.id %}
+                <a style="text-decoration: none;" class="link_decoration hover-underline-animation" href="{% url 'category_items' childCatList.id %}">{{ childCatList.category }}</a>
+                {% endif %}
+                
+            </div>
+            
+            
+            {% endfor %}
+        </div>
+
+        <div class="contentRight">
+            <div class="contentRight_firstRow">
+                <label style="font-size: 20px; font-weight: 700; display: flex;">Category Items</label>
+
+            </div>
+            <div class="contentRight_secondRow">
+                <form action="">
+                    {% if counter > 1 %}
+                    <label for="" style="font-size: 16px; font-family: Niramit;"> {{ counter }} Records</label>
+                    {% else %}
+                    <label for="" style="font-family: Niramit; font-size: 16px;">{{ counter }} Record</label>
+                    {% endif %}
+                    
+                    <!-- FILTER BASED ON BRANDS -->
+                    
+                    <button style="font-size: 11px; " class="btn btn-secondary btn-sm dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Brand
+                    </button>
+                    
+                    <ul class="dropdown-menu" style="padding: 0.5%;">
+                        {% for brand in brands %}
+                        
+                        <li style="padding: 0%; margin: 0%;">
+                            <div class="form-check">
+                                <input class="form-check-input shadow-none" type="checkbox" value="{{ brand.id }}" data-val="{{ brand.brand }}" data-ids="{{ brand.id}} " id="" name="chckbox_id">
+                                <input type="button" data-row_id="{{ brand.id }}" value="{{ brand.brand }}" id="" class="btn-sm dropdownlist shadow-none">
+                                
+                            </div>
+                        </li>
+                        {% endfor %}
+                        
+
+                        <li >
+                            <input class="btn btn-outline-primary btn-sm shadow-none" style="display: block; width: 100%;" type="submit" value="Apply" name="filterCat" id="applyBtnId">
+                            
+                        </li>
+                    </ul>
+
+
+                    <!-- DROPDOWN BUTTON THAT SHOW THE NUMBER OF APPLIED FILTER -->
+                    {% if isFilterBrandVisted %}
+                    <button style="font-size: 11px; margin-left: 0.5rem;" class="btn btn-secondary btn-sm dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ selectBrndCount }} Filter applied
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            {% for applyFilter in selectBrandList %}
+                            <button data-updateid="{{ applyFilter.id }}" class="appliedFilterList shadow-none" name="unselect" value="{{ applyFilter.id }}" type="submit" >
+                            {{ applyFilter.brand }}
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            {% endfor %}
+                        </li>
+
+                        <hr style="margin: 4% 0% 4% 0%;">
+
+                        <li>
+                        <a href="{% url 'category_items' categoryName.id %}"   style="margin-left: 10%">
+                            Clear all
+                        </a>
+                            
+                        </li>
+                    </ul>
+                    {% endif %}
+                </form>
+
+                <form action="" method="GET">
+                    <button style="font-size: 11px;" class="btn btn-secondary btn-sm dropdown-toggle shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter category item
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category_items' categoryName.id  %}">
+                                <button style="border: none; background-color: transparent;" name="filter_cat" value="filterCategory">
+                                    Filter product of lower or same or higher category level
+                                </button>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'category_items' categoryName.id  %}">
+                                <button style="border: none; background-color: transparent;" name="filter_cat" value="sameCatLevelOnly">
+                                    Filter product of same category level only
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <hr>
+
+            <div class="row" style="width: 100%;">
+                
+                <div class="row row-cols-1 row-cols-md-4 g-4" style="padding: 0%; margin: 0%;">
+                    {% for categoryProduct in categoryProducts %}
+                    
+                    <div class="col" style="margin: 0% 0% 1% 0%; font-family: Niramit;">
+                        <div class="card h-100" style="border: none;">
+                            <a class="textDeco" href="{% url 'product_detail' categoryProduct.id %}" target="_blank" >
+                                {% if categoryProduct.imageURL %}
+                                <img style="width: 15rem; height: 13rem; object-fit: contain; background-color: rgb(241, 239, 239);" src="{{ categoryProduct.imageURL }}" class="img-thumbnail" alt="...">
+                                {% else %}
+                                <img style="width: 15rem; height: 13rem; object-fit: contain; background-color: rgb(241, 239, 239);" src="{% static 'images/default_image_icon.png' %}" class="img-thumbnail" alt="...">
+                                {% endif %}
+                                <br>
+                                {{ categoryProduct.name }}
+                            </a>
+                            <div class="card-body" style="padding: 0px; ">
+                                
+                                <p class="card-text" style="margin: 0%">
+                                    <div>
+                                        <div style="font-size: 12px; color: tomato;">
+                                            {% if categoryProduct.mfgDate %}
+                                            <small >Mfg: {{categoryProduct.mfgDate}}</small>
+                                            <br >
+                                            <small >Exp: {{categoryProduct.expDate}}</small>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            {% if categoryProduct.discount > 0 %}
+                                            <div style="width: 100%; text-align: right;">
+                                                <span style="font-size: 12px; color: gray;">Was: </span><label style="font-size: 12px; font-weight: 500; color: gray; text-decoration: line-through;">&#8358; {{ categoryProduct.price }}</label>
+
+                                            </div>
+                                            
+                                            {% else %}
+                                            <label style="font-size: 16px; font-weight: 700; ">&#8358; {{ categoryProduct.price }}</label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                                        
+                                        <div>
+                                            {% if categoryProduct.discount > 0 %}
+                                            <label style="font-size: 16px; font-weight: 700;">&#8358; {{ categoryProduct.new_price }}</label>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            {% if categoryProduct.out_of_stock %}
+                                            <span class="customBadge">Out of Stock</span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </p>
+                            </div>
+                            <div class="card-footer" style="display: flex; width: 100%; justify-content: space-between; padding-top: 0%; padding-bottom: 0%; background-color: transparent; border: none;">
+                                
+                                <button data-product="{{ categoryProduct.id }}" data-action="add" data-value="{{ categoryProduct.out_of_stock }}"
+                                class="btn btn-outline-secondary add-btn btn-sm update-cart shadow-none">
+                                Add to Cart
+                                </button>
+
+                                <a class="btn btn-outline-success btn-sm view-product shadow-none" href="{% url 'product_detail' categoryProduct.id %}">View</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% endfor %}
+                </div>
+
+                {% if not categoryProducts %}
+
+                <label style="width: 100%;"><p style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 13%;">
+                    No product for the selected category</p></label>
+
+                {% endif %}
+
+                
+            </div>
+
+            <!-- PAGENATION -->
+            <br>
+            <div class="paginator">
+                <span class="step-links">
+                    {% if categoryProducts.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% my_url categoryProducts.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ categoryProducts.number }} of {{ categoryProducts.paginator.num_pages }}
+                    </span>
+
+                    {% if categoryProducts.has_next %}
+                        <a href="{% my_url categoryProducts.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% my_url categoryProducts.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+
+            </div>
+    
+        </div>
+    </div>
+
+   
+
+</div>
+
+
+<script>
+    var isFilterBrandVisted = "{{ isFilterBrandVisted }}";
+
+    // THIS BLOCK OF CODE IS USED TO ENSURE THAT NAME OF CHECKBOX TOGGLE
+    var btnClick = document.getElementsByClassName('dropdownlist')
+    var chkBoxIds = document.querySelectorAll('input[name="chckbox_id"]');
+    var updateSelectChkBox = document.getElementsByClassName('appliedFilterList');
+    // console.log(updateSelectChkBox)
+    let chkBo = 0
+    let clkBtnId = 0
+    for (var x = 0; x < btnClick.length; x++) {
+        btnClick[x].addEventListener('click', function() {
+            clkBtnId = parseInt (this.dataset.row_id);
+            for (var chkBox of chkBoxIds){
+                chkBo = chkBox.dataset.ids;
+                
+                if (chkBo == clkBtnId){
+                    console.log(chkBox.value)
+                    if (chkBox.checked){
+                        chkBox.checked = false;
+                    } else {
+                        chkBox.checked = true;
+                    }
+                    break
+                }
+            }
+           
+        })
+    }
+ 
+    
+
+    // ONCE THE FILTER IS APPLIED, GET THE BRAND'S IDs & CHECKED RECORD OF ALL THAT 
+    // WAS SELECTED AND STORE THEM IN BROWSER SESSION STORAGE
+
+    // var applyBtn = document.getElementById('applyBtnId');
+    // applyBtn.addEventListener('click', function(e) {
+        
+    //     var checkBoxList = [];
+    //     for (var chkBox of chkBoxIds){
+    //         var record = {
+    //             'id': chkBox.dataset.ids,
+    //             'isChecked': chkBox.checked
+    //         }
+    //         checkBoxList.push(record);
+    //     }
+    //     sessionStorage.setItem('chkBoxRecord', JSON.stringify(checkBoxList))
+
+    // })
+
+    // CHECK IF isFilterBrandVisted (COMING FROM THE BACKEND WHERE FUNCTION IS EXECUTED)
+    // TURN OUT TRUE, FROM THE BROWSER'S APPLICATION, GET THE SESSION STORAGE RECORD AND 
+    // APPLY THEM ON THE DROPDOWN BUTTON LIST. ALSO CREATE A COMBO BUTTON TO SHOW THE
+    // NUMBER OF FILTER APPLIED
+    window.addEventListener('DOMContentLoaded', function() {
+        console.log(isFilterBrandVisted)
+        if (isFilterBrandVisted == 'True') {
+            var checkBoxList = sessionStorage.getItem('chkBoxRecord')
+            // let storedChkBox = JSON.parse(checkBoxList)
+            for (var chkBox of chkBoxIds) {
+                // console.log(chkBox.dataset.ids)
+                for (var x = 0; x < updateSelectChkBox.length; x++) {
+                    let updateId = updateSelectChkBox[x].dataset.updateid;
+                    
+                    if (chkBox.dataset.ids == parseInt(updateId)) {
+                        chkBox.checked = true;
+                    }
+                }
+
+                // for (var key in updateSelectChkBox) {
+                //     // updateChkId = this.dataset.update_id;
+                //     // if (parseInt (chkBox.dataset.ids) == parseInt (updateChkId)) {
+                //     //     console.log('Same')
+                //     // }
+                //     // if (parseInt (chkBox.dataset.ids) == parseInt (storedChkBox[key]['id'])) {
+                        
+                //     //     chkBox.checked = storedChkBox[key]['isChecked']
+
+                //     //     break
+                //     // }
+                // }
+            }
+        } 
+        // else {
+        //     sessionStorage.removeItem('chkBoxRecord')
+        // }
+    })
+    
+    
+
+    
+
+</script>
+
+{% endblock content %}

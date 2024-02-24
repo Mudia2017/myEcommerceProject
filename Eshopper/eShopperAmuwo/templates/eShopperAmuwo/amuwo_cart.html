@@ -1,0 +1,695 @@
+{% extends 'homePage/homepage.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  <!-- USED FOR STAR RATING DISPLAY -->
+
+
+<style>
+
+    body {
+        min-width: 1000px;
+    }
+    .ellipse {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+    .stars-inner1 {
+        color: rgb(255, 164, 66);
+    }
+
+    .horizontal_view {
+        display: flex;
+        overflow: scroll;
+        
+    }
+
+
+        /* ========== POPUP CONFIRMATION FORM ============= */
+
+        .modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-open {
+            display: flex;
+        }
+        
+        .modal_form {
+            max-width: 700px;
+            max-height: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+        }
+
+        .modal-button {
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            background-color: grey;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        .modal-confirm-button {
+            background-color: tomato;
+        }
+
+        .modal-header {
+            
+            color: orange;
+        }
+
+        .modal-header h2 {
+            padding: 0.5em;
+            color: orange;
+        }
+
+        .modal_content {
+            padding: 1em;
+            color:  rgba(168, 167, 167);
+            text-align: center;
+        }
+
+        .modal-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* =========== END OF POPUP CONFIRMATION FORM ========== */
+    
+
+    /* ===== START OF POPUP INFO ========= */
+    .message-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+    .modal-open-info {
+            display: flex;
+        }
+
+        .modal-info-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-ok-button {
+            background-color: rgb(50, 135, 245);
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        /* ============ END OF POPUP INFO ========== */
+
+
+        .cartRowDelBtn {
+            border-style: none;
+            background-color: transparent;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 0px 0px;
+            padding: 0px 0px;
+            cursor: pointer;
+            color: rgb(226, 90, 90);
+            
+        }
+
+        .cartRowDelBtn:hover {
+            color: #0087ca;
+            text-decoration: underline;
+        }
+    
+</style>
+
+
+<br>
+<div class="row main" style="margin-top: 3rem; width: 98%; margin-left: 1rem;">
+    <div class="col-lg-12">
+        <div class="box-element">
+            <a class="btn btn-outline-dark" href="{% url 'eShopAmuwo' %}">&#x2190; Continue Shopping</a>
+            <br>
+            <br>
+            
+            <table class="table" style="flex: 2">
+                <tr>
+
+                    <th>
+                        <h5>Items: <strong>{{ order.get_cart_items }}</strong></h5>
+                    </th>
+                    <th>
+                        <h5>Total: <strong>&#8358; {{ order.get_cart_total }}</strong></h5>
+                    </th>
+
+                    <th>
+                        <a id="chk_out" style="float:right; margin:5px" class="btn btn-success checkOut"
+                            data-value="{{ isOut_of_stock }}" href="{% url 'amuwo_checkout' %}">Checkout</a>
+                    </th>
+                </tr>
+            </table>
+        </div>
+
+
+        <div class="box-element">
+            <form action="" method="POST">
+                {% csrf_token %}
+
+                <div class="cart-row">
+                    {% if isOut_of_stock == True %}
+                    <div style="flex: 2"><input name="remove_item_frm_cart" type="submit" data-move="remove_ptd" onclick="removeItmFrmCookieCart()"
+                            value="Remove out of stock or inactive item" class="btn btn-outline-danger btn-sm update-cart"
+                            style="border-radius: 5px;">
+                        </div>
+
+                        <!-- <button id="1" name="remove_invalid_itm" onClick="reply_click(this.name)">Remove Invalid Item</button> -->
+                    {% else %}
+                    <div style="flex: 2">
+                        
+                    </div>
+                    {% endif %}
+                    <div style="flex: 2"><strong>Item</strong></div>
+                    <div style="flex: 1"><strong>Price</strong></div>
+                    <div style="flex: 1"><strong>Quantity</strong></div>
+                    <div style="flex: 1"><strong>Total</strong></div>
+                </div>
+
+                {% for item in items %}
+                <div class="cart-row">
+                    <div style="flex: 2">
+                        {% if item.product.imageURL %}
+                        <img style="height: 10rem; width: 10rem; object-fit: contain;" class="row-image" src="{{ item.product.imageURL }}">
+                        {% else %}
+                        <img style="height: 10rem; width: 10rem; object-fit: contain;" class="row-image" src="{% static 'images/default_image_icon.png' %}">
+                        {% endif %}
+                        {% if item.product.out_of_stock == True %}
+                        <!-- Out of stock outlook is from bootstrip  -->
+                        <span class="badge badge-danger" style="background-color: RGB(255, 22, 12);">Out of
+                            Stock</span>
+                        {% elif item.product.active == False or item.product.store.active == False %}
+                        <span class="badge badge-danger" style="background-color: RGB(255, 22, 12);">Inactive item</span>
+                        {% endif %}
+                    </div>
+                    <div style="flex: 2">{{ item.product.name }}</div>
+
+                    {% if item.product.discount > 0 %}
+                    <div style="flex: 1">&#8358; {{ item.get_unit_price }}</div>
+                    {% else %}
+                    <div style="flex: 1">&#8358; {{ item.product.price }}</div>
+                    {% endif %}
+
+                    <div style="flex: 1; display: flex; width: 60%; ">
+                        <span>
+                            <input class="quantity form-control inputQtyRow" data-ptd_id="{{ item.product.id }}" value="{{ item.quantity }}" name="inputRowQty" style="width: 62%; margin-left: 10%; text-align: center;" maxlength="3" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" >
+                        </span>
+                        <!-- <p class="quantity">{{ item.quantity }}</p> -->
+                        <div class="quantity" style="justify-content: left; width: 80%;">
+                            <!-- IF OUT OF STOCK OR INACTIVE, USE THIS BUTTON TO REMOVE THE ITEM FROM CART -->
+                            {% if item.product.out_of_stock == True or item.product.active == False or item.product.store.active == False %}
+
+                            {% else %}
+                            <img data-product="{{ item.product.id }}" data-action="add" class="chg-quantity update-cart"
+                                src="{% static 'images/arrow-up.png' %}">
+
+                            <img data-product="{{ item.product.id }}" data-action="remove"
+                                src="{% static 'images/arrow-down.png' %}" alt="" class="chg-quantity update-cart">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="flex: 1">&#8358; {{ item.get_total }}</div>
+                    <div>
+                    
+                        <button type="button" name="delCartRow" value="{{item.product.id}}" class="cartRowDelBtn">Delete</button>
+                    </div>
+                </div>
+                
+                {% endfor %}
+
+                {% if order.get_cart_items == 0 %}
+                <p
+                    style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 5%; margin-bottom: 5%;">
+                    Your cart is empty!</p>
+                {% endif %}
+
+            </form>
+        </div>
+
+        <!-- =============== YOUR SAVED ITEM ============== -->
+        {% if wishLists %}
+        <div class="box-element">
+            <p style="font-weight: 700; font-size: 26px;">Your saved items</p>
+            <hr>
+
+            <div class="horizontal_view ">
+                {% for wishList in wishLists %}
+                <div class="col-lg-3" >
+                    <div class="card h-100" style="padding-bottom: 8px;">
+                        <a style="text-decoration-line: none;" href="{% url 'product_detail' wishList.id %}">
+                            {% if wishList.imageURL %}
+                          <img style="height: 16rem; object-fit: contain; background-color: ghostwhite;" src="{{ wishList.imageURL }}" class="card-img-top" alt="...">
+                          {% else %}
+                          <img style="height: 16rem; object-fit: contain; background-color: ghostwhite;" src="{% static 'images/default_image_icon.png' %}" class="card-img-top" alt="...">
+                          {% endif %}
+                          <br>
+                          <div style="padding: 0% 2% 0% 2%; font-size: 15px;" class="ellipse">
+                              <span for="">{{ wishList.name }}</span>
+    
+                          </div>
+                        </a>
+                        <div style="padding: 0% 2% 0% 2%;">
+                            {% if wishList.discount > 0 %}
+                            <label style="font-weight: bold; font-size: 24px;" for="">&#8358; {{ wishList.new_price }}</label>
+                            {% else %}
+                            <label style="font-weight: bold; font-size: 24px;" for="">&#8358; {{ wishList.price }}</label>
+                            {% endif %}
+                            <br>
+                            {% if wishList.discount > 0 %}
+                            <label style="color: grey; text-decoration: line-through; font-size: 15px;" for="">&#8358; {{ wishList.price }}</label>
+                            
+                            <label style="font-size: 15px; margin-left: 5%;" for="">{{ wishList.discount }} Off</label>
+                            {% endif %}
+                        </div>
+                        
+                        <div style="padding: 0% 2% 0% 2%; display: flex; justify-content: space-between;">
+                            <!-- ====== STAR RATING AND COUNTER ======= -->
+                            <div style="display: flex;">
+
+                                {% if wishList.averageStarRated > 0.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if wishList.averageStarRated > 1.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% elif wishList.averageStarRated > 1.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if wishList.averageStarRated > 2.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% elif wishList.averageStarRated > 2.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if wishList.averageStarRated > 3.9 %}
+                                <span><i class="fa fa-star stars-inner1"></i></span>
+                                {% elif wishList.averageStarRated > 3.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if wishList.averageStarRated > 4.9 %}
+                                <span><i class="fa fa-star stars-inner1"></i></span>
+                                {% elif wishList.averageStarRated > 4.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+                                &nbsp;
+                                <div>
+                                    {% if wishList.averageStarRated == None %}
+                                    <p style="font-size: 16px; margin: 0%;">0</p>
+                                    {% else %}
+                                    <p style="font-size: 16px; margin: 0%;">{{ wishList.counter }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                {% if wishList.out_of_stock == True %}
+                                <!-- Out of stock outlook is from bootstrip  -->
+                                <span class="badge badge-danger" style="font-size: 10px; background-color: RGB(255, 22, 12);">Out of
+                                    Stock</span>
+                                {% elif wishList.active == False or wishList.store.active == False %}
+                                <span class="badge badge-danger" style="font-size: 10px; background-color: RGB(255, 22, 12);">Inactive item</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="padding: 0px 3px; ">
+                            {% if wishList.active == False or wishList.out_of_stock  == True or wishList.store.active == False %}
+                            <div style="display: flex; justify-content: space-around;">
+                                <button style="font-size: 13px; width: 39%; margin-right: 1px;" name="deleteSaveItm" value="{{ wishList.id }}" type="button" class="btn btn-outline-danger saveItm">Delete</button>
+                                <a href="{% url 'all_category' wishList.category.id %}">
+
+                                    <button style="font-size: 13px; width: 100%; margin-left: 1px;" type="button" class="btn btn-outline-secondary">Similar Item</button>
+                                </a>
+
+                            </div>
+                            {% else %}
+                            <button style="font-size: 13px; width: 100%;" type="submit" class="btn btn-outline-primary update-cart" data-product="{{ wishList.id }}" data-action="add" data-value="{{ wishList.out_of_stock }}">Add to Cart</button>
+                            
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if recentViewList %}
+        <div class="box-element">
+            <p style="font-weight: 700; font-size: 26px;">Recently viewed items</p>
+            <hr>
+
+            <div class="horizontal_view ">
+                <!-- GRID VIEW OF RECENTLY VIEWED ITEMS -->
+                <div class="horizontal_view">
+                    {% for recentViewItem in recentViewList %}
+                    <div style="display: block;">
+                        <a style="text-decoration-line: none;" href="{% url 'product_detail' recentViewItem.id %}">
+                            {% if recentViewItem.imageURL %}
+                            <img style="object-fit: contain; background-color: rgb(241, 239, 239); margin-right: 10px; width: 13rem; height: 13rem;" src="{{ recentViewItem.imageURL }}" alt="" class="thumbnail">
+                            {% else %}
+                            <img style="object-fit: contain; background-color: rgb(241, 239, 239); margin-right: 10px; width: 13rem; height: 13rem;" src="{% static 'images/default_image_icon.png' %}" alt="" class="thumbnail">
+                            {% endif %}
+                            <br>
+                            <div style="padding: 0% 2% 0% 2%; font-size: 15px;" class="ellipse">
+                                <span for="">{{ recentViewItem.name }}</span>
+      
+                            </div>
+                            <br>
+                            <span>
+                                {% if recentViewItem.discount > 0 %}
+                                &#8358; {{ recentViewItem.new_price|floatformat:2 }}
+                                {% else %}
+                                &#8358; {{ recentViewItem.price|floatformat:2 }}
+                                {% endif %}
+                            </span>
+                        </a>
+                        <br>
+                        <span style="font-size: 12px; color: gray; text-decoration: line-through;">
+                            {% if recentViewItem.discount > 0 %}
+                                &#8358; {{ recentViewItem.price|floatformat:2 }}
+                            {% endif %}
+                        </span>
+                        {% if recentViewItem.discount > 0 %}
+                        <span style="font-size: 12px; background-color: orange; margin-left: 0.5rem; padding: 2px;"> -{{ recentViewItem.discount }}%</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- ======= POPUP CONFIRMATION TEMPLATE ========== -->
+<div id="confirmation" class="modal-container">
+    <div class="modal_form">
+        <section>
+            <header>
+                <h2 class="modal-header">Warning</h2>
+            </header>
+            <section>
+                <h5 class="modal_content" id="modal_content_id"></h5>
+            </section>
+            <footer class="modal-footer">
+                <button class="modal-button" onclick="onCancel()" id="cancelBtnId">Cancel</button>
+                <button class="modal-button modal-confirm-button" onclick="onConfirmBtn()" id="confirmBtnId">Confirme</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP CONFIRMATION TEMPLATE ========== -->
+
+
+
+<!-- ======= POPUP MESSAGE INFORMATION ========== -->
+<div id="information" class="message-modal-container">
+    <div class="modal_form">
+        <section>
+            <header class="modal-header">
+                <h2>Warning</h2>
+            </header>
+            <section class="modal_content">
+                <h5 id="modal_info_content_id" style="color: rgba(168, 167, 167);"></h5>
+            </section>
+            <footer class="modal-info-footer">
+                
+                <button class="modal-ok-button" onclick="onCancelInfoForm()">Ok</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP MESSAGE INFORMATION ========== -->
+
+<script type="text/javascript">
+    // Prevent users from checking out empty cart
+    let userAcct = user;
+    let requestFrm;
+    let requestedPtdId;
+    let _value;
+    var totalItem = '{{ order.get_cart_items }}'
+    var checkOutBtn = document.getElementById('chk_out')
+    checkOutBtn.addEventListener('click', function (e) {
+
+        if (totalItem < 1) {
+            e.preventDefault()
+            console.log("total Item:", totalItem)
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'No item to check out!';
+        }
+
+    })
+    // This will be used to check if out of stock items are currently in cart
+    // I don't want customer to check those items out.
+
+    var ofs = "{{ isOut_of_stock }}"
+    checkOutBtn.addEventListener('click', function (e) {
+
+        if (ofs == 'True') {
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'Some item(s) in your cart are currently of stock or inactive!' +
+                ' Use "Remove out of stock or inactive item" button to clear these item(s) before proceeding.';
+            
+        }
+
+    })
+
+    // USED TO REMOVE INACTIVE/OUT-OF-STOCK ITEM(S) FROM THE CART OF GUEST USER
+    function removeItmFrmCookieCart() {
+        var ptd_id = JSON.parse("{{inactive_ptd|escapejs}}");
+        
+        for (var i = 0; i < ptd_id.length; i++){
+            // alert(ptd_id[i]);
+            delete (cart[ptd_id[i]]);
+        };
+        
+    }
+
+
+    // FUNCTION CALL TO DELETE A ROW OF A CART ITEM
+    let _cartItems = document.getElementsByClassName('cartRowDelBtn')
+    for (let x = 0; x < _cartItems.length; x++) {
+        _cartItems[x].addEventListener('click', function(e) {
+            e.preventDefault()
+            onPopConfirmForm()
+            document.getElementById('modal_content_id').innerHTML = 'Do you want to '+
+                    'delete this item from your cart list?';
+            requestFrm = _cartItems[x].name;
+            requestedPtdId = _cartItems[x].value;
+        })
+    }
+
+
+    // FUNCTION CALL WHEN DELETE BUTTON OF SAVED ITEM IS CLICKED ON
+    let saveItem = document.getElementsByClassName('saveItm')
+    
+    for (let x = 0; x < saveItem.length; x ++){
+        saveItem[x].addEventListener('click', function(e){
+            e.preventDefault()
+            onPopConfirmForm()
+            document.getElementById('modal_content_id').innerHTML = 'You are about to '+
+                    'delete an item from your saved list! Do you want to proceed?';
+            requestFrm = saveItem[x].name;
+            requestedPtdId = saveItem[x].value
+            
+        })
+    }
+
+    // FUNCTION CALL USED TO SEND REQUEST TO BACKEND WHEN DELETE BUTTON 
+    // ON THE SAVED ITEM IS CLICKED
+    function processRequest(call, ptdId, val) {
+        let url = '/amuwo_cart/'
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({'call': call, 'ptdId': ptdId, 'val': val})
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                if (data == 'success'){
+                    location.reload()
+                }
+            })
+    }
+
+
+
+// FUNCTION CALL TO UPDATE INPUTTED QUANTITY FIELD OF CART ROWS 
+let inputRowQty = document.getElementsByClassName('inputQtyRow');
+for (var x = 0; x < inputRowQty.length; x++) {
+    inputRowQty[x].addEventListener('focusout', function() {
+        
+        const allRows = document.querySelectorAll('input[name="inputRowQty"]');
+        for (const _row of allRows) {
+            if ( this.dataset.ptd_id ==  _row.dataset.ptd_id) {
+                
+                // IN CASE THE FIELD IS EMPTY, ASSIGN 1 TO VALUE
+                if (!_row.value) {
+                    _row.value = 1
+                    if (userAcct != 'AnonymousUser'){
+                        processRequest('updateInputItmRow', this.dataset.ptd_id, _row.value)
+                    } else {
+                        updateCookieItem(this.dataset.ptd_id, _row.value)
+                    }
+                }
+                // IF ZERO IS INPUTTED AS IT VALUE, CONFIRM IF THE ITEM SHOULD 
+                // BE DELETED FROM THE CART
+                else if (_row.value == 0) {
+                    onPopConfirmForm()
+                    document.getElementById('modal_content_id').innerHTML = 'You are about to '+
+                    'delete an item from your cart list! Do you want to proceed?';
+                    requestFrm = _row.name;
+                    requestedPtdId = this.dataset.ptd_id;
+                    _value = _row.value;
+                }
+                // IF ROW VALUE IS GREATER THAN ZERO, PROCEED WITH REQUEST
+                else if (_row.value > 0 && userAcct != 'AnonymousUser'){
+                    processRequest('updateInputItmRow', this.dataset.ptd_id, _row.value)
+                } else {
+                    updateCookieItem(this.dataset.ptd_id, _row.value)
+                }
+            }
+        }
+        
+    
+    })
+}
+
+
+    // FUNCTION CALL FOR GUEST USER TO UPDATE TO UPDATE CART DATA 
+    // THE INPUTTED QUANTITY IS USED TO UPDATE THE CART DATA
+    function updateCookieItem(productId, value){
+    
+        console.log('Not logged in..')
+        let val = parseInt(value)
+        
+        if (val > 0){
+            cart[productId] = {'quantity': val}
+        } else {
+            delete(cart[productId])
+        }
+        
+        console.log('cart:',cart)
+        document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+        location.reload()
+    }
+
+    
+
+    // =========== SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+    function onPopConfirmForm() {
+        let confirmation = document.getElementById('confirmation');
+        if (!confirmation.classList.contains('modal-open')) {
+            confirmation.classList.add("modal-open");
+        }
+    }
+
+    function onCancel() {
+        let confirmation = document.getElementById('confirmation');
+        confirmation.classList.remove("modal-open");
+
+        
+    }
+
+    function onConfirmBtn() {
+        onCancel();
+        if (requestFrm == 'deleteSaveItm') {
+            processRequest(requestFrm, requestedPtdId, '')
+        } else if (requestFrm == 'inputRowQty') {
+            if (userAcct != 'AnonymousUser') {
+                processRequest('updateInputItmRow', requestedPtdId, _value)
+            } else {
+                updateCookieItem(requestedPtdId, _value)
+            }
+        } else if (requestFrm == 'delCartRow') {
+            if (userAcct != 'AnonymousUser') {
+                processRequest(requestFrm, requestedPtdId, 0)
+            } else {
+                updateCookieItem(requestedPtdId, _value)
+            }
+        }
+        
+    }
+    
+    // =========== END OF SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+
+
+    // ============= SCRIPT FOR POPUP INFORMATION MESSAGE ===========
+
+    function onPopInfoForm() {
+         let info = document.getElementById('information');
+         if (!info.classList.contains('modal-open-info')) {
+             info.classList.add('modal-open-info');
+            }
+    }
+
+    function onCancelInfoForm() {
+        let information = document.getElementById('information');
+        information.classList.remove("modal-open-info");
+        
+    }
+    // ============= END OF SCRIPT FOR INFORMATION MESSAGE ==========
+
+</script>
+
+{% endblock content %}

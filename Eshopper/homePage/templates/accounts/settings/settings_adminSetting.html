@@ -1,0 +1,201 @@
+{% extends 'homePage/homepage.html' %}
+{% block content %}
+
+<style>
+    .box_element {
+        margin-top: 4rem;
+        padding: 1%;
+        /* background-color: lightpink; */
+    }
+
+    .display_mode {
+        display: flex;
+        margin-top: 1%;
+    }
+
+    div .right_element {
+        border-radius: 5px;
+        /* background-color: rgb(0, 174, 255); */
+        background-color: turquoise;
+        width: 30%;
+        padding: 3px;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+    div form .account_btn:hover {
+      background-color: rgb(184, 178, 178);
+    }
+
+    #address_btn:visited {
+    background-color: rgb(204, 199, 199);
+  }
+
+    .row_element {
+        display: flex;
+        width: 100%;
+        margin-top: 2rem;
+        /* background-color: lime; */
+    }
+
+    form .account_btn {
+        text-decoration: none;
+        /* box-shadow: hsl(0, 0%, 80%) 0 0 16px; */
+        background-color: rgb(236, 236, 236);
+        width: 80%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        padding-left: 2%;
+        display: block;
+        font-size: 14px;
+        /* margin-right: 15rem; */
+        margin-left: 10%;
+        /* text-align: center; */
+        color: grey;
+        
+
+    }
+
+    form .right_element_info {
+        /* background-color: mediumpurple; */
+        display: block;
+        padding-left: 3%;
+    }
+
+  
+</style>
+
+
+
+
+
+<div class="box_element">
+    <form action="" method="GET">
+    
+        <div style="display: flex; width: 100%; background-color: blanchedalmond;">
+            <div style="margin-left: 2%;"><a class="btn btn-outline-dark" href=" {% url 'settings' %} ">&#x2190; Back </a></div>
+
+            <div style="margin-left: 40%;"><h3>Admin Setting</h3></div>
+        </div>
+
+        <!-- SUCCESS ALERT MESSAGE -->
+        <div id="success-alert" class="alert alert-success" role="alert">
+            <p style="text-align: center; font-weight: 700; font-size: 18px; margin: 0%;">
+               Record updated 
+            </p>
+        </div>
+
+        
+        <div class="display_mode">
+            <div class="right_element">
+                <div style="width: 100%; ">
+                    <label style="margin-top: 0%; font-weight: 800; font-size: 15px; padding-left: 0px;" for="">Verify Store</label>
+                        
+                    <div style="background-color: white; width: 100%; display: flex; justify-content: space-between;">
+                        
+
+                        <select id="mySelect" name="category" class="form-select form-select-sm" >
+                            <option name="opt_selected" value="" selected>---- </option>
+                            {% for store_name in store_names %}
+                            <option value="{{ store_name.id }}">{{ store_name }}</option>
+                           {% endfor %}
+                        </select>
+
+                        <div class="form-check form-switch" style="margin-left: 10px;">
+                   
+                            <input name="verify" class="form-check-input" type="checkbox" id="flexSwitchCheck_id"  >
+                           
+                            <label class="form-check-label" for="flexSwitchCheckChecked" style="font-size: 10px;">Verified Store</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+       
+        </div>
+        <input id="updateSetting_id_btn" style="font-weight: 700; margin-top: 5rem;" type="button" class="btn btn-warning btn-sm" value="Update" name="update_btn">
+    </form>
+</div>
+
+
+<script>
+
+    // THIS ON-CHANGE FUNCTION IS EXECUTED WHEN EVER A USER SELECT OR CHANGE THE LIST OF STORES
+    document.getElementById('mySelect').onchange = function() {
+        var selectedStore_id = document.getElementById("mySelect").value;
+        updateSettings(selectedStore_id, flexSwitchBox = '')
+    }
+
+    // THIS FUNCTION IS EXECUTED WHEN THE UPDATE BUTTON IS CLICKED ON
+    var submit_btn = document.getElementById('updateSetting_id_btn').addEventListener('click', function(e){
+        
+        var store_id = document.getElementById("mySelect").value;
+        var flexSwitchBox = document.getElementById('flexSwitchCheck_id').checked;
+        
+        if(store_id){
+            // CALL THE FUNCTION TO PROCESS REQUEST
+            updateSettings(store_id, flexSwitchBox)
+        }else if (store_id == ''){
+            e.preventDefault()
+            alert('Kindly select a store you which to verify')
+        }
+    })
+
+    // FUNCTION THAT GET DATA FROM FONTEND, SEND IT TO THE BACKEND, PROCESS IT AND GET A RESPONSE
+    
+    function updateSettings(store_id, flexSwitchBox){
+        let url = '/update_setting/'
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({'store_id': store_id, 'flexSwitchBox': flexSwitchBox})
+        })
+        .then((response) => {
+            return response.json()
+        })
+        .then((data) => {
+
+             // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+            var response_msg = data.success_msg
+          
+            if (response_msg == 'Record updated') {
+                
+                setTimeout("showdiv()", 0);
+
+                setTimeout("hidediv()", 3000);
+            }
+
+            // USED TO TOGGLE THE VERIFIED STATUS OF ANY STORE SELECTED IN THE DROPDOWN LIST
+            var flexSwitch_Box = document.getElementById('flexSwitchCheck_id');
+            var verify_status = data.verify
+            if (verify_status ){
+                flexSwitch_Box.checked = true
+            }else {
+                flexSwitch_Box.checked = false
+            }
+            
+        })
+
+    }
+
+    // FUNCTIONS TO SHOW AND HIDE SUCCESS MESSAGE
+    function showdiv() {
+        document.getElementById('success-alert').style.display = "block";
+    }
+    function hidediv() {
+        document.getElementById('success-alert').style.display = "none";
+        location.reload()
+    }
+
+    
+</script>
+
+
+{% endblock %}

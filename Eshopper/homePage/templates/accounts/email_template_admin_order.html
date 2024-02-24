@@ -1,0 +1,52 @@
+{% if order_status == 'Cancelled' %}
+
+Dear {{ cus_name }},
+We are sorry to inform you that your order number: {{ transaction_id }} with order date {{ date_order }} have been cancelled.
+    Please accept are sincere apology as we look forward to more better days.
+Thanks for using HAPPY SHOPPERS...!
+
+Best Regards.
+
+{% elif order_status == 'Shipped' %}
+
+Dear {{ cus_name }},
+We like to inform you that your order number: {{ transaction_id }} with order date {{ date_order }} have been shipped.
+
+Best Regards.
+
+{% elif order_status == 'Completed' and registered_user %}
+
+Dear {{ cus_name }},
+We are happy to inform you that your order number {{ transaction_id }} with order date {{ date_order }} have been delivered.
+I hope you had a smooth experience shopping with us as we look forward to render our service to you.
+    Kindly go to your account section and drop your product review. This will help other customer to make a good decision while purchasing.
+For any complain or suggestions kindly log into your account and leave your comment in the customer service section.
+Your feedback is important to us.
+Thanks for using HAPPY SHOPPERS...!
+
+Best Regards,
+
+{% elif order_status == 'Refunded'  or emailTemp == 'Refunded' %}
+
+Dear {{ cus_name }},
+We would like to inform you that your order number {{ transaction_id }} with order date {{ date_order }} have been processed for refund.
+Your refund amount is N {{ totalRefund }}. We would appreciate if you can use it to re-order your items. We sincerely apologise any inconviences it most have caused you.
+Else provide your account information for the refund. Kindly note that bank charges will be deducted.
+  
+Thanks for using HAPPY SHOPPERS as we look forward to better days.
+
+Best Regards,
+
+{% elif order_status == 'Completed' and not registered_user %}
+
+Dear {{ cus_name }},
+We are happy to inform you that your order number {{ transaction_id }} with order date {{ date_order }} have been delivered.
+I hope you had a smooth experience shopping with us as we look forward to render our service to you.
+    
+    We noticed you shopped as a guest. We encourage you to open an account with us as you stand the opportunity of having a better experience and great deal using HAPPY SHOPPERS
+    
+Thanks for using HAPPY SHOPPERS...!
+
+Best Regards,
+
+{% endif %}

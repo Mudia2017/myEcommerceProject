@@ -1,0 +1,238 @@
+{% extends 'homePage/homepage.html' %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS -->
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        min-width: 1000px;
+    }
+    .ellipse {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        margin-bottom: 0%;
+    }
+    .ellipse1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        
+    }
+
+    /* START OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+    .hover-underline-animation {
+        display: inline-block;
+        position: relative;
+        color: #0087ca;
+    }
+
+    .hover-underline-animation:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #0087ca;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+
+    .hover-underline-animation:hover:after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
+
+    /* END OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+
+    .sticky-div {
+            position: sticky;
+            top: 62px;
+            padding: 0px 0px;
+            z-index: 1;
+        }
+</style>
+
+
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+<div style="margin-top: 4rem; padding: 0rem 1rem;">
+    <hr style="margin-top: 8rem;">
+    <div style="width: 100%; display: flex;">
+        <div style="width: 20%;">
+            <label for="">Other Brands</label>
+
+            <br>
+            
+            <form action="">
+                {% for allBrand in brandList %}
+                <hr style="margin: 0px;">
+                <div style="width: 100%; display: -webkit-flex; justify-content: space-between; padding: 1rem 0rem 1rem 0rem;">
+                    <button style="border: none; background-color: transparent;" type="submit" name="shopByBrand" value="{{ allBrand.id }}" class="ellipse1 hover-underline-animation">{{ allBrand.brand }}</button>
+                    
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+        <div style="width: 80%; float: right; padding-left: 10px;">
+            
+            <div style="background-color: aquamarine; display: inline-block; width: 100%;" class="sticky-div">
+                <span style="width: 85%; background-color: aqua; display: inline-block; margin-left: 15%; padding-bottom: 1%;">
+                        <h2 style="color: black; padding: 2% 0% 0% 4%;">Shop by Brand</h2>
+                        <h6 class="ellipse1" style="color: gray; font-weight: lighter; font-style: oblique; font-size: 18px;">
+                            Your one stop shop of all things from your favorite brand 
+                            <span style="font-size: 30px; color: black; font-weight: 400;">{{ selBrndName }}!!!</span>
+                        </h6>
+                    
+                </span>
+            </div>
+           
+            <br>
+            <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;"><span style="font-weight: bold; font-size: 15px;">{{ count }} </span><span style="font-size: 13px;">Items in total</span></p>
+            
+            <hr>
+
+            <div class="card mb-3" style="width: 100%; margin-bottom: 0px; border: none;">
+                {% for brandPtdItem in brandPtdItems %}
+                <div class="" style="display: flex; width: 100%; ">
+                    <div class="">
+                        <a href="{% url 'product_detail' brandPtdItem.id %}" class="col-md-3">
+                            {% if brandPtdItem.imageURL %}
+                        <img style="object-fit: contain; width: 14rem; height: 10rem;" src="{{ brandPtdItem.imageURL }}" class="img-fluid rounded-start" alt="...">
+                        {% else %}
+                        <img style="object-fit: contain; width: 14rem; height: 10rem; " src="{% static 'images/default_image_icon.png' %}" class="img-fluid rounded-start" alt="...">
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div style="display: flex; width: 100%; justify-content: space-between; margin-left: 2%;">
+                        <div class="" style="width: 85%; padding: 0px 4px;">
+                            <p class="card-text ellipse">{{ brandPtdItem.name }}</p>
+                            
+                            <br>
+                            {% if brandPtdItem.mfgDate %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; color: darkgray;">
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;"> MfgDate: {{ brandPtdItem.mfgDate }} </p>
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;"> ExpDate: {{ brandPtdItem.expDate }} </p>
+                            </span>
+        
+                            {% endif %}
+
+                            {% if brandPtdItem.discount > 0 %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; ">
+                                <p style="margin-bottom: 0%; font-size: 22px; font-weight: bold;">&#8358; {{ brandPtdItem.new_price }}</p>
+                                <p style="margin-bottom: 0%; text-decoration: line-through; color: gray; font-size: 15px;">&#8358;
+                                    {{ brandPtdItem.price }}</p>
+                                <p style="margin-bottom: 0%;">- {{ brandPtdItem.discount }} %</p>
+                            </span>
+
+                            {% else %}
+                            <span style="font-size: 22px; font-weight: bold;">
+                                &#8358; {{ brandPtdItem.price }}
+                                
+                            </span>
+                            {% endif %}
+
+                            {% if brandPtdItem.out_of_stock == True %}
+                            <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;">
+                                <span class="badge text-bg-danger" style="background-color: RGB(255, 22, 12);">Out of Stock</span>
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div style="width: 15%;">
+                            
+                            {% if brandPtdItem.out_of_stock == True %}
+                            <button style="font-size: 13px; width: 100%;" type="button" class="btn btn-outline-primary" disabled>Add to Cart</button><br>
+                            {% else %}
+                            <button style="font-size: 13px; width: 100%;" class="btn btn-outline-primary update-cart" data-product="{{ brandPtdItem.id }}" data-action="add" data-value="{{ brandPtdItem.out_of_stock }}">
+                                Add to Cart
+                            </button>
+                            
+                            {% endif %}
+                            
+                            <!-- THE FIRST IF STATEMENT IS CHECKING IF IT'S A REGISTERED USER -->
+                            {% if request.user.id %}
+                            {% if brandPtdItem.isHeartFill %}
+                            <input type="image" data-product="{{ brandPtdItem.id }}" data-action="heart" class="chg-quantity update-favorite"
+                            src="{% static 'images/heartfill.png' %}" style="width: 40px;">
+                            {% else %}
+                            <input type="image" data-product="{{ brandPtdItem.id }}" data-action="fillHeart" class="chg-quantity update-favorite"
+                            src="{% static 'images/heart.png' %}" style="width: 45px; ">
+                            {% endif %}
+                            {% endif %}
+                           
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+
+                {% endfor %}
+            </div>
+
+            <br>
+            <div class="paginator">
+                <span class="step-links">
+                    {% if brandPtdItems.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% my_url brandPtdItems.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                    {% endif %}
+        
+                    <span class="current">
+                        Page {{ brandPtdItems.number }} of {{ brandPtdItems.paginator.num_pages }}
+                    </span>
+        
+                    {% if brandPtdItems.has_next %}
+                        <a href="{% my_url brandPtdItems.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% my_url brandPtdItems.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+        
+            </div>
+        
+            <br>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script>
+    // USED TO UPDATE FAVORITE ITEM 
+    var favorite = document.getElementsByClassName('update-favorite')
+    for (var i = 0; i < favorite.length; i++) {
+        favorite[i].addEventListener('click', function(){
+            var ptdId = this.dataset.product;
+            var action = this.dataset.action;
+
+            updateWishList(ptdId, action)
+        })
+    }
+
+    function updateWishList(ptdId, action) {
+        var url = '/update_favorite/'
+        fetch(url, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':csrftoken
+            },
+            body:JSON.stringify ({'ptdId': ptdId, 'action': action})
+        })
+
+        .then((response)=>{
+                return response.json()
+            })
+
+        .then((data)=>{
+                console.log('data:', data)
+                location.reload()
+            })
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <title>eShoppers</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1000">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    
+
+    <script type="text/javascript">
+        var user = '{{ request.user }}'
+
+        function getToken(name) {
+            var cookiesValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getToken('csrftoken');
+
+        function getCookies(name) {
+            // Split cookies string and get all individual name=value pairs in an array
+            var cookieArr = document.cookie.split(";");
+
+            // Loop through the array elements
+            for (var i = 0; i < cookieArr.length; i++) {
+                var cookiePair = cookieArr[i].split("=");
+
+                /* Removing whitespace at the beginning of the cookie name
+                * and compare it with the given string */
+                if (name == cookiePair[0].trim()) {
+                    // Decode the cookie value and return
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            // Return null if not found
+            return null;
+        }
+
+        var cart = JSON.parse(getCookies('cart'))
+
+        if (cart == undefined) {
+            cart = {}
+            console.log('Cart was created!')
+            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+        }
+        console.log('cart:', cart)
+
+    </script>
+
+    <style>
+        .nav-msg {
+            color: #fff;
+        }
+
+
+           /* ================== CSS FOR LOAD EVENT SPINNER ====================== */
+    .loader,
+        .loader:after {
+            border-radius: 50%;
+            width: 10em;
+            height: 10em;
+        }
+        .loader {            
+            margin: 60px auto;
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-left: 1.1em solid #ffffff;
+            margin-top: 5rem;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: load8 1.1s infinite linear;
+            animation: load8 1.1s infinite linear;
+        }
+        @-webkit-keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        #loadingDiv {
+            position:absolute;;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color:rgb(53, 49, 49);
+            opacity: 0.75;
+        }
+        /* ================== END CSS FOR LOAD EVENT SPINNER ====================== */
+
+
+        @media only screen and (min-width: 765px) {
+            .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+
+        }
+        #navbarDropdown {
+            font-size: 20px;
+            font-weight: 500;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    {#Let's create a place holder for navbar... create a div... because we have bootstrap, let add a class container#}
+    {# We go to bootstrap to get navbar of our choice and format the source code to suit our webpage #}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed_navbar">
+        <div class="container">
+            <img height="45px" src="{% static 'images/white_shopper_logo.png' %}" alt="">
+            <a class="navbar-brand" href="{% url 'eShopAmuwo' %}">eShoppers</a>
+            <a class="navbar-brand" href="{% url 'homePage' %}">Home Page</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+
+                    </li>
+
+                </ul>
+                <div class="form-inline my-2 my-lg-0" style="display: flex;">
+
+                    {% if myFilter %}
+                    <form action="" method="GET" >
+                        
+                        <div style="display: flex;">
+                            <div class="search_wrapper">
+                                {{ myFilter.form }}
+                            </div>
+                            
+                            
+                            <select onchange="" style="font-size: small; width: 20%;" select name="category" class="form-select form-select-sm">
+                                <option value="0" selected>Shop by Category</option>
+                                <option name="selected_category" value="allCategorySelected" >All Categories</option>
+                                {% for category in categories %}
+                                {% if category.level == 0 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}"> {{ category }}</option>
+                                {% elif category.level == 1 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">--- {{ category }}</option>
+                                {% elif category.level == 2 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">------ {{ category }}</option>
+                                {% elif category.level == 3 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">--------- {{ category }}</option>
+                                {% elif category.level == 4 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">------------ {{ category }}</option>
+                                {% elif category.level == 5 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">--------------- {{ category }}</option>
+                                {% elif category.level == 6 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">------------------ {{ category }}</option>
+                                {% elif category.level == 7 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">--------------------- {{ category }}</option>
+                                {% elif category.level == 8 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">------------------------ {{ category }}</option>
+                                {% elif category.level == 9 %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">--------------------------- {{ category }}</option>
+                                {% else %}
+                                <option name="selected_category" id="{{ category.id }}" value="{{ category.id }}">------------------------------ {{ category }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            
+                            <input class="search" type="submit" value="Search">
+                        
+                        </div>
+                        
+                    </form>
+                    {% endif %}
+                    <!-- &emsp; -->
+                    
+
+                </div>
+                
+                   
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" >
+
+                    <li class="nav-item dropdown" >  
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span style="font-size: 13px;"> Hello {{ request.user }}</span> 
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 10px;">
+                            <li><a href="{% url 'customer_acct_card' %}" class="dropdown-item" type="submit"
+                                id="sign-in">User Account</a></li>
+                            
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a href="{% url 'logout' %}" class="dropdown-item" type="submit" id="sign-in">Logout</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                {% else %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item dropdown">  
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span style="font-size: 13px;">Hello Guest</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 10px;">
+                            <li><a href="{% url 'login' %}" class="dropdown-item" type="submit" id="sign-in">Login</a></li>
+                            <li><a href="{% url 'register' %}" class="dropdown-item" type="submit"
+                                id="register-btn">Register</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+                {% endif %}
+
+                <a href="{% url 'amuwo_cart' %}">
+                    <img id="cart-icon" src="{% static 'images/cart.png' %}">
+                </a>
+                <p id="cart-total">{{ cartItems }}</p>
+                
+                
+            </div>
+            
+        </div>
+
+    </nav>
+
+    <div style="width: 96%; margin-left: 2%;">
+        {# This is were all of our other template are going to sit#}
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    {#This three scripts are also copied from bootstrap to make front of our page look nice#}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+    <script>
+        var search_btn = document.getElementsByTagName('input')
+        var filter = "{{ myFilter }}"
+        // BECAUSE THE INPUT TAG CLASH WITH CHECK-OUT PAGE,
+        // I HAD TO PUT THIS CONDITION TO DISTINGUISH
+        if (filter != '') {
+            search_btn[0].placeholder = 'Search for anything';
+            search_btn[0].style.borderRadius = '4px'
+            search_btn[0].style.width = '400px'
+        } 
+
+
+
+
+    </script>
+</body>
+
+</html>

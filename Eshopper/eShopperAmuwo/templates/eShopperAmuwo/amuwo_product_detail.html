@@ -1,0 +1,1011 @@
+{% extends 'homePage/homepage.html' %}
+{% load embed_video_tags %} <!-- FUNCTION IS TO ENABLE VIDEO DISPLAY ON THE TEMPLATE. IT WAS FROM DJANGO EMBED VIDEO SITE -->
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  <!-- USED FOR STAR RATING DISPLAY -->
+
+<!-- <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">  -->
+<style>
+    .row-content {
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .first-session {
+        display: block;
+        width: 40%;
+    }
+
+    #featured {
+        width: 400px;
+        height: 400px;
+    }
+
+    .second-session {
+        width: 60%;
+        margin-left: 2%;
+        display: block;
+    }
+
+    .second-session input {
+        float: right;
+        margin-top: 0%;
+    }
+
+    .horizontal-view {
+        display: flex;
+        overflow: scroll;
+    }
+
+    .thumbnail {
+        width: 15rem;
+    }
+
+    a img:hover {
+        box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+
+    /* CUSTOMER REVIEW SESSION */
+
+
+
+    .cus-review-row {
+        display: flex;
+        width: 100%;
+    }
+
+    .first-session-cr {
+        display: block;
+        width: 21rem;
+    }
+
+    .second-session-cr {
+        width: 70%;
+        margin-left: 2%;
+        display: block;
+    }
+
+    /* ##################################################################### */
+    /* For Chrome or Safari */
+    progress::-webkit-progress-bar {
+        background-color: #c9c4c4;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #FFA442 !important;
+    }
+
+
+    /* For Firefox */
+    progress {
+        background-color: rgb(185, 182, 182);
+    }
+
+    progress::-moz-progress-bar {
+        background-color: #FFA442 !important;
+    }
+
+    /* For IE10 */
+    progress {
+        background-color: rgb(192, 189, 189);
+    }
+
+    progress {
+        background-color: #FFA442;
+    }
+
+
+    .stars-inner1 {
+        color: rgb(255, 164, 66);
+    }
+
+    @media only screen and (min-width: 992px) {
+        .badge-danger {
+            margin-bottom: 10%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 100%;
+            margin-bottom: 1%;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 100%;
+            margin-bottom: 5%;
+        } 
+    }
+
+    @media only screen and (max-width: 991px){
+        .badge-danger {
+            margin-bottom: 25%;
+        }
+    }
+
+    @media only screen and (max-width: 768px){
+        .badge-danger {
+            margin-bottom: 25%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 2%;
+            width: 130%;
+            margin-bottom: 1%;
+        }
+
+        #featured {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 130%;
+            margin-bottom: 5%;
+        }
+    }
+    
+    @media only screen and (max-width: 540px) {
+        .badge-danger {
+            margin-bottom: 15%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 2%;
+            width: 170%;
+            margin-bottom: 1%;
+        }
+
+        #featured {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 170%;
+            margin-bottom: 5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 414px) {
+        .badge-danger {
+            margin-bottom: 15%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 2%;
+            width: 235%;
+            margin-bottom: 1%;
+        }
+
+        #featured {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 235%;
+            margin-bottom: 5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 375px) {
+        .badge-danger {
+            margin-bottom: 15%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 2%;
+            width: 235%;
+            margin-bottom: 1%;
+        }
+
+        #featured {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 235%;
+            margin-bottom: 5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 280px) {
+        .badge-danger {
+            margin-bottom: 15%;
+        }
+
+        .box-element {
+            margin-top: 5rem;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 2%;
+            width: 300%;
+            margin-bottom: 1%;
+        }
+
+        #featured {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        .box-element2 {
+            margin-top: 0%;
+            margin-right: 1%;
+            box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 300%;
+            margin-bottom: 5%;
+        }
+
+    }
+
+    .alert-warning {
+        display: none;
+    }
+    /* body {  min-width:280px; } */
+
+    /* ============== CSS FOR IMAGE SLIDER ================= */
+    .small_thumbnail {
+        object-fit: cover;
+        max-width: 100px;
+        max-height: 80px;
+        cursor: pointer;
+        opacity: 0.5;
+        margin: 5px;
+        border: 2px solid black;
+    }
+    .small_thumbnail:hover {
+        opacity: 1;
+    }
+    .active {
+        opacity: 1;
+    }
+
+    #slide_wrapper {
+        max-width: 410px;
+        display: flex;
+        min-height: 100px;
+        align-items: center;
+    }
+
+    #slider {
+        width: 380px;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    .arrow {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        transition: .3s;
+    }
+
+    .arrow:hover {
+        opacity: .5;
+        width: 35px;
+        height: 35px;
+    }
+
+    /* ================ END OF CSS FOR IMAGE SLIDER =============== */
+</style>
+
+<form action="" method="POST">
+
+    <div class="box-element">
+
+        {% csrf_token %}
+        <div class="row-content">
+
+            <div class="first-session">
+                {% if product.imageURL %}
+                <img style="object-fit: contain; background-color: rgb(242, 242, 242);" id="featured" src="{{ product.imageURL }}" alt="..." class="img-thumbnail">
+                {% else %}
+                <img style="object-fit: contain; background-color: rgb(242, 242, 242);" id="featured" src="{% static 'images/default_image_icon.png' %}" alt="..." class="img-thumbnail">
+                {% endif %}
+                {% if product.slide_image_set.all %}
+                <div id="slide_wrapper">
+                    <img style="margin-right: 1%;" id="slideLeft" class="arrow" src="{% static 'images/preview_left_arrow.png' %}" alt="">
+
+                    <div id="slider">
+                        {% for image in product.slide_image_set.all %}
+
+                        <img class="small_thumbnail" src="{{ image.image_slideURL }}" alt="">
+                        <!-- <img class="small_thumbnail active" src="{% static 'images/milo.jpg' %}" alt=""> -->
+
+                        {% endfor %}
+                    </div>
+
+                    <img style="margin-left: 1%;" id="slideRight" class="arrow" src="{% static 'images/preview_right_arrow.png' %}" alt="">
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="second-session">
+                <a class="btn btn-outline-dark" href="{% url 'eShopAmuwo' %}">&#x2190;
+                    Continue Shopping</a>
+
+                <br>
+
+                <!-- ================= WARNING ALERT MESSAGE ===================== -->
+                
+                <div id="warning-alert" class="alert alert-warning" role="alert">
+                    <strong> {{ myDictionary.warningMsg }} </strong>
+                </div>
+
+                <hr>
+
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <div>
+                        <p style="font-size: 20px; font-weight: 500;">{{ product.name }}</p>
+                        {% if product.brand == None %}
+                        <h6 style="color: #34495E; font-size: 14px;">Product Brand: {{ '' }} </h6>
+                        {% else %}
+                        <h6 style="color: #EB984E;"><span style="color: #34495E; font-size: 14px;">Product Brand: </span>
+                            {{ product.brand }} </h6>
+                        {% endif %}
+
+                        <!-- ================ STAR RATING OF THE DETAILED PRODUCT ================== -->
+
+                        <div style="display: flex;">
+
+                            {% if myDictionary.weighted_average_rating > 0.9 %}
+                            <span><i class="fa fa-star stars-inner1 "></i></span>
+                            {% else %}
+                            <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                            {% endif %}
+
+                            {% if myDictionary.weighted_average_rating > 1.9 %}
+                            <span><i class="fa fa-star stars-inner1 "></i></span>
+                            {% elif myDictionary.weighted_average_rating > 1.4 %}
+                            <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                            {% else %}
+                            <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                            {% endif %}
+
+                            {% if myDictionary.weighted_average_rating > 2.9 %}
+                            <span><i class="fa fa-star stars-inner1 "></i></span>
+                            {% elif myDictionary.weighted_average_rating > 2.4 %}
+                            <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                            {% else %}
+                            <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                            {% endif %}
+
+                            {% if myDictionary.weighted_average_rating > 3.9 %}
+                            <span><i class="fa fa-star stars-inner1"></i></span>
+                            {% elif myDictionary.weighted_average_rating > 3.4 %}
+                            <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                            {% else %}
+                            <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                            {% endif %}
+
+                            {% if myDictionary.weighted_average_rating > 4.9 %}
+                            <span><i class="fa fa-star stars-inner1"></i></span>
+                            {% elif myDictionary.weighted_average_rating > 4.4 %}
+                            <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                            {% else %}
+                            <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                            {% endif %}
+                            &nbsp;
+                            
+                            <p>{{myDictionary.counter }}</p>
+                        </div>
+                        
+                    </div>
+
+                    <!-- =================== SHORT VIDEO CLIP RELATING TO PRODUCT ======================= -->
+                    {% for i in video_item %}
+                    {% video i.video '50% x 20%' %}
+                    {% endfor %}
+
+                </div>
+                <hr>
+
+                <!-- CONDITION TO CHECK FOR DISCOUNT -->
+                {% if product.discount > 0 %}
+                    <div style="display: flex; justify-content: space-between;">
+                        <p style="color: #B52413;"><span style="color: #34495E; font-size: 14px;">Price:
+                            </span><strong>&#8358; {{ product.get_unit_price }} </strong></p>
+                        <p>{{ product.discount }}% off</p>
+
+                        <!-- CHECKING IF PRODUCT IS OUT OF STOCK -->
+                        {% if product.out_of_stock == True %}
+
+                        <!-- Out of stock outlook is from bootstrip  -->
+                        <span class="badge badge-danger">Out of
+                            Stock</span>
+
+                        {% endif %}
+
+                        <!-- CONDITION TO CHECK FOR MANUFACTURE/EXPIRATION DATE -->
+                        <div style="display: block;">
+                            {% if product.mfgDate != None %}
+
+                            <p style="margin: 0%; font-size: 14px; color: #E74C3C;"><span style="color: #34495E; font-size: 12px;">Mfg
+                                    Date: </span> {{ product.mfgDate }}</p>
+
+                            <p style="margin: 0%; font-size: 14px; color: #E74C3C;"><span style="color: #34495E; font-size: 12px;">Exp
+                                    Date: </span> {{ product.expDate }}</p>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        <div>
+                            <h6 style=" color: #34495E; font-size: 12px; margin: 0%;">
+                                Old Price: <span
+                                    style="color: gray; font-size: 14px; text-decoration: line-through;"><strong>&#8358;
+                                        {{ product.price }}</strong></span></h6>
+                        </div>
+                        
+                        <div >
+                            <!-- CONDITION TO CHECK IF PRODUCT FROM STORE AND PRODUCT IT SELF IS INACTIVE -->
+                        {% if product.store.active == False or product.active == False and product.out_of_stock == False %}
+                        <span class="badge badge-danger">Currently unavaliable</span>
+                        {% endif %}
+                            <label style="padding-top: 10px;"><strong>Add to WishList</strong></label>
+
+                            {% if myDictionary.isHeartFill == False %}
+                            <a href="{% url 'product_detail' product.id %}">
+                                <input type="image" src="{% static 'images/heart_hallow.png' %}" name="wishList" value="Yes" style="width: 50px;">
+                                
+                            </a>
+                            {% else %}
+                            <a href="{% url 'product_detail' product.id %}">
+                                <input type="image" src="{% static 'images/heartfill.png' %}" name="heartFill" style="width: 50px;">
+                                
+                            </a>
+                            {% endif %}
+                            
+                            
+                        </div>
+                    </div>
+
+                {% else %}
+                <!-- EXECUTE IF THERE IS NO DISCOUNT -->
+                    <div style="display: flex; justify-content: space-between;">
+                        <p style="color: #B52413;"><span style="color: #34495E; font-size: 14px;">Price:
+                            </span><strong>&#8358; {{ product.price }} </strong></p>
+
+                        <!-- CHECKING IF PRODUCT IS OUT OF STOCK -->
+                        {% if product.out_of_stock == True %}
+
+                        <!-- Out of stock outlook is from bootstrip  -->
+                        <span class="badge badge-danger">Out of
+                            Stock</span>
+
+                        {% endif %}
+                        
+
+                        <!-- CONDITION TO CHECK FOR MANUFACTURE/EXPIRATION DATE -->
+                        <div style="display: block;">
+                            {% if product.mfgDate != None %}
+
+                            <p style="margin: 0%; font-size: 14px; color: #E74C3C;"><span style="color: #34495E; font-size: 12px;">Mfg
+                                    Date: </span> {{ product.mfgDate }}</p>
+
+                            <p style="margin: 0%; font-size: 14px; color: #E74C3C;"><span style="color: #34495E; font-size: 12px;">Exp
+                                    Date: </span> {{ product.expDate }}</p>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        
+                        <div>
+                            
+                        </div>
+                        
+                        <div >
+                                <!-- CONDITION TO CHECK IF PRODUCT FROM STORE AND PRODUCT IT SELF IS INACTIVE -->
+                        {% if product.store.active == False or product.active == False and product.out_of_stock == False %}
+                        <span class="badge badge-danger">Currently unavaliable</span>
+                        {% endif %}
+                            <label style="padding-top: 10px;"><strong>Add to WishList</strong></label>
+
+                            {% if myDictionary.isHeartFill == False %}
+                            <a href="{% url 'product_detail' product.id %}">
+                                <input type="image" src="{% static 'images/heart_hallow.png' %}" name="wishList" value="Yes" style="width: 50px;">
+                                
+                            </a>
+                            {% else %}
+                            <a href="{% url 'product_detail' product.id %}">
+                                <input type="image" src="{% static 'images/heartfill.png' %}" name="heartFill" style="width: 50px;">
+                                
+                            </a>
+                            {% endif %}
+                            
+                            
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                <hr>
+            {% if product.store.active == False or product.active == False %}
+                <button data-product="{{ product.id }}" data-action="add" data-value="{{ product.out_of_stock }}"
+                class="btn btn-success btn-block add-btn update-cart" disabled>
+                Add to Cart
+                </button>
+            {% else %}
+            
+                <button data-product="{{ product.id }}" data-action="add" data-value="{{ product.out_of_stock }}"
+                    class="btn btn-success btn-block add-btn update-cart">
+                    Add to Cart
+                </button>
+            {% endif %}
+            
+            </div>
+
+        </div>
+
+        <!-- HORIZONTAL GRID VIEW OF PRODUCT OF THE SAME CATEGORY -->
+        <hr>
+        <p style="color: #D35400; font-size: 25px; font-weight: 400;">Similar Product</p>
+        <div class="horizontal-view">
+
+            {% for product_category in same_category_products %}
+
+            <!-- USING THIS CONDITION TO ENSURE THAT PRODUCT DISPLAYED ON THE DETAIL PAGE DOES NOT SHOW IN SIMILAR PRODUCT SESSION -->
+            {% if product_category.id != product.id %}
+            <div style="display: block; margin: 1% 1%;">
+
+                <a href="{% url 'product_detail' product_category.id %}">
+                    {% if product_category.imageURL %}
+                    <img style="object-fit: contain; height: 9rem; background-color: rgb(242, 242, 242);" src="{{ product_category.imageURL }}" alt="..." class="thumbnail">
+                    {% else %}
+                    <img style="object-fit: contain; height: 9rem; background-color: rgb(242, 242, 242);" src="{% static 'images/default_image_icon.png' %}" alt="..." class="thumbnail">
+                    {% endif %}
+                    <p style="margin: 0%;"> {{product_category.name|truncatechars:32 }} </p>
+                </a>
+                
+                <div style="display: flex;">
+
+                    {% if product_category.averageStarRated > 0.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if product_category.averageStarRated > 1.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif product_category.averageStarRated > 1.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if product_category.averageStarRated > 2.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif product_category.averageStarRated > 2.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if product_category.averageStarRated > 3.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif product_category.averageStarRated > 3.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if product_category.averageStarRated > 4.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif product_category.averageStarRated > 4.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+                    &nbsp;
+                    <span>
+                        {% if product_category.averageStarRated == None %}
+                        <p style="font-size: 20px; margin: 0%;">0</p>
+                        {% else %}
+                        <p style="font-size: 20px; margin: 0%;">{{ product_category.counter }}
+                        </p>
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if product_category.discount > 0 %}
+                <p style="margin: 0%; color: #B52413">&#8358; {{ product_category.new_unit_price|floatformat:2 }}</p>
+                <p style="color: rgb(99, 97, 97); font-size: 13px; margin: 0%;"><span
+                        style="text-decoration: line-through;">&#8358; {{ product_category.price }}</span> <span>
+                        ({{ product_category.discount }} % off)</span> </p>
+                {% else %}
+                <p style="margin: 0%; color: #B52413">&#8358; {{ product_category.price }}</p>
+                {% endif %}
+
+
+            </div>
+            {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <!-- DISPLAY IF THERE ARE NO PRODUCT IN THE SAME CATEGORY -->
+        {% if myDictionary.isSame_category_product == False %}
+        <p
+            style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 0%;">
+            No similar product yet</p>
+        {% endif %}
+
+        <hr>
+        <p style="color: #D35400; font-size: 25px; font-weight: 400;">Product Description</p>
+
+        <textarea style="width: 100%; border: none;" rows="10" readonly>{{ product.description }}</textarea>
+        
+    </div>
+
+
+    <!-- ########### CUSTOMER REVIEW SECTION ############### -->
+
+    <div class="box-element2">
+
+        <p style="color: #D35400; font-size: 25px; font-weight: 400;"> Customer Reviews </p>
+        <hr>
+
+        <div class="cus-review-row">
+            <div class="first-session-cr" style="padding-left: 2%;">
+                <div style="display: flex;">
+
+                    {% if myDictionary.weighted_average_rating > 0.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 1.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif myDictionary.weighted_average_rating > 1.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 2.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif myDictionary.weighted_average_rating > 2.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 3.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif myDictionary.weighted_average_rating > 3.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 4.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif myDictionary.weighted_average_rating > 4.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+                    &nbsp;
+                    <span>
+                        {% if myDictionary.weighted_average_rating == None %}
+                        <p style="font-size: 20px;">0 out of 5</p>
+                        {% else %}
+                        <p style="font-size: 20px;">{{ myDictionary.weighted_average_rating | floatformat:1 }} out of 5
+                        </p>
+                        {% endif %}
+                    </span>
+                </div>
+
+                <p>Ratings ({{myDictionary.counter }})</p>
+
+                <div style="display: inline-flex;">
+                    <p style="margin-bottom: 1%;">5
+                        <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                        &nbsp;
+                        <span><progress value="{{ myDictionary.five_star_percent }}" max="100"></progress></span>
+                        &nbsp;
+                        <span>
+                            {% if myDictionary.five_star_percent == 0 or myDictionary.five_star_percent == None %}
+                            <p style="margin-bottom: 0%;">0%</p>
+                            {% else %}
+                            <p style="margin-bottom: 0%;"> {{ myDictionary.five_star_percent | floatformat:0 }}%</p>
+                            {% endif %}
+                        </span>
+                    </p>
+
+                </div>
+
+                <div style="display: inline-flex;">
+                    <p style="margin-bottom: 1%;">4
+                        <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                        &nbsp;
+                        <progress value="{{ myDictionary.four_star_percent }}" max="100"></progress>
+                        &nbsp;
+                        <span>
+                            {% if myDictionary.four_star_percent == 0 or myDictionary.four_star_percent == None %}
+                            <p style="margin-bottom: 0%;">0%</p>
+                            {% else %}
+                            <p style="margin-bottom: 0%;"> {{ myDictionary.four_star_percent | floatformat:0 }}%</p>
+                            {% endif %}
+                        </span>
+                    </p>
+
+                </div>
+
+                <div style="display: inline-flex;">
+                    <p style="margin-bottom: 1%;">3
+                        <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                        &nbsp;
+                        <span><progress value="{{ myDictionary.three_star_percent }}" max="100"></progress></span>
+                        &nbsp;
+                        <span>
+                            {% if myDictionary.three_star_percent == 0 or myDictionary.three_star_percent == None %}
+                            <p style="margin-bottom: 0%;">0%</p>
+                            {% else %}
+                            <p style="margin-bottom: 0%;"> {{ myDictionary.three_star_percent | floatformat:0 }}%</p>
+                            {% endif %}
+                        </span>
+                    </p>
+
+                </div>
+
+                <div style="display: inline-flex;">
+                    <p style="margin-bottom: 1%;">2
+                        <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                        &nbsp;
+                        <progress value="{{ myDictionary.two_star_percent }}" max="100"></progress>
+                        &nbsp;
+                        <span>
+                            {% if myDictionary.two_star_percent == 0 or myDictionary.two_star_percent == None %}
+                            <p style="margin-bottom: 0%;">0%</p>
+                            {% else %}
+                            <p style="margin-bottom: 0%;"> {{ myDictionary.two_star_percent | floatformat:0 }}%</p>
+                            {% endif %}
+                        </span>
+                    </p>
+
+                </div>
+
+                <div style="display: inline-flex;">
+                    <p style="margin-left: 1%;">1
+                        <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                        &nbsp;
+                        <progress value="{{ myDictionary.one_star_percent }}" max="100"></progress>
+                        &nbsp;
+                        <span>
+                            {% if myDictionary.one_star_percent == 0 or myDictionary.one_star_percent == None %}
+                            <p>0%</p>
+                            {% else %}
+                            <p> {{ myDictionary.one_star_percent | floatformat:0 }}%</p>
+                            {% endif %}
+                        </span>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="second-session-cr">
+                <p style="font-weight: bold;">Top reviews from customers</p>
+
+                <hr>
+
+                <!-- DISPLAY IF THERE ARE NO CUSTOMER REVIEW FOR THE PRODUCT YET -->
+                {% if myDictionary.isCusReview == False %}
+                <p
+                    style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 13%;">
+                    No customer review for this product yet</p>
+                {% endif %}
+
+                <!-- LOOP TO DISPLAY FEW CUSTOMER REVIEWS -->
+
+                {% for comment in myDictionary.customLatestFewComments %}
+
+
+                <div class="stars-outer">
+                    {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                </div>
+                <div>
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                                style="font-weight: bold; color: darkblue;">
+                                {{ comment.customer.name}}</span>
+
+                        </p>
+                        <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg></p>
+                    </div>
+
+                    <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                    <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                    <p style="margin: 0%;"> {{ comment.comment }} </p>
+                </div>
+                <hr>
+                {% endfor %}
+
+                <!-- USED TO DECIDE IF THE LINK 'SEE ALL REVIEWS' SHOULD DISPLAY OR NOT -->
+                {% if myDictionary.counter > 2 %}
+                <a href="{% url 'all_cus_ptd_comments' product.id %}">See all reviews
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+                        <path fill-rule="evenodd"
+                            d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="third-session">
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR WARNING MESSAGE
+    var isWarning = "{{ myDictionary.warning }}";
+
+    if (isWarning == 'True') {
+        function showDiv() {
+            document.getElementById('warning-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('warning-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 8000);
+    }
+
+
+    // ======================== SMALL THUMBNAIL ============================
+    let small_thumbnails = document.getElementsByClassName('small_thumbnail')
+    let activeImages = document.getElementsByClassName('active')
+
+    for (var i=0; i < small_thumbnails.length; i++){
+        small_thumbnails[i].addEventListener('mouseover', function(){
+            if (activeImages.length > 0){
+                activeImages[0].classList.remove('active')
+            }
+            this.classList.add('active')
+            document.getElementById('featured').src = this.src
+        })
+    }
+    
+    let buttonRight = document.getElementById('slideRight');
+    let buttonLeft = document.getElementById('slideLeft');
+
+    buttonLeft.addEventListener('click', function(){
+        document.getElementById('slider').scrollLeft -= 90
+    })
+
+    buttonRight.addEventListener('click', function(){
+        document.getElementById('slider').scrollLeft += 90
+    })
+
+    // ====================== END OF SMALL THUMBNAIL =========================
+    
+
+    
+    
+</script>
+
+{% endblock content %}

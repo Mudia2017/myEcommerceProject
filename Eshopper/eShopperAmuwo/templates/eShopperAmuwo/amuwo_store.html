@@ -1,0 +1,267 @@
+{% extends 'eShopperAmuwo/amuwo_main.html' %}
+{% load static %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS -->
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">  <!-- USED FOR STAR RATING DISPLAY -->
+
+
+<style>
+
+    body {
+        min-width: 1050px;
+    }
+    .ellipse {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+    img:hover {
+        box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+    .nail {
+        max-width: 300%;
+        max-height: 35%;
+        object-fit: contain;
+        background-color: rgba(233, 175, 175, 0.767);
+    }
+
+    @media only screen and (max-width: 940px) {
+       
+        .element-box {
+            width: 120%;
+        }
+
+    }
+
+    .stars-inner1 {
+        color: rgb(255, 164, 66);
+    }
+</style>
+
+<div style="margin-top: 70px; " class="element-box">
+    <div style="width: 80%; float: right;" >
+
+
+        <!-- <div class=" row row-cols-1 row-cols-md-4 g-4"> -->
+        <div class=" row row-cols-1 row-cols-md-4 g-4" >
+            {% for product in products %}
+            <div class="col" style="margin-bottom: 2%;">
+                <div class="card h-100"  >
+                    <a href="{% url 'product_detail' product.id %}" >
+                    {% if product.imageURL %}
+                    <img style="height: 15rem; object-fit: contain; background-color: rgb(241, 239, 239);" src="{{ product.imageURL }}" class="card-img-top" alt="...">
+                    {% else %}
+                    <img style="height: 15rem; object-fit: contain; background-color: rgb(241, 239, 239);" src="{% static 'images/default_image_icon.png' %}" class="card-img-top" alt="...">
+                        {% endif %}
+                        <h6 style="margin-left: 0.3rem;" class="card-title ellipse">{{ product.name }}</h6>
+                    </a>
+                    <div style="display: block; justify-content: space-between; margin-left: 0.3rem;">
+                        <span>
+                            {% if product.mfgDate == None %}
+                            <!-- <small style=" float: left; margin-top: -15px; font-size: 10px"> {{ '' }}</small>
+                            <br>
+                            <small style="float: left; margin-top: -25px; font-size: 10px"> {{ '' }}</small> -->
+                            {% else %}
+                            <small style=" float: left; margin-top: -12px; font-size: 10px">Mfd
+                                date: {{ product.mfgDate }}</small>
+                            <br>
+                            <small style="float: left; margin-top: -25px; font-size: 10px; ">Exp
+                                date: {{ product.expDate }}</small>
+            
+                            {% endif %}
+
+                        </span>
+
+                        <div class="" style="padding-right: 0.3rem; padding-left: 0.3rem; padding-bottom: 0.3rem;">
+                            <!-- CHECKING PRICE AFTER DISCOUNT. -->
+                            {% if product.discount > 0 %}
+                
+                            <span style=" float: right; font-weight: 600; color: rgb(88, 83, 83);">&#8358;
+                                    {{ product.new_price|floatformat:2 }}</span>
+                                    {% endif %}
+                                    <br>
+                                
+                            <!-- DISPLAY THE PERCENTAGE OFF FOR PRICE AFTER DISCOUNT -->
+                            {% if product.discount > 0 %}
+                            <div style=" float: right; font-size: 12px;"><strong>
+                                    (-{{ product.discount|floatformat:2 }}% )</strong></div>
+                
+                                    <s style="display: inline-block; float: right; color: grey; margin-right: 4px; font-size: 12px;">&#8358;
+                                        {{ product.price }}</s>
+                                        {% else %}
+                                        <h6 style="display: inline-block; float: right">&#8358; {{ product.price }}</h6>
+                            {% endif %}
+                        </div>
+                    
+                        <div style="display: flex; width: 100%; justify-content: space-between; padding-right: 3px;">
+                            {% if product.out_of_stock == True %}
+                            <!-- Out of stock outlook is from bootstrip  -->
+                            <div>
+                                <span class="badge badge-danger" style="font-size: 12px; background-color: RGB(255, 22, 12);">Out of
+                                    Stock</span>
+                            </div>
+                            {% else %}
+                            <div></div>
+                            {% endif %}
+                            
+
+                                <!-- ====== STAR RATING AND COUNTER ======= -->
+                            <div style="display: flex;">
+
+                                {% if product.averageStarRated > 0.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if product.averageStarRated > 1.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% elif product.averageStarRated > 1.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if product.averageStarRated > 2.9 %}
+                                <span><i class="fa fa-star stars-inner1 "></i></span>
+                                {% elif product.averageStarRated > 2.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if product.averageStarRated > 3.9 %}
+                                <span><i class="fa fa-star stars-inner1"></i></span>
+                                {% elif product.averageStarRated > 3.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+            
+                                {% if product.averageStarRated > 4.9 %}
+                                <span><i class="fa fa-star stars-inner1"></i></span>
+                                {% elif product.averageStarRated > 4.4 %}
+                                <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                                {% else %}
+                                <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                                {% endif %}
+                                &nbsp;
+                                <div>
+                                    {% if product.averageStarRated == None %}
+                                    <p style="font-size: 16px; margin: 0%;">0</p>
+                                    {% else %}
+                                    <p style="font-size: 16px; margin: 0%;">{{ product.counter }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0px;">
+                    </div>
+                
+                    
+                    <div style="display: flex;">
+                        {% if user.is_authenticated %}
+                        <div>
+
+                            {% if product.isHeartFill %}
+                            <input type="image" data-product="{{ product.id }}" data-action="heart" class="chg-quantity update-favorite"
+                                    src="{% static 'images/heartfill.png' %}" style="width: 40px;">
+                            {% else %}
+                            <input type="image" data-product="{{ product.id }}" data-action="fillHeart" class="chg-quantity update-favorite"
+                                    src="{% static 'images/heart_hallow.png' %}" style="width: 35px;">
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <input type="image" src="{% static 'images/heart_hallow.png' %}" style="width: 35px;" disabled>
+                        {% endif %}
+                        <button style="width: 100%;" data-product="{{ product.id }}" data-action="add" data-value="{{ product.out_of_stock }}"
+                            class="btn btn-outline-secondary add-btn update-cart">
+                            Add to Cart
+                        </button>
+                        
+                    </div>
+
+                
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+
+        {% if not products %}
+            <label style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 13%;">
+            No record!</label>
+
+        {% endif %}
+
+        <br>
+            <div class="paginator">
+                <span class="step-links">
+                    {% if products.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% my_url products.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                    {% endif %}
+        
+                    <span class="current">
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}
+                    </span>
+        
+                    {% if products.has_next %}
+                        <a href="{% my_url products.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% my_url products.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+        
+            </div>
+        
+        <br>
+    </div>
+
+</div>
+
+
+<script>
+    // USED TO UPDATE FAVORITE ITEM
+    var favorite = document.getElementsByClassName('update-favorite')
+    for (var i = 0; i < favorite.length; i++) {
+        favorite[i].addEventListener('click', function(){
+            var ptdId = this.dataset.product;
+            var action = this.dataset.action;
+
+            updateWishList(ptdId, action)
+        })
+    }
+
+    function updateWishList(ptdId, action) {
+        var url = '/update_favorite/'
+        fetch(url, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':csrftoken
+            },
+            body:JSON.stringify ({'ptdId': ptdId, 'action': action})
+        })
+
+        .then((response)=>{
+                return response.json()
+            })
+
+        .then((data)=>{
+                console.log('data:', data)
+                location.reload()
+            })
+    }
+</script>
+
+
+{% endblock content %}

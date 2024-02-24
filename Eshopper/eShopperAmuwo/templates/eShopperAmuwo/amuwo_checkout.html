@@ -1,0 +1,862 @@
+{% extends 'homePage/homepage.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<script src="https://js.paystack.co/v1/inline.js"></script>  <!-- SCRIPT FROM PAYSTACK PAYMENT SYSTEM -->
+
+
+<style>
+    #guest_info {
+        display: none;
+    }
+
+    /* ================ INPUT FIELD DESIGN ============= */
+    .first-row {
+        display: flex;
+    }
+
+    .input-name-field {
+        width: 100%;
+        height: 100%;
+        color: #595f6e;
+        padding-top: 20px;
+        border: none;
+        outline: none;
+        padding-left: 1%;
+    }
+
+    .input-name-field:focus+.label-name .content-name,
+    .input-name-field:valid+.label-name .content-name {
+        transform: translateY(-140%);
+        font-size: 11px;
+        color: #5fa8d3;
+    }
+
+    .input-name-field:focus+.label-name::after,
+    .input-name-field:valid+.input-name-field::after {
+        transform: translateX(0%);
+    }
+
+    .name-row {
+        width: 100%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .name {
+        width: 50%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .label-name {
+        position: absolute;
+        bottom: -5px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-bottom: 1px solid black;
+    }
+
+    .label-name::after {
+        content: "";
+        position: absolute;
+        left: 0px;
+        bottom: -1px;
+        width: 100%;
+        height: 100%;
+        border-bottom: 3px solid #5fa8d3;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .content-name {
+        position: absolute;
+        bottom: 5px;
+        left: 2%;
+        transition: all 0.3s ease;
+    }
+
+    /* ================ END OF INPUT FIELD DESIGN ======= */
+
+
+
+    /* ========== POPUP CONFIRMATION FORM ============= */
+
+    .modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-open {
+            display: flex;
+        }
+        
+        .modal_form {
+            max-width: 700px;
+            max-height: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+        }
+
+        .modal-button {
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            background-color: grey;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        .modal-confirm-button {
+            background-color: tomato;
+        }
+
+        .modal-header {
+            
+            color: orange;
+        }
+
+        .modal-header h2 {
+            padding: 0.5em;
+            color: orange;
+        }
+
+        .modal_content {
+            padding: 1em;
+            color:  rgba(168, 167, 167);
+            text-align: center;
+        }
+
+        .modal-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* =========== END OF POPUP CONFIRMATION FORM ========== */
+
+
+
+    /* ===== START OF POPUP INFO ========= */
+    .message-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+    .modal-open-info {
+            display: flex;
+        }
+
+        .modal-info-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-ok-button {
+            background-color: rgb(50, 135, 245);
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        /* ============ END OF POPUP INFO ========== */
+
+
+    /* =========== START OF WINDOW SPINNER ============= */
+    .spin-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner_modal_content {
+            padding: 0.5em;
+            color:  white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .modal-open-load {
+            display: flex;
+        }
+
+    /* ========== STARTING FROM HERE LOADING EFFECT COPY FROM WEB ============ */
+    .loading {
+        display: flex;
+    }
+    .loading .dot {
+        position: relative;
+        width: 2em;
+        height: 2em;
+        margin: 0.8em;
+        border-radius: 50%;
+    }
+    .loading .dot::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        border-radius: inherit;
+        animation: wave 2s ease-out infinite;
+    }
+    .loading .dot:nth-child(1) {
+        background: #7ef9ff;
+    }
+    .loading .dot:nth-child(1)::before {
+        animation-delay: 0.2s;
+    }
+    .loading .dot:nth-child(2) {
+        background: #89cff0;
+    }
+    .loading .dot:nth-child(2)::before {
+        animation-delay: 0.4s;
+    }
+    .loading .dot:nth-child(3) {
+        background: #4682b4;
+    }
+    .loading .dot:nth-child(3)::before {
+        animation-delay: 0.6s;
+    }
+    .loading .dot:nth-child(4) {
+        background: #0f52ba;
+    }
+    .loading .dot:nth-child(4)::before {
+        animation-delay: 0.8s;
+    }
+    .loading .dot:nth-child(5) {
+        background: #000080;
+    }
+    .loading .dot:nth-child(5)::before {
+        animation-delay: 1s;
+    }
+
+    @keyframes wave {
+    50%, 75% {
+        transform: scale(2.5);
+    }
+    80%, 100% {
+        opacity: 0;
+    }
+    }
+    /* END OF LOADING EFFECT */
+
+        /* =========== END OF WINDOW SPINNER ============= */
+
+
+    
+
+</style>
+
+<br>
+
+
+<div class="row main" style="margin-top: 3rem; width: 98%; margin-left: 1%;">
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper">
+            <form id="form">
+                <div id="guest_info">
+                    <div class="first-row" style="margin-top: 2%;">
+                        <div class="name">
+                            <input value="" class="input-name-field" type="text" name="guestname" id="name"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Full Name</span>
+                            </label>
+                        </div>
+        
+                        <div class="name" style="margin-left: 5%;">
+                            <input value="" class="input-name-field" type="text" name="email" id="email"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Email</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- <div class="form-field">
+                        <input required class="form-control" type="text" name="name" id="name" placeholder="Name..">
+                    </div>
+                    <div class="form-field">
+                        <input required class="form-control" type="email" name="email" id="email" placeholder="Email..">
+                    </div> -->
+                </div>
+
+                <div id="shipping-info">
+                    <hr>
+                    <div style="display: flex; justify-content: space-between;">
+                        <p style="margin-bottom: 0%;">Shipping Information:</p>
+
+
+                        <div id="allShipping_wrapper" class="btn-group" style="width: 50%;">
+                            
+                            <select id="mySelect" style="font-size: small;" select name="category" class="btn btn-secondary btn-sm dropdown-toggle selectedShippingMenu">
+                                <div class="dropdown_menu" class="">
+                                    <option value="0" selected class="">Select Shipping Address</option>
+                                    {% for allShippingAddress in allShippingAddresses %}
+                                    <option data-ship_name="{{ allShippingAddress.name }}" data-ship_address="{{ allShippingAddress.address }}" data-ship_city="{{ allShippingAddress.city }}" data-ship_state="{{ allShippingAddress.state }}" data-ship_zipcode="{{ allShippingAddress.zipcode }}" data-ship_mobile="{{ allShippingAddress.mobile }}" data-ship_altmobile="{{ allShippingAddress.altMobile }}" data-address_type="{{ allShippingAddress.address_type }}" value="{{ allShippingAddress.address }}" class="">{{ allShippingAddress.address |stringformat:".35s"}}</option>
+            
+                                    {% endfor %}
+                                </div>
+                            </select>
+                            
+                        </div>
+                        
+                    </div>
+
+                    <hr style="margin-top: 0%;">
+                    <!-- <div class="form-field">
+                        <input required class="form-control" value="{{ shippingAddress.address }}" type="text" name="address" placeholder="Address.." id="addressField">
+                    </div>
+                    <div class="form-field">
+                        <input required class="form-control" value="{{ shippingAddress.city }}" type="text" name="city" placeholder="City..">
+                    </div> -->
+                    <div class="first-row" style="margin-top: 2%;">
+                        <div class="name">
+                            <input value="{{ shippingAddress.name }}" class="input-name-field" type="text" name="_name" id="name_id"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Full Name</span>
+                            </label>
+                        </div>
+        
+                        <div class="name" style="margin-left: 5%;">
+                            <input value="{{ shippingAddress.mobile }}" class="input-name-field" type="tel" name="mobile" id="mobile_id"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Mobile</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="first-row" style="margin-top: 2%;">
+                
+                        <div class="name-row">
+                            <input value="{{ shippingAddress.address }}" class="input-name-field" type="text" name="address" id="addressField"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Address</span>
+                            </label>
+                        </div>
+                        
+                    </div>
+                    <div class="first-row" style="margin-top: 2%;">
+                        <div class="name">
+                            <input value="{{ shippingAddress.city }}" class="input-name-field" type="text" name="city" id="city_id"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">City</span>
+                            </label>
+                        </div>
+        
+                        <div class="name" style="margin-left: 5%;">
+                            <input value="{{ shippingAddress.state }}" class="input-name-field" type="text" name="state" id="state_id"
+                                autocomplete="" required />
+                            <label for="name" class="label-name">
+                                <span class="content-name">State</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="first-row" style="margin-top: 2%;">
+
+                        {% if shippingAddress.zipcode == None %}
+                        <div class="name">
+                            <input value="" class="input-name-field" type="number" name="zipcode" id="zipcode_id"
+                                autocomplete="" />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Zip Code</span>
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="name">
+                            <input value="{{ shippingAddress.zipcode }}" class="input-name-field" type="number" name="zipcode" id="zipcode_id"
+                                autocomplete="" />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Zip Code</span>
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        {% if shippingAddress.altMobile == None %}
+                        <div class="name" style="margin-left: 5%;">
+                            <input value="" class="input-name-field" type="tel" name="altMobile" id="altMobile_id"
+                                autocomplete="" />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Alt Mobile</span>
+                            </label>
+                        </div>
+                        {% else %}
+                        <div class="name" style="margin-left: 5%;">
+                            <input value="{{ shippingAddress.altMobile }}" class="input-name-field" type="tel" name="altMobile" id="altMobile_id"
+                                autocomplete="" />
+                            <label for="name" class="label-name">
+                                <span class="content-name">Alt Mobile</span>
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- <div class="form-field">
+                        <input class="form-control" value="{{ shippingAddress.state }}" type="text" name="state" placeholder="State..">
+                    </div>
+                    <div class="form-field">
+                        <input required class="form-control" value="{{ shippingAddress.mobile }}" type="text" name="mobile" placeholder="Mobile..">
+                    </div> -->
+                    <!-- <div class="form-field">
+                        <input class="form-control" value="{{ shippingAddress.home_tel }}" type="text" name="alt_mobile" placeholder="Alt Mobile..">
+                    </div> -->
+                    <br>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="optional_note" placeholder="Optional Note"></textarea>
+                    </div>
+                </div>
+
+                <hr>
+
+                <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+
+            </form>
+        </div>
+
+
+        <div class="box-element hidden" id="payment-info">
+            <small>Payment Options</small>
+            <div id="payment_options">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_option" value="Card Payment" id="flexRadioDefault1">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Debit Card
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_option" value="Pay on Delivery" id="flexRadioDefault2">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      Pay on Delivery
+                    </label>
+                  </div>
+            </div>
+
+
+            <br>
+            <button type="button" class="btn btn-primary" id="make-payment">Make Payment</button>
+            
+            
+        </div>
+    </div>
+
+    
+    <div class="col-lg-6">
+        
+        <div class="box-element">
+            
+            <a id="back_btn" class="btn btn-outline-dark" href="{% url 'amuwo_cart' %}">&#x2190; Back to Cart</a>
+            
+            
+            <hr>
+            <h3>Order Summary</h3>
+            <hr>
+
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex:2">
+                    {% if item.product.imageURL %}
+                    <img style="height: 7rem; width: 7rem; object-fit: contain;" class="_row-image" src="{{item.product.imageURL}}">
+                    {% else %}
+                    <img style="height: 7rem; width: 7rem; object-fit: contain;" class="_row-image" src="{% static 'images/default_image_icon.png' %}">
+                    {% endif %}
+                </div>
+                <div style="flex:3">
+                    <p>{{ item.product.name }}</p>
+                </div>
+                {% if item.product.discount > 0 %}
+                <div style="flex:1.5">
+                    <p>&#8358; {{ item.unit_price }}</p>
+                </div>
+                {% else %}
+                <div style="flex:1.5">
+                    <p>&#8358; {{ item.product.price }}</p>
+                </div>
+                {% endif %}
+                <div style="flex:.3">
+                    <p>X{{ item.quantity }}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <h5>Item: {{ order.get_cart_items }}</h5>
+            <h5>Total &#8358; {{ order.get_cart_total }}</h5>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- ======= POPUP MESSAGE INFORMATION ========== -->
+<div id="information" class="message-modal-container">
+    <div class="modal_form">
+        <section>
+            <header class="modal-header">
+                <h2 id="modal_header_id"></h2>
+            </header>
+            <section class="modal_content">
+                <h5 id="modal_info_content_id" style="color: rgba(168, 167, 167);"></h5>
+            </section>
+            <footer class="modal-info-footer">
+                
+                <button class="modal-ok-button" onclick="onCancelInfoForm()">Ok</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP MESSAGE INFORMATION ========== -->
+
+<!-- ===== WINDOW SPINNER ======= -->
+<div id="windowSpinner" class="spin-modal-container">
+    <div id="spinner_modal_id" class="bar">
+        <section>
+            
+            <section class="spinner_modal_content">
+                <div class="loading">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                
+                <p style="font-family: Lucida Handwriting; font-size: 20px; font-weight: bold;">Loading... <span style="font-family: Bradley Hand; font-size: 20px;">please wait</span></p>
+            </section>
+            
+        </section>
+    </div>
+</div>
+<!-- ====== END OF WINDOW SPINNER ====== -->
+
+
+<script type="text/javascript">
+
+    var paymentRef = "{{ ref }}"
+    var shipping = "{{ order.shipping }}"
+    var cart_total = '{{ order.get_cart_total }}'
+    var customerEmail = '{{ order.customer.email }}'
+    var customerName = '{{ order.customer.name }}'
+    
+    let payment_btn = document.getElementById('make-payment')
+    let isTransactionCompleted = false;
+    let isInvalidItem = false;
+    
+    // We are using this if statement to check if username and email field should be hidden
+    if(user != 'AnonymousUser'){
+            // Hide entire form if customer is logged in and shipping is false
+            // document.getElementById('user-info').classList.add('hidden');
+            
+            // Hide the customer info and supply customer information used to login
+            // The name of user should be add. Since user is a registered customer
+            document.getElementById('name').value = customerName;
+            document.getElementById('email').value = customerEmail;
+        }
+    else {
+        // document.getElementById('user-info').classList.remove('hidden');
+        document.getElementById('guest_info').style.display = 'block';
+        document.getElementById('allShipping_wrapper').style.display = 'none';
+    }
+    
+    var form = document.getElementById('form')
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault()
+        console.log('form submitted...')
+        
+        document.getElementById('form-button').classList.add('hidden')
+        document.getElementById('payment-info').classList.remove('hidden')
+    })
+    let selectedValue;
+    // THIS BLOCK OF CODE CHECK IF PAYMENT METHOD WAS SELECTED AND THE TYPE SELECTED
+    document.getElementById('make-payment').addEventListener('click', function(e){
+        e.preventDefault();
+        
+        const rbs = document.querySelectorAll('input[name="payment_option"]');
+        
+        for (const rb of rbs){
+            if (rb.checked){
+                selectedValue = rb.value;
+                break;
+            }
+           
+        }
+
+        if (selectedValue == 'Pay on Delivery' || selectedValue == 'Card Payment'){
+
+            if (selectedValue == 'Card Payment'){ // IF CARD PAYMENT WAS SELECT, CALL THE PAYMENT GATEWAY
+                
+                // IN CASE OF GUEST USER, I HAVE TO GET THE EMAIL FROM THE TEMPLATE
+                customerEmail = document.getElementById('email').value;
+                payWithPaystack()
+            }else{
+
+                submitFormData(selectedValue, amt = 0, payStackReference = 0, status = '')
+            }
+            
+            
+
+        }else{
+            onPopInfoForm()
+            document.getElementById('modal_header_id').innerHTML = 'Warning';
+            document.getElementById('modal_info_content_id').innerHTML = 'Kindly select payment option';
+        }
+        
+    })
+
+    // ================ CODE FROM PAYSTACK =======================
+    let amt = cart_total.toString().replace(',','')
+    
+    amt = parseInt (amt * 100);
+
+    
+    function payWithPaystack(){
+        let handler = PaystackPop.setup({
+        key: '{{ paystack_public_key }}',
+        email: customerEmail,
+        amount: amt,
+        currency: "NGN",
+        ref: paymentRef,
+        label: "Optional string that replaces customer email",
+        metadata: {
+           custom_fields: [
+              {
+                  display_name: "Mobile Number",
+                  variable_name: "mobile_number",
+                  value: "+234801"
+              }
+           ]
+        },
+        callback: function(response){
+            console.log('Channel:', response.status)
+            // alert('Success. Transaction ref is: ' + response.reference);
+            if (response.status === 'success') {
+                submitFormData(selectedValue, amt, response.reference, response.status)
+
+            }
+        },
+        onClose: function(){
+            alert('window closed');
+
+            // IF THE WINDOW IS CLOSED, ENABLE ALL DISABLED BUTTONS AND FIELDS...
+            payment_btn.disabled = false
+            document.getElementById('flexRadioDefault1').disabled = false
+            document.getElementById('flexRadioDefault2').disabled = false
+            document.getElementById('back_btn').style.pointerEvents = 'auto';
+            document.getElementById('back_btn').style.cursor = 'pointer';
+            var elements = form.elements;
+            for (var i = 0, len = elements.length; i < len; ++i) {
+                elements[i].readOnly = false;
+            }
+        }
+      });
+      handler.openIframe();
+    }
+
+    // ================= END OF CODE FROM PAYSTACK ======================
+
+
+    function submitFormData(selectedValue, amt, payStackReference, status){
+        console.log('Payment button clicked')
+        onPopWindowSpinner()
+        var userFormData = {
+                'name': null,
+                'email': null,
+                'total': (cart_total),
+            }
+
+            var shippingInfo = {
+                'name': null,
+                'address': null,
+                'city': null,
+                'state': null,
+                'mobile': null,
+                'alt_mobile': null,
+                'optional_note': null
+            }
+
+            shippingInfo.name = form._name.value
+            shippingInfo.address =  form.address.value
+            shippingInfo.city = form.city.value
+            shippingInfo.state = form.state.value
+            shippingInfo.mobile = form.mobile.value
+            shippingInfo.alt_mobile = form.altMobile.value
+            shippingInfo.optional_note = form.optional_note.value
+            
+            console.log('NAME: ', form.name.value)
+            if(user == 'AnonymousUser'){
+            // The name of the user should be hard-coded here since this is a one time customer
+            userFormData.name = form.guestname.value
+            userFormData.email = form.email.value
+            }
+
+
+            var url = '/process_order/'
+            console.log('URL SESSTION')
+                    fetch(url,{
+                        method:'POST',
+                        headers:{
+                            'Content-Type':'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body:JSON.stringify({'form':userFormData, 'shipping': shippingInfo, 'selectedValue': selectedValue, 'amt': amt, 'payStackReference': payStackReference, 'status': status})
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('Success:', data);
+
+                        // RE-DIRECT USER IF ALL ITEM(S) ARE NOT VALID...!
+                        if (data == 'item(s) not valid'){
+                            isInvalidItem = true;
+                            onCancelWindowSpinner();
+                            onPopInfoForm();
+                            document.getElementById('modal_header_id').innerHTML = 'Error';
+                            document.getElementById('modal_header_id').style.color = 'red';
+                            document.getElementById('modal_info_content_id').innerHTML = 'Item(s) in your cart are not valid...! Ordered items was not complete! '+
+                            'Kindly remove invalid item(s) from the cart.';
+                            
+                        }else{
+                            onCancelWindowSpinner();
+                            isTransactionCompleted = true;
+                            onPopInfoForm()
+                            document.getElementById('modal_header_id').innerHTML = 'Success';
+                            document.getElementById('modal_header_id').style.color = 'green';
+                            document.getElementById('modal_info_content_id').innerHTML = 'Transaction completed';
+                            
+                        }
+                        
+                    })
+
+
+    }
+
+
+    // THIS FUNCTION IS USED TO DISPLAY ANY SHIPPING ADDRESS SELECTED FROM THE MENU LIST 
+    var shipping_addresses = document.getElementsByClassName('selectedShippingMenu');
+   
+    for (var x = 0; x < shipping_addresses.length; x++){
+        
+        shipping_addresses[x].addEventListener('change', function(){
+            var ship_location = document.getElementById("mySelect").value;
+            // var value = shipping_addresses.value;
+            console.log(ship_location);
+            var addressType = event.target.options[event.target.selectedIndex].dataset.address_type;
+            var ship_name = event.target.options[event.target.selectedIndex].dataset.ship_name;
+            var ship_mobile = event.target.options[event.target.selectedIndex].dataset.ship_mobile;
+            var ship_address = event.target.options[event.target.selectedIndex].dataset.ship_address;
+            var ship_city = event.target.options[event.target.selectedIndex].dataset.ship_city;
+            var ship_state = event.target.options[event.target.selectedIndex].dataset.ship_state;
+            var ship_zipcode = event.target.options[event.target.selectedIndex].dataset.ship_zipcode;
+            var ship_altmobile = event.target.options[event.target.selectedIndex].dataset.ship_altmobile;
+
+            if (ship_location === '0'){
+                document.getElementById('name_id').value = '';
+                document.getElementById('mobile_id').value = '';
+                document.getElementById('addressField').value = '';
+                document.getElementById('city_id').value = '';
+                document.getElementById('state_id').value = '';
+                document.getElementById('zipcode_id').value = '';
+                document.getElementById('altMobile_id').value = '';
+                
+            } else {
+                document.getElementById('name_id').value = ship_name;
+                document.getElementById('mobile_id').value = ship_mobile;
+                document.getElementById('addressField').value = ship_address;
+                document.getElementById('city_id').value = ship_city;
+                document.getElementById('state_id').value = ship_state;
+                if (typeof ship_zipcode !== 'undefined') {
+                    document.getElementById('zipcode_id').value = ship_zipcode;
+                } else {
+                    document.getElementById('zipcode_id').value = '';
+                }
+                if( ship_altmobile !== 'None'){
+                    document.getElementById('altMobile_id').value = ship_altmobile;
+                    
+                } else {
+                    document.getElementById('altMobile_id').value = '';
+                }
+            }
+        })
+    }
+
+
+    // ============= SCRIPT FOR POPUP INFORMATION MESSAGE ===========
+
+    function onPopInfoForm() {
+         let info = document.getElementById('information');
+         if (!info.classList.contains('modal-open-info')) {
+             info.classList.add('modal-open-info');
+            }
+    }
+
+    function onCancelInfoForm() {
+        let information = document.getElementById('information');
+        information.classList.remove("modal-open-info");
+        if (isTransactionCompleted === true) {
+            isTransactionCompleted = false;
+            cart = {}
+            document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+            window.location.href = "{% url 'eShopAmuwo' %}"
+        } else if (isInvalidItem === true) {
+            isInvalidItem = false;
+            window.location.href = "{% url 'amuwo_cart' %}"
+        }
+        
+    }
+    // ============= END OF SCRIPT FOR INFORMATION MESSAGE ==========
+
+
+    // ============= SCRIPT FOR WINDOW SPINNER ===========
+
+    function onPopWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        if (!spin.classList.contains('modal-open-load')) {
+            spin.classList.add('modal-open-load');
+        }
+    }
+
+    function onCancelWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        spin.classList.remove("modal-open-load");
+    }
+    // ============= END OF SCRIPT FOR WINDOW SPINNER ==========
+   
+</script>
+{% endblock content %}

@@ -1,0 +1,992 @@
+{% extends 'homePage/homepage.html' %}
+{% block acctDetail %}
+
+
+<!-- ======= DATE PICKER LINKS =========== -->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<!-- Fengyuan Chen's Datepicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+
+<style>
+    /* ===================== CSS FOR CARD FORM ===================== */
+
+    .card-row-wrapper {
+        display: flex;
+    }
+
+    .pen {
+        float: right;
+    }
+
+    .card {
+        /* float: left; */
+        width: 49.5%;
+
+    }
+
+
+    /* ======================= END OF CARD FORM ========================= */
+
+    .address-label {
+        text-align: center;
+    }
+
+    .btn-address {
+        margin-left: 5%;
+        width: 90%;
+    }
+
+    form .account-btn {
+        text-decoration: none;
+        box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+        background-color: #fff;
+        width: 100%;
+        padding: 3%;
+        display: block;
+        font-size: 20px;
+    }
+
+    .btn-logout {
+        width: 100%;
+        background-color: rgb(235, 102, 53);
+        color: #fff;
+        border: none;
+        padding: 7px;
+        font-size: 18px;
+        text-decoration: none;
+        display: block;
+        padding-left: 40%;
+    }
+
+
+
+    /* @media only screen and (max-width: 540px) {
+        ._box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 767px) {
+        ._box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+    }
+
+    @media only screen and (min-width: 768px) {
+        ._box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+    } */
+
+
+    /* @media only screen and (min-width: 992px) { */
+
+        /* ======== CSS TO PLACE THE FORM ON THE RIGHT SIDE OF THE SCREEN =========== */
+        .box-element-right {
+            margin-top: 4rem;
+            margin-left: 1%;
+            margin-right: 1%;
+            background: rgb(250, 248, 248); 
+            border: groove rgb(210, 210, 212); 
+            border-width: 1px; 
+            border-radius: 15px;
+            padding: 1%;
+            width: 100%;
+        }
+
+        /* ======== CSS TO PLACE THE FORM ON THE LEFT SIDE OF THE SCREEN =========== */
+        ._box-element {
+            margin-top: 4rem;
+            margin-right: 1%;
+            width: 30%;
+        }
+
+        div form .account-btn:hover {
+            background-color: rgb(184, 178, 178);
+        }
+
+        div form .btn-logout:hover {
+            background-color: rgb(177, 81, 2);
+            color: #fff;
+        }
+
+        .display-mode {
+            display: flex;
+            position: absolute;
+            left: 250px;
+            width: calc(100vw - 255px)
+        }
+    /* } */
+
+    #product-btn:visited {
+        background-color: rgb(204, 199, 199);
+    }
+
+    body {
+        min-width: 280px;
+    }
+
+    .address-label .form-switch {
+        float: right;
+        font-size: 16px;
+        margin-top: 1%;
+        color: black;
+        font-weight: bold;
+    }
+
+    .alert-warning {
+        display: none;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+
+    /* =========== START OF WINDOW SPINNER ============= */
+    .spin-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner_modal_content {
+            padding: 0.5em;
+            color:  white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .modal-open-load {
+            display: flex;
+        }
+
+    /* ========== STARTING FROM HERE LOADING EFFECT COPY FROM WEB ============ */
+    .loading {
+        display: flex;
+    }
+    .loading .dot {
+        position: relative;
+        width: 2em;
+        height: 2em;
+        margin: 0.8em;
+        border-radius: 50%;
+    }
+    .loading .dot::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        border-radius: inherit;
+        animation: wave 2s ease-out infinite;
+    }
+    .loading .dot:nth-child(1) {
+        background: #7ef9ff;
+    }
+    .loading .dot:nth-child(1)::before {
+        animation-delay: 0.2s;
+    }
+    .loading .dot:nth-child(2) {
+        background: #89cff0;
+    }
+    .loading .dot:nth-child(2)::before {
+        animation-delay: 0.4s;
+    }
+    .loading .dot:nth-child(3) {
+        background: #4682b4;
+    }
+    .loading .dot:nth-child(3)::before {
+        animation-delay: 0.6s;
+    }
+    .loading .dot:nth-child(4) {
+        background: #0f52ba;
+    }
+    .loading .dot:nth-child(4)::before {
+        animation-delay: 0.8s;
+    }
+    .loading .dot:nth-child(5) {
+        background: #000080;
+    }
+    .loading .dot:nth-child(5)::before {
+        animation-delay: 1s;
+    }
+
+    @keyframes wave {
+    50%, 75% {
+        transform: scale(2.5);
+    }
+    80%, 100% {
+        opacity: 0;
+    }
+    }
+    /* END OF LOADING EFFECT */
+
+        /* =========== END OF WINDOW SPINNER ============= */
+</style>
+
+
+<div class="display-mode">
+
+    <!-- <div class="_box-element">
+
+        <form action="" id="button-form">
+            <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'customer_acct_card' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                    </svg>My eShopper Account
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a id="my-order-btn" class="account-btn" href="{% url 'my_order' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-cart-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                        <path
+                            d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>My Order
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'pending_review' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person-lines-fill" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                    </svg>My Pending Reviews
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'wishList' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-list-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path fill-rule="evenodd"
+                            d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                    </svg>My WatchList
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'login_Security' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-file-lock" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1zm2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224zM6.105 8.125A.637.637 0 0 1 6.5 8h3a.64.64 0 0 1 .395.125c.085.068.105.133.105.175v2.4c0 .042-.02.107-.105.175A.637.637 0 0 1 9.5 11h-3a.637.637 0 0 1-.395-.125C6.02 10.807 6 10.742 6 10.7V8.3c0-.042.02-.107.105-.175z" />
+                        <path
+                            d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                    </svg>Login & Security
+                </a>
+            </div> -->
+
+            <!-- THE STORE IS ONLY FOR STAFF. THOSE THAT HAVE STORE IN THE SITE -->
+            <!-- {% if user.is_staff %}
+
+            <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'trader_store' request.user.id %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-shop" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z" />
+                    </svg>Trader Store
+                </a>
+
+                <a id="product-btn" class="account-btn" href=" {% url 'product_over_view' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-box-seam" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+                    </svg>Product
+                </a>
+
+                <a id="my-admin-btn" class="account-btn" href=" {% url 'admin_session' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-ui-checks" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                      </svg>Admin
+                </a>
+
+            </div>
+            {% endif %}
+            <a id="settings_btn" class="account-btn" href=" {% url 'settings' %} ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 20px">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>Settings
+            </a>
+
+            <hr />
+
+            <div class="left-btn-col">
+                <a class="btn-logout" href="{% url 'logout' %}"> Logout </a>
+            </div>
+        </form>
+    </div> -->
+
+
+    <!-- ============ SEPERATION BETWEEN LEFT AND RIGHT FORM ================== -->
+
+    <div class="box-element-right">
+        <form action="" id="address-form" class="edit-address-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="address-label">
+                <h2>Edit Product</h2>
+            </div>
+
+            <!-- SUCCESS ALERT MESSAGE FOR SAVE/UPDATE -->
+            <div id="success-alert" class="alert alert-success" role="alert">
+                <strong><center> {{ myDictionary.successmsg }} </center></strong>
+            </div>
+
+            <!-- WARNING ALERT MESSAGE -->
+            <div id="warning-alert" class="alert alert-warning" role="alert">
+                <strong> {{ myDictionary.warningmsg }} </strong>
+            </div>
+
+            <hr>
+
+            <div style="display: flex;">
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label class="form-label">Product Name</label>
+                    <input value="{{ form.name }}" name="name" type="text" class="form-control form-control-sm shadow-none"
+                        id="colFormLabelSm" required>
+
+                </div>
+                {% if form.category %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Category</label>
+                    <select name="category" class="form-select form-select-sm shadow-none" id="levelZeroCatSelectedOpt" required>
+                        <option value="{{ form.category.id }}" selected>{{form.category}} </option>
+                        <!-- {% for category in myDictionary.categories %}
+                        {% if category.level == 0 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}"> {{ category }}</option>
+                        {% elif category.level == 1 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--- {{ category }}</option>
+                        {% elif category.level == 2 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------ {{ category }}</option>
+                        {% elif category.level == 3 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------- {{ category }}</option>
+                        {% elif category.level == 4 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------ {{ category }}</option>
+                        {% elif category.level == 5 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------- {{ category }}</option>
+                        {% elif category.level == 6 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------ {{ category }}</option>
+                        {% elif category.level == 7 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------------- {{ category }}</option>
+                        {% elif category.level == 8 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------------ {{ category }}</option>
+                        {% elif category.level == 9 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------------------- {{ category }}</option>
+                        {% else %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------------------ {{ category }}</option>
+                        {% endif %}
+                        {% endfor %} -->
+                    </select>
+                </div>
+                {% else %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Category</label>
+                    <select name="category" class="form-select form-select-sm shadow-none" required>
+                        <option value="" selected>Open this select menu </option>
+                        {% for category in myDictionary.categories %}
+                        {% if category.level == 0 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}"> {{ category }}</option>
+                        {% elif category.level == 1 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--- {{ category }}</option>
+                        {% elif category.level == 2 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------ {{ category }}</option>
+                        {% elif category.level == 3 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------- {{ category }}</option>
+                        {% elif category.level == 4 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------ {{ category }}</option>
+                        {% elif category.level == 5 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------- {{ category }}</option>
+                        {% elif category.level == 6 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------ {{ category }}</option>
+                        {% elif category.level == 7 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------------- {{ category }}</option>
+                        {% elif category.level == 8 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------------ {{ category }}</option>
+                        {% elif category.level == 9 %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">--------------------------- {{ category }}</option>
+                        {% else %}
+                        <option id="{{ category.id }}" value="{{ category.id }}">------------------------------ {{ category }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% if form.category %}
+            <!-- SUB-CATEGORIES FOR "SAVE AND CONTINUE EDITING" -->
+            <div id="" style=" padding-top: 15px; display: flex;">
+                <select style="margin-right: 3px;" name="" id="levelOneCatOptionSelect" class="form-select form-select-sm shadow-none" >
+                </select>
+
+                <select name="category" id="levelTwoCatOptionSelect" class="form-select form-select-sm shadow-none" >
+                </select>
+            </div>
+            {% else %}
+            <!-- SUB-CATEGORIES FOR SAVE FORM -->
+            <div id="hideSubCatElement" style=" padding-top: 15px;">
+                <select style="margin-right: 3px;" name="category" id="levelOneCatOptionSelect" class="form-select form-select-sm shadow-none" required>
+                </select>
+
+                <select name="category" id="levelTwoCatOptionSelect" class="form-select form-select-sm shadow-none" required>
+                </select>
+            </div>
+            {% endif %}
+
+            <hr>
+            {% if form.description %}
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Product Description</label>
+                <textarea rows="10" style="font-size: 12px;" class="form-control shadow-none" id="" rows="3" name="description"
+                    required>{{ form.description }}</textarea>
+            </div>
+            {% else %}
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Product Description</label>
+                <textarea rows="10" style="font-size: 12px;" class="form-control shadow-none" id="" rows="3" name="description"
+                    required></textarea>
+            </div>
+            {% endif %}
+
+            <hr>
+
+            <div style="display: flex;">
+                <div style="margin-right: 0.5%; width: 50%;">
+
+                    <label for="formFileSm" class="form-label">Image</label>
+
+                    {{ ptd_form.image }}
+
+                    <!-- <input value="{{ form.price }}" name="price" type="text" step="0.01"
+                        class="form-control form-control-sm" id="" minlength="0" required> -->
+                </div>
+
+                {% if form.brand %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Brand</label>
+                    <select name="brand" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="{{ form.brand.id }}" selected>{{ form.brand }}</option>
+                        {% for brand in myDictionary.brands %}
+                        <option id="{{ brand.id }}" value="{{ brand.id }}">{{ brand.brand }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Brand</label>
+                    <select name="brand" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="" selected>Open this select menu</option>
+                        {% for brand in myDictionary.brands %}
+                        <option id="{{ brand.id }}" value="{{ brand.id }}">{{ brand.brand }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+            <div style="display: flex;">
+
+                <div style="margin-right: 0.5%; width: 50%;">
+
+                    <label for="inputEmail4" class="form-label">Price</label>
+                    <br>
+
+                    {{ ptd_form.price }}
+
+                </div>
+
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label for="inputEmail4" class="form-label">Percentage Discount Off</label>
+                    <br>
+
+                    {{ ptd_form.discount }}
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div style="display: flex;">
+                {% if form.store %}
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label for="inputEmail4" class="form-label">Store</label>
+                    <select required name="store" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="{{ form.store.id }}" selected>{{ form.store }}</option>
+                        {% for store in myDictionary.t_stores %}
+                        <option id="{{ store.id }}" value="{{ store.id }}">{{ store.store_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label for="inputEmail4" class="form-label">Store</label>
+                    <select required name="store" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="" selected>Open this select menu</option>
+                        {% for store in myDictionary.t_stores %}
+                        <option id="{{ store.id }}" value="{{ store.id }}">{{ store.store_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+
+                {% if form.out_of_stock == True %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Out of Stock</label>
+                    <select name="out_of_stock" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="False">No</option>
+                        <option value="True" selected>Yes</option>
+                    </select>
+                </div>
+                {% else %}
+                <div style="width: 50%;">
+                    <label for="inputEmail4" class="form-label">Out of Stock</label>
+                    <select name="out_of_stock" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                        <option value="False" selected>No</option>
+                        <option value="True">Yes</option>
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <div style="display: flex;">
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label for="inputEmail4" class="form-label">Manufacture Date</label>
+                    {{ ptd_form.mfgDate }}
+                    <!-- <input value="{{ form.mfgDate }}" name="mfgDate" style="width: 50%;" type="date" id="myDate"
+                        class="form-control form-control-sm"> -->
+
+                </div>
+
+                <div style="margin-right: 0.5%; width: 50%;">
+                    <label for="inputEmail4" class="form-label">Expire Date</label>
+                    {{ ptd_form.expDate }}
+                    <!-- <input value="{{ form.expDate }}" name="expDate" style="width: 50%;" type="datetime" id="myDate"
+                        class="form-control form-control-sm" > -->
+
+                </div>
+            </div>
+            {% if img_slides %}
+            <hr>
+
+            <center><label style="font-weight: 800; font-size: 15px;" for="">Slide Images</label></center>
+            {% for img_slider in img_slides %}
+            <div style="display: block;">
+                
+                <label for="">Current Image: </label><a href="{{img_slider.image_slideURL}}">{{img_slider.image_slideURL}}</a><input name="slideImg_path" value="{{img_slider.image_slideURL}}" type="checkBox">
+                <label for="">Clear</label>
+            
+            </div>
+            {% endfor %}
+
+            {% endif %}
+
+            <hr>
+
+            <div style="display: flex;">
+
+                {% if form.active == False %}
+                <div class="form-check form-switch" style="width: 55%;">
+                    <input name="active" class="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckChecked" unchecked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                </div>
+                {% else %}
+                <div class="form-check form-switch" style="width: 55%;">
+                    <input name="active" class="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckChecked" checked>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                </div>
+                {% endif %}
+
+                {% if video_url %}
+                {% for video in video_url %}
+                <div style="margin-right: 3%;">
+                    <label style="font-weight: 800; font-size: 12px;">Video Url link</label>
+                    <input id="chckbox_id" type="checkbox" name="videoUrl_chckBox" value="delete video"> <span style="font-size: small; font-weight: 600;">Delete video</span>
+                    <input value="{{ video }}" name="video_url" type="text" class="" >
+                </div>
+                {% endfor %}
+                {% else %}
+                <div style="margin-right: 3%;">
+                    <label style="font-weight: 800; font-size: 12px;">Video Url link</label>
+                    <input value="" name="video_url" type="text" class="" id="chckbox_id">
+                </div>
+                {% endif %}
+
+                <span >
+                    <label style="font-weight: 800; font-size: 15px;">Add Image Slider</label>
+                    <input value="" name="slide_ptd_image" type="file" class=""
+                        id="" multiple >
+                   
+                    
+                </span>
+
+            </div>
+
+            <hr>
+
+            <input name="save-btn" type="submit" value="Save" class="btn btn-outline-success btn-sm shadow-none" id="save_btn">
+            <input name="save-add-another-btn" type="submit" value="Save and add another"
+                class="btn btn-outline-success btn-sm shadow-none" style="margin: 0% 1%;" id="save_add_btn">
+            <input name="save-edit-btn" type="submit" value="Save and continue editing"
+                class="btn btn-outline-success btn-sm shadow-none" id="btn_save_edit">
+
+            <hr>
+
+        </form>
+    </div>
+
+</div>
+
+<!-- ===== WINDOW SPINNER ======= -->
+<div id="windowSpinner" class="spin-modal-container">
+    <div id="spinner_modal_id" class="bar">
+        <section>
+            
+            <section class="spinner_modal_content">
+                <div class="loading">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                
+                <p style="font-family: Lucida Handwriting; font-size: 20px; font-weight: bold;">Loading... <span style="font-family: Bradley Hand; font-size: 20px;">please wait</span></p>
+            </section>
+            
+        </section>
+    </div>
+</div>
+<!-- ====== END OF WINDOW SPINNER ====== -->
+
+
+<script type="text/javascript">
+
+    // STYING INPUT FIELDS
+    var form_fields = document.getElementsByTagName('input')
+    var ptd_image = "{{ myDictionary.isImage }}";
+    let categories_json = "{{ categories_json }}";
+    categories_json = categories_json.replace(/&amp;/g, '&');
+    const categories = JSON.parse(categories_json.replace(/&quot;/g, '"'));
+    let ptdCatId = "{{ ptdCatId }}"; // USED TO GET THE CATEGORY & SUB-CATEGORIES OF THE ITEM
+    console.log(ptdCatId);
+
+
+    // ========== STRUCTURE THE CATEGORY AND IT'S SUB-CAT ===========
+
+    function getCategories (catLevels, selectedLevelId, optName) {
+        let option = '';
+        // SINCE WE WANT TO DISPLAY EMPTY CATEGORY LIST IF "SELECTED-LEVEL-ID" IS EMPTY
+        if (selectedLevelId == '') {
+            option += '<option value=" ' + `name="` + ' selected>' + `- - -` + '</option>';
+        }
+        for (let x = 0; x <= catLevels.length; x++) {
+            if (typeof catLevels[x] !== 'undefined') {
+                // THIS IS THE SELECTED CATEGORY
+                if (catLevels[x].id == selectedLevelId) {
+                    option += '<option value=' + catLevels[x].id + ` name=` + optName + ' selected>' + catLevels[x].category + '</option>';
+                } else {
+                    option += '<option value=' + catLevels[x].id + ` name=` + optName + '>' + catLevels[x].category + '</option>';
+                }
+            }
+        }
+        return option;
+    }
+
+    const levelZeroCatSelectedEl = document.getElementById('levelZeroCatSelectedOpt');
+    if (levelZeroCatSelectedEl) {
+        let option0 = '';
+        let option1 = '';
+        let option2 = '';
+
+         // =============== CATEGORY LEVEL TWO SESSION ================
+         const lv2FilteredSelectedCatRd = categories.filter(categories => {
+            return categories.id == ptdCatId;
+        })
+        const levelTwo = categories.filter(categories => {
+            return categories.parent_id == lv2FilteredSelectedCatRd[0].parent_id
+        })
+        option2 += '<option value=' + ptdCatId + '>' + lv2FilteredSelectedCatRd[0].category + '</option>'
+        document.getElementById('levelTwoCatOptionSelect').innerHTML = getCategories(levelTwo, lv2FilteredSelectedCatRd[0].id, 'opt_twoLevel');
+        
+
+        // =============== CATEGORY LEVEL ONE SESSION ================
+        const filterSelectedLevel1Rd = categories.filter(categories => {
+            return categories.id == lv2FilteredSelectedCatRd[0].parent_id;
+        })
+        const levelOnes = categories.filter(categories => {
+            return categories.parent_id == filterSelectedLevel1Rd[0].parent_id
+        })
+        document.getElementById('levelOneCatOptionSelect').innerHTML = getCategories(levelOnes, filterSelectedLevel1Rd[0].id, 'opt_oneLevel');
+
+
+        // =============== CATEGORY LEVEL ZERO SESSION ================
+        const filterSelectedLevelZeroRd = categories.filter(categories => {
+            return categories.id == filterSelectedLevel1Rd[0].parent_id;
+        })
+        const levelZeros = categories.filter(categories => {
+            return categories.level == filterSelectedLevelZeroRd[0].level
+        })
+        levelZeroCatSelectedEl.innerHTML = getCategories(levelZeros, filterSelectedLevelZeroRd[0].id, 'opt_zeroLevel');
+
+
+        // IF THE ZERO LEVEL CATEGORY DROP-DOWN LIST IS CHANGED, CHANGE THE SUB-CATEGORIES 
+        // UNDER IT TO DEFAULT.
+        levelZeroCatSelectedEl.addEventListener('change', function() {
+            let selectedCatId = '';
+            const selected = document.querySelectorAll('option[name="opt_zeroLevel"]');
+            for (let select of selected) {
+                if (select.selected){
+                    selectedCatId = select.value
+                }
+            }
+
+            // === USE THE SELECT LEVEL ZERO ID TO FILTER THE CORRESPONDING LEVEL ONE CATEGORIES ===
+            const level_one = categories.filter(categories => {
+                return categories.parent_id == selectedCatId;
+            })
+            document.getElementById('levelOneCatOptionSelect').innerHTML = getCategories(level_one, '', 'opt_oneLevel');
+            
+            // === USE CAT LEVEL ONE ID TO FILTER CATEGORY LEVEL TWO ====
+            document.getElementById('levelTwoCatOptionSelect').innerHTML = `<option value=' name=' selected>` + `- - -` + `</option>`
+
+        })
+
+        // WHEN EVER THE LEVEL ONE CATEGORY ITEM IS SELECT, FIRE THIS EVENT CHANGE 
+        // TO DISPLAY THE CORRESPONDING LEVEL 2 CATEGORY  
+        document.getElementById('levelOneCatOptionSelect').addEventListener('change', function() {
+            let selectedCatId = '';
+            const selected = document.querySelectorAll('option[name="opt_oneLevel"]');
+            for (const select of selected) {
+                if (select.selected) {
+                    selectedCatId = select.value;
+                }
+            }
+            // === USE THE SELECT LEVEL ZERO ID TO FILTER THE CORRESPONDING LEVEL ONE CATEGORIES ===
+            const level_two = categories.filter(categories => {
+                return categories.parent_id == selectedCatId;
+            })
+            document.getElementById('levelTwoCatOptionSelect').innerHTML = getCategories(level_two, '', 'opt_twoLevel');
+        })
+
+    }
+
+
+    // ========== END OF STRUCTURE THE CATEGORY AND IT'S SUB-CAT ======
+
+
+
+    if (ptd_image == 'True') {
+        form_fields[1].style.width = '100%';
+
+        // PRICE FIELD MODIFICATION
+        form_fields[5].style.width = '100%';
+        form_fields[5].style.paddingLeft = '1%';
+        form_fields[5].style.border = '0.1px solid #16316149';
+        form_fields[5].style.height = '30.5px';
+        form_fields[5].style.borderRadius = '4px';
+        
+
+        // PERCENTAGE DISCOUNT OFF FIELD MODIFICATION
+        form_fields[6].style.width = '100%';
+        form_fields[6].style.paddingLeft = '1%';
+        form_fields[6].style.border = '0.1px solid #16316149';
+        form_fields[6].style.height = '30.5px';
+        form_fields[6].style.borderRadius = '4px';
+
+        // DESIGN FOR MFG-DATE
+        form_fields[7].setAttribute("autocomplete", "off");
+        form_fields[7].style.border = '0.1px solid #16316149';
+        form_fields[7].style.paddingLeft = '1%';
+        form_fields[7].style.borderRadius = '4px';
+
+        // DESIGN FOR EXP-DATE
+        form_fields[8].setAttribute("autocomplete", "off");
+        form_fields[8].style.border = '0.1px solid #16316149';
+        form_fields[8].style.paddingLeft = '1%';
+        form_fields[8].style.borderRadius = '4px';
+    } else {
+        // MODIFCATION FIELD FOR PRICING WORK ON THE ADD PRODUCT FILE
+        form_fields[3].style.width = '100%';
+        form_fields[3].style.paddingLeft = '1%';
+        form_fields[3].style.border = '0.1px solid #16316149';
+        form_fields[3].style.height = '30.5px';
+        form_fields[3].style.borderRadius = '4px';
+
+        // MODIFCATION FIELD FOR PERCENTAGE DISCOUNT OFF WORK ON THE ADD PRODUCT FILE
+        form_fields[4].style.width = '100%';
+        form_fields[4].style.paddingLeft = '1%';
+        form_fields[4].style.border = '0.1px solid #16316149';
+        form_fields[4].style.height = '30.5px';
+        form_fields[4].style.borderRadius = '4px';
+
+        // MODIFCATION FIELD FOR PERCENTAGE DISCOUNT OFF IF THE IMAGE IS NOT ADDED
+        form_fields[5].style.width = '100%';
+        form_fields[5].style.paddingLeft = '1%';
+        form_fields[5].style.border = '0.1px solid #16316149';
+        form_fields[5].style.height = '30.5px';
+        form_fields[5].style.borderRadius = '4px';
+
+        // MODIFCATION FIELD FOR MANUFACTURE DATE IF THE IMAGE IS NOT ADDED
+        form_fields[6].setAttribute("autocomplete", "off");
+        form_fields[6].style.border = '0.1px solid #16316149';
+        form_fields[6].style.paddingLeft = '1%';
+        form_fields[6].style.borderRadius = '4px';
+
+        // MODIFCATION FIELD FOR EXPIRATION DATE IF THE IMAGE IS NOT ADDED
+        form_fields[7].setAttribute("autocomplete", "off");
+        form_fields[7].style.border = '0.1px solid #16316149';
+        form_fields[7].style.paddingLeft = '1%';
+        form_fields[7].style.borderRadius = '4px';
+    }
+
+
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSaved = "{{ myDictionary.ptd_saved }}";
+
+    if (isSaved == 'True') {
+        function showdiv() {
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 8000);
+    }
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR WARNING MESSAGE
+    var isWarning = "{{ myDictionary.warning }}";
+
+    if (isWarning == 'True') {
+        function showDiv() {
+            document.getElementById('warning-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('warning-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 8000);
+    }
+
+
+    // ======== SCRIPT FOR DATE PICKER ============
+    $(function () {
+        $("#id_mfgDate").datepicker({
+            format:'yyyy-mm-dd',
+        });
+    });
+
+    $(function () {
+        $("#id_expDate").datepicker({
+            format:'yyyy-mm-dd',
+        });
+    });
+
+
+    // ========== CONFIRM IF THE USER WANT TO DELETE THE VIDEO =============
+    document.getElementById('btn_save_edit').addEventListener('click', function(e){
+        let checkedBox = document.getElementById('chckbox_id')
+        if (checkedBox.checked){
+            let ans = window.confirm('Do you want to delete the video?');
+            if (!ans){
+                e.preventDefault()
+            } else {
+                onPopWindowSpinner();
+            }
+        } else {
+            onPopWindowSpinner();
+        }
+    })
+
+    document.getElementById('save_btn').addEventListener('click', function(e) {
+        let checkedBox = document.getElementById('chckbox_id')
+        if (checkedBox.checked){
+            let ans = window.confirm('Do you want to delete the video?');
+            if (!ans){
+                e.preventDefault()
+            } else {
+                onPopWindowSpinner();
+            }
+        } else {
+            onPopWindowSpinner();
+        }
+    })
+
+    document.getElementById('save_add_btn').addEventListener('click', function(e) {
+        let checkedBox = document.getElementById('chckbox_id')
+        if (checkedBox.checked){
+            let ans = window.confirm('Do you want to delete the video?');
+            if (!ans){
+                e.preventDefault()
+            } else {
+                onPopWindowSpinner();
+            }
+        } else {
+            onPopWindowSpinner();
+        }
+    })
+
+    // ============= SCRIPT FOR WINDOW SPINNER ===========
+
+    function onPopWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        if (!spin.classList.contains('modal-open-load')) {
+            spin.classList.add('modal-open-load');
+        }
+    }
+
+    function onCancelWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        spin.classList.remove("modal-open-load");
+    }
+    // ============= END OF SCRIPT FOR WINDOW SPINNER ==========
+</script>
+{% endblock acctDetail %}

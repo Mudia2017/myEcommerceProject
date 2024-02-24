@@ -1,0 +1,146 @@
+
+
+<html>
+    
+    <head>
+        {% load static %}
+        
+        <meta charset="utf-8">
+        <title>PDF Invoice</title>
+       
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style>
+            @page {
+                size: A4;
+                
+                @frame content_frame {
+                    left: 50pt;
+                    width: 512pt;
+                    top: 50pt;
+                    height: 692pt;
+                        /* for debugging the layout */
+                }
+                @frame footer_frame {           /* Another static Frame */
+                    -pdf-frame-content: footer_content;
+                    left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+                }
+    
+            /* background-image: url('static/milo.jpg'); */
+            }
+            
+           
+        </style>
+     
+    </head>
+    
+    <body>
+    
+        <div id="header_content">
+    
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            <div style="text-align: left;">
+                                <h4 style="font-size: 14px;">BILL FROM:</h4>
+                                
+                            </div>
+                        </th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-size: 13px;">
+                            <p><b style="font-size: 16px;">Happy Shoppers Co.</b> <br> 34 Isolo Road <br>Off Ajao Estate, <br>Isolo Way, <br>Lagos.</p>
+                        </td>
+                        <td style="text-align: center;"><img height="80px" width="50px" src="static/images/shopper_logo.png" alt=""> <br> <span style="color: gray;">Happy Shoppers Co.</span> </td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <hr>
+    
+            <table style="margin-top: 0.3cm;">
+                <tr>
+                    <td><b style="font-size: 14px;">BILL TO:</b></td>
+                    <td style="color: rgb(0, 146, 190); font-size: 25px; font-weight: 500; text-align: center;">INVOICE</td>
+                    <td></td>                
+                </tr>
+                <tr >
+                    <td style="font-size: 13px; width: 50%; "> <span style="color: rgb(0, 126, 245); font-size: 14px;" >{{ shipping_address.name }}</span> <br> <span >{{ shipping_address.address }}</span>, <br> {{shipping_address.city }}, <br> {{ shipping_address.state }}. <br><b style="font-size: 15px; color: navy;">Phone: </b> {{ shipping_address.mobile }} <br><b style="font-size: 15px; color: navy;">Alt Phone: </b> {{ shipping_address.altMobile }} <br> <b style="font-size: 15px; color: navy;"> Email: </b>{{ order.customer.email }} </td>
+                    <td></td>
+                    <td style="font-size: 13px; width: 45%; padding: 2%; "><b style="font-size: 15px; color: navy;">Invoice Date: </b> <label>{{ invoice_date }}</label> <br> <b style="font-size: 15px; color: navy;">Payment Method: </b>{{ order.payment_option }} <br> <br> <b style="font-size: 15px; color: navy; ">Invoice Total: </b> <span style="color: rgb(0, 146, 190); font-size: 28px; font-weight: 800; ">N {{ grandTotal }}</span></td>
+                </tr>
+            </table>
+    
+            <hr>
+    
+            <table id="content_frame" >
+                <thead>
+                    <tr style="color: rgb(0, 146, 190); font-size: 14px;">
+                        <th style="text-align: left; padding-left: 0.1cm;">Item</th>
+                        <th style="text-align: right;">Quantity</th>
+                        <th style="text-align: right;">Unit Price (N) </th>
+                        <th style="text-align: right;">Line Total (N)</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    {% for orderItem in orderItems %}
+                    <tr style="font-size: 13px; text-align: right; padding-top: 0.2cm;">
+                        
+                        <td style="text-align: left; padding-left: 0.1cm;"> {{ orderItem.product.name }} </td>
+                        <td>{{ orderItem.quantity }} </td>
+                        <td>{{ orderItem.unit_price }} </td>
+                        <td>{{ orderItem.line_total }} </td>
+                        
+                    </tr>
+    
+                    {% endfor %}
+                </tbody>
+    
+            </table>
+    
+            <hr>
+    
+            <table class="table table-success table-hover">
+                <tr style="font-size: 12px;">
+                   
+                </tr>
+    
+                <div>
+                    <tr style="text-align: right; font-size: 14px;">
+                        <td></td>
+                        <td><b>SUBTOTAL</b></td>
+                        <td>N {{ grandTotal }}</td>
+                    </tr>
+    
+                    <tr style="text-align: right; font-size: 14px;">
+                        <td></td>
+                        <td><b>TAX</b></td>
+                        <td>N 0.00</td>
+                    </tr>
+    
+                    <tr style="text-align: right; font-size: 14px;">
+                        <td></td>
+                        <td><b>TOTAL</b></td>
+                        <td style="color: rgb(0, 146, 190); font-size: 18px; font-weight: 800;">N {{ grandTotal }}</td>
+                    </tr>
+    
+                </div>
+            </table>
+            
+           
+        </div>
+    
+        <div style="font-size: 13px;" id="footer_content">(c) - page <pdf:pagenumber>
+            of <pdf:pagecount>
+    
+            <span style="color: lightgray;">Invoice powered by Happy Shoppers</span>
+        </div>
+    
+    </body>
+    
+    </html>
+    

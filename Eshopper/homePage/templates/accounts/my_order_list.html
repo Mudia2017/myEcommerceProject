@@ -1,0 +1,309 @@
+{% extends 'homePage/homepage.html' %}
+{% load static %}
+{% block acctDetail %}
+<link rel="stylesheet" href="../../../static/css/myWish_orderList.css">
+
+<style>
+      .displaySection {
+    display: flex;
+}
+
+.hideSection {
+    display: none;
+}
+
+</style>
+
+<div class="content">
+    <div style=" width: 100%; float: right; margin: 1rem 1rem 0rem 1rem;">
+        <div style="display: flex; justify-content: space-around;">
+
+
+
+            <label id="count" for="">Records (<span >{{ myDictionary.counter }}</span>)</label>
+
+            
+        
+            <div style="display: flex; width: 30%; float: right;">
+
+                <div class="input-group mb-3" >
+                    <input id="searchInput" style="width: 60%; font-family: sora;" name="order_no" type="text" placeholder="Order No" class="form-control form-control-sm shadow-none">
+                    <select style="width: auto;" name="action_comboBox_selected" class="form-select form-select-sm shadow-none" id="orderStatus">
+                        <option name="order_status" value="False" selected>------</option>
+                        <option name="order_status" value="Complete">Complete</option>
+                        <option name="order_status" value="Processing">Processing</option>
+                        <option name="order_status" value="On hold">On hold</option>
+                        <option name="order_status" value="Shipped">Shipped</option>
+                        <option name="order_status" value="Cancelled">Cancelled</option>
+                        <option name="order_status" value="Refunded">Refunded</option>
+                        <option name="order_status" value="Rejected">Rejected</option>
+                        <option name="order_status" value="Failed">Failed</option>
+                    </select>
+
+                    
+                </div>
+            </div>
+
+                         
+        </div>
+        <!-- DISPLAY ORDER RECORD WHEN PAGE FIRST LOAD UP. DATA COMING FROM BACKEND. -->
+        <div id="hide_section">
+            {% for myOrder in myOrderData %}
+            <section id="inner_hide_section" class="content_section displaySection">
+                
+                <div class="order_detail_element">
+                    <div>Order No: <span id="transId">{{ myOrder.transaction_id }}</span> </div>
+                    <div>Customer Name: {{ myOrder.customer_name }}</div>
+                    <div>Datetime Created: {{ myOrder.date_order }}</div>
+                    {% if myOrder.complete == True and myOrder.paid == True and myOrder.status == 'Processing' %}
+                    <div>Status: <span  style="color: rgb(4, 0, 218);"> Processing</span></div>
+                    {% elif myOrder.complete == True and myOrder.paid == False and myOrder.status == 'Processing' %}
+                    <div>Status: <span style="color: rgb(4, 0, 218);">Processing</span></div>
+                    {% elif myOrder.complete == True and myOrder.status == 'Shipped' %}
+                    <div>Status: <span style="color: rgb(148, 0, 161);">Shipped</span></div>
+                    {% elif myOrder.complete == True and myOrder.paid == True and myOrder.status == 'Completed' %}
+                    <div>Status: <span style="color: rgb(0, 117, 45);">Completed</span></div>
+                    {% elif myOrder.status == 'Cancelled' %}
+                    <div>Status: <span style="color: rgb(255, 0, 0);">Cancelled</span></div>
+                    {% elif myOrder.paid == True and myOrder.status == 'Refunded' %}
+                    <div>Status: <span style="color: rgb(255, 0, 0);">Refunded</span></div>
+                    {% elif myOrder.status == 'Rejected' %}
+                    <div>Status: <span style="color: rgb(255, 0, 0);">Rejected</span></div>
+                    {% elif myOrder.status == 'Failed' %}
+                    <div>Status: <span style="color: rgb(255, 0, 0);">Failed</span></div>
+                    {% else %}
+                    <div>Status: <span style="color: rgb(255, 94, 0);">On hold</span></div>
+                    {% endif %}
+                    <div>Total Amount: &#8358; {{ myOrder.line_total }}</div>
+                </div>
+                <div class="element_button" >
+                        <div >
+                            <a href="{% url 'cus_update_myOrder' myOrder.transaction_id %}">
+                            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none">Order Detail</button></a>
+                            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none">Write Product Review</button>
+                            
+                        </div>
+                        
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+
+        <!-- ELEMENT TO DISPLAY FILTERED ORDER RECORD WITH JAVASCRIPT -->
+
+            <div id="hideSection2" class="hideSection" style="display: block;">
+                <!-- <section id="" class="content_section displaySection" style="">
+                    <div class="order_detail_element">
+                        <p>this is a text</p>
+                    </div>
+    
+                    <div class="element_button" >
+                        <div >
+                            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none">Order Detail</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none">Write Product Review</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm shadow-none">Archive Order</button>
+                        </div>
+                        
+                    </div>
+                </section> -->
+    
+                
+            </div>
+
+    </div>
+    
+   
+</div>
+
+<script>
+
+    let myOrderData = '{{ jsonData }}'
+    let counter = document.getElementById('count');
+   
+    myOrderData = (myOrderData.replace(/&quot;/g, '"'));
+    myOrderData = JSON.parse(myOrderData)
+
+
+    //  SECTION TO HIDE OR DISPLAY THE DEFAULT LOADING PAGE.
+    // WHEN RECORD IS FIRST LOADED TO THE PAGE FROM THE BACKEND.
+    document.getElementById('orderStatus').addEventListener('change', function() {
+        let selectedStatus = '';
+        const selected = document.querySelectorAll('option[name="order_status"]')
+        for (let select of selected) {
+            if (select.selected) {
+                selectedStatus = select.value;
+                break;
+            }
+        }
+           
+        const filteredOrder = myOrderData.filter(myOrderData => {
+            return myOrderData.status == selectedStatus;
+        })
+       
+        var el = document.getElementById('hide_section');
+        var innerEl = document.getElementById('inner_hide_section')
+        if (selectedStatus != 'False') {
+            innerEl.classList.remove('displaySection');
+            el.classList.add('hideSection');
+
+            loadFilteredData(filteredOrder);
+          
+        } else {
+            el.classList.remove('hideSection');
+            innerEl.classList.add('displaySection');
+            let ele = document.getElementById('hideSection2');
+            ele.classList.add('hideSection')
+
+            counter.innerHTML = 'Records ' + '(' + myOrderData.length + ')';
+
+            // THE DEFAULT OF 'FALSE' CAN BE SELECTED AFTER SELECTING FROM A 
+            // STATUS WITH RECORD. WE NEED TO CHECK IF THERE IS AN EXISTING
+            // RECORD ON THE FORM AND REMOVE THEM.
+            var elementExist = document.getElementById('sectionId');
+            if (elementExist) {
+                var elems = document.querySelectorAll('#sectionId')
+                for (var elem of elems) {
+                    ele.removeChild(elem)
+                }
+                
+            }
+        }
+        
+       
+    })
+
+  
+    // THIS FUNCTION WILL HANDLE THE ORDER STATUS SELECTED FROM THE DROP-DOWN.
+    // IT WILL DISPLAY THE FILTERED RECORD.
+
+    function loadFilteredData(orderRecs) {
+        let el = document.getElementById('hideSection2');
+        el.classList.remove('hideSection')
+        el.classList.add('displaySection')
+        
+        // IN THIS PLACE, WE WANT TO CHECK IF AN EXITING FILTERED RECORD EXIST IN 
+        // THE TEMPLATE; IF IT DOES, CLEAR IT BEFORE DISPLAYING A NEW RECORD.
+        var elementExist = document.getElementById('sectionId');
+        if (elementExist) {
+            var elems = document.querySelectorAll('#sectionId')
+            for (var elem of elems) {
+                el.removeChild(elem)
+            }
+        }
+        counter.innerHTML = 'Records ' + '(' + '0' + ')';
+        
+        for (var rec of orderRecs) {
+            let span1 = document.createElement('span');
+            span1.innerHTML = rec['transaction_id'];
+            
+            let sec = document.createElement('section');
+            sec.className = 'content_section displaySection';
+            sec.setAttribute('id', 'sectionId');
+            let elem1 = document.createElement('div');
+            elem1.className = 'order_detail_element';
+
+            let div1 = document.createElement('div');
+            div1.innerHTML = 'Order No: ' 
+            div1.appendChild(span1);
+
+            let div2 = document.createElement('div');
+            div2.innerHTML = 'Customer Name: ' + rec['customer_name'];
+
+            let div3 = document.createElement('div');
+            div3.innerHTML = 'Datetime Created: ' + rec['date_order'];
+
+            let span2 = document.createElement('span');
+            span2.style.color = getStatusColor(rec['complete'], rec['paid'], rec['status']);
+            span2.innerHTML = rec['status'];
+            let div4 = document.createElement('div');
+            div4.innerHTML = 'Status: ';
+            div4.appendChild(span2);
+
+            let div5 = document.createElement('div');
+            div5.innerHTML = 'Total Amount: ₦ ' + numberWithCommas(rec['line_total']);
+
+            let element1 = document.createElement('div');
+            element1.className = 'element_button';
+            let element2 = document.createElement('div');
+
+            let a1 = document.createElement('a')
+            let url = "{% url 'cus_update_myOrder' 1 %}";
+            url = url.replace(/1/g, rec['transaction_id'])
+            
+            a1.setAttribute("href", url);
+            
+
+            let btn1 = document.createElement('button');
+            btn1.className = 'btn btn-outline-secondary btn-sm shadow-none';
+            btn1.type = 'button';
+            btn1.innerHTML = 'Order Detail';
+            let btn2 = document.createElement('button');
+            btn2.className = 'btn btn-outline-secondary btn-sm shadow-none';
+            btn2.type = 'button';
+            btn2.innerHTML = 'Write Product Review';
+            
+
+            a1.appendChild(btn1)
+            elem1.appendChild(div1);
+            elem1.appendChild(div2);
+            elem1.appendChild(div3);
+            elem1.appendChild(div4);
+            elem1.appendChild(div5);
+            element2.appendChild(a1);
+            element2.appendChild(btn2);
+            element1.appendChild(element2);
+
+            sec.appendChild(elem1)
+            sec.appendChild(element1)
+
+            el.appendChild(sec);
+
+            counter.innerHTML = 'Records ' + '(' + orderRecs.length + ')';
+            
+        }
+    }
+
+    // A FUNCTION TO GET STATUS COLOR WHEN WE FILTER RECORD BY STATUS
+    function getStatusColor(isComplete, isPaid, status) {
+        
+        if (isComplete == true && isPaid == true && status == 'Processing') {
+            return '#0400da';
+        } else if (isComplete == true && isPaid == false && status == 'Processing') {
+            return '#0400da';
+        } else if (isComplete == true && status == 'Shipped') {
+            return '#9400a1';
+        } else if (isComplete == true && isPaid == true && status == 'Complete') {
+            return '#00752d';
+        } else if (status == 'Cancelled') {
+            return '#ff0000';
+        } else if (isPaid == true && status == 'Refunded') {
+            return '#ff0000';
+        } else if (status == 'Rejected') {
+            return '#ff0000';
+        } else if (status == 'Failed') {
+            return '#ff0000';
+        } else {
+            return '#ff5e00';
+        }
+    }
+
+    // USED TO FORMAT FIGURE WITH COMMAS.
+    function numberWithCommas(val) {
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
+    // SEARCH FIELD INPUT 
+    document.getElementById('searchInput').addEventListener('keyup', function(){
+        let value = document.getElementById('searchInput').value
+        let searchRecords = myOrderData.sort(function (rec) {
+            return rec['transaction_id'] == value
+        }) 
+            
+        
+        console.log(searchRecords)
+    })
+
+    
+</script>
+{% endblock acctDetail %}

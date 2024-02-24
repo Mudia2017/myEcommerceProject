@@ -1,0 +1,73 @@
+{% if user == 'registered_acct' or user == 'guest' %}
+
+Dear {{name}},
+
+We want to thank you for making your purchases on our site.
+Your order have been received and is under processing...
+Below is a list of what you ordered for:
+
+Order No: {{order_no}}
+
+{% for order_item in order_items %}
+Product Name: {{order_item.product.name}}
+Product Qty: {{order_item.quantity}}
+Product Price: N {{order_item.unit_price}}
+---------------------------------------------
+{% endfor %}
+Total: N {{total}}
+---------------------------------------------
+Your items will be delivered under 24 hours.
+
+Thanks for your patronage!
+For more information or clarification please contact us via:
+E-mail: oskienterprises@gmail.com
+Telephone: 08056016682
+
+
+
+{% elif user == 'admin' %}
+
+Dear {{ name }},
+There is a new order 
+
+Order No: {{ transaction_id }} 
+Dated: {{ date_order }}
+
+{% for order_item in order_items %}
+Product Name: {{ order_item.product.name }}
+Store Name: {{ order_item.product.store.store_name}}
+Store Location: {{ order_item.product.store.store_address }}, {{ order_item.product.store.city }}, {{ order_item.product.store.LGA }}, {{ order_item.product.store.state }}
+Mobile: {{ order_item.product.store.mobile }}
+Product Qty: {{ order_item.quantity }}
+Unit Price: N {{ order_item.unit_price }}
+Line Total: N {{ order_item.line_total }}
+---------------------------------------------
+{% endfor %}
+Total: N {{total}}
+---------------------------------------------
+Items most be delivered under 24hrs.
+
+
+
+{% elif user == 'traderStore' %}
+
+Dear {{ name }},
+There is a new order 
+
+Order No: {{ transaction_id }} 
+Dated: {{ date_order }}
+
+{% for order_item in sortedList %}
+Product Name: {{ order_item.ptd_name }}
+Store Name: {{ order_item.store_name}}
+Store Location: {{ order_item.store_location }}, {{ order_item.store_city }}, {{ order_item.storeLGA }}, {{ order_item.store_state }}
+Product Qty: {{ order_item.ptd_quantity }}
+Unit Price: N {{ order_item.unit_price }}
+Line Total: N {{ order_item.line_total }}
+---------------------------------------------
+{% endfor %}
+Total: N {{total}}
+---------------------------------------------
+Items most be delivered under 24hrs.
+
+{% endif %}

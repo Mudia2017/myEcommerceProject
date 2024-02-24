@@ -1,0 +1,264 @@
+
+{% extends 'homePage/homepage.html' %}
+
+{% block content %}
+
+<div class="login-model">
+    <div class="login-content">
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <label for="" class="login-label">
+                <h4>Register</h4>
+            </label>
+
+            <hr style="margin-bottom: 2%; margin-top: 0px;">
+
+            <div class="" style="margin-bottom: 1rem;">
+
+                <div class="name" style="width: 100%; margin-bottom: 2%;">
+
+                    <input value="" class="input-name-field" type="username" name="username" autocomplete="" required />
+                    <label for="" class="label-name">
+                        <span class="content-name">Username</span>
+                    </label>
+
+                </div>
+
+                <div class="name" style="width: 100%; margin-bottom: 2%;">
+
+                    <input value="" class="input-name-field" type="text" name="email" autocomplete="" required />
+                    <label for="" class="label-name">
+                        <span class="content-name">Email</span>
+                    </label>
+
+                </div>
+
+
+                <div class="name pwd-field" style="width: 100%;">
+
+                    <input value="" class="input-name-field" type="password" name="password1" autocomplete="" required />
+                    <label for="" class="label-name">
+                        <span class="content-name">Password</span>
+                    </label>
+
+                </div>
+
+                <div class="name pwd-field2" style="width: 100%;">
+
+                    <input value="" class="input-name-field" type="password" name="password2" autocomplete="" required />
+                    <label for="" class="label-name">
+                        <span class="content-name">Confirm Password</span>
+                    </label>
+
+                </div>
+
+                <label for="exampleFormControlInput1" class="password-label"><i
+                        class="material-icons pwd-visibility">visibility_off</i>Password is case
+                    sensitive</label>
+
+            </div>
+
+            <!-- ERROR ALERT MESSAGE -->
+            <div id="error-alert" class="alert alert-danger" role="alert">
+                <strong> {{ myDictionary.error_message }} </strong>
+
+            </div>
+
+
+            <a href="{% url 'homePage' %}" class="btn btn-danger" id="log-in-buttons">Cancel</a>
+
+            <button class="btn btn-primary" id="wrap-btn" onclick=""></button>
+            <input style="width: 45%;" type="submit" class="btn btn-primary button" id="log-in-buttons" value="Create Account">
+
+
+
+            <label class="terms-conditions">By continuing, you're confirming that you've read our <a href="#">Terms &
+                    Conditions</a> and Cookie Policy</label>
+
+        </form>
+    </div>
+</div>
+
+<style>
+    /* ===================== CSS FOR INPUT FIELD NAME ===================== */
+    .first-row {
+    display: flex;
+  }
+
+  .name-row {
+    width: 100%;
+    position: relative;
+    height: 50px;
+    overflow: hidden;
+  }
+
+  .name {
+    width: 50%;
+    position: relative;
+    height: 50px;
+    overflow: hidden;
+  }
+
+  .input-name-field {
+    width: 100%;
+    height: 100%;
+    color: #595f6e;
+    padding-top: 20px;
+    border: none;
+    outline: none;
+    padding-left: 1%;
+  }
+
+  .label-name {
+    position: absolute;
+    bottom: -4px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-bottom: 1px solid black;
+  }
+
+  .label-name::after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    bottom: -1px;
+    width: 100%;
+    height: 100%;
+    border-bottom: 3px solid #5fa8d3;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .content-name {
+    position: absolute;
+    bottom: 5px;
+    left: 2%;
+    transition: all 0.3s ease;
+  }
+
+  .input-name-field:focus+.label-name .content-name,
+  .input-name-field:valid+.label-name .content-name {
+    transform: translateY(-140%);
+    font-size: 11px;
+    color: #5fa8d3;
+  }
+
+  .input-name-field:focus+.label-name::after,
+  .input-name-field:valid+.input-name-field::after {
+    transform: translateX(0%);
+  }
+
+
+    /* ======================= END OF INPUT FIELD NAME ========================= */
+
+
+    @import url('https://fonts.googleapis.com/icon?family=Material+Icons'); /* USED BY PASSWORD TOGGLE ICON */
+    
+
+    .login-model {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        position: absolute;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-content {
+        width: 300px;
+        height: 75%;
+        background-color: white;
+        border-radius: 4px;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+    }
+
+    #log-in-buttons {
+        width: 30%;
+        margin: 0 3%;
+    }
+
+    .password-label {
+        display: flex;
+        font-size: 10px;
+        color: crimson;
+    }
+
+    #wrap-btn {
+        visibility: hidden;
+    }
+
+    .pwd-visibility {
+        color: black;
+        cursor: pointer;
+        margin-right: 5px;
+    }
+
+    .terms-conditions {
+        font-size: 10px;
+        color: grey;
+        margin: 0%;
+    }
+
+    .alert-danger {
+        display: none;
+        font-size: 13px;
+    }
+
+    .login-label {
+        text-align: center;
+        font-size: 23px;
+        color: orange;
+    }
+</style>
+
+<script type="text/javascript">
+
+
+    // PASSWORD TOGGLE VISIBILITY FOR PASSWORD INPUT FIELD
+    const visibilityToggle = document.querySelector('.pwd-visibility');
+
+    const pwt_input = document.querySelector('.pwd-field input');
+    const pwt_input2 = document.querySelector('.pwd-field2 input');
+
+    password = true
+
+    visibilityToggle.addEventListener('click', function () {
+        if (password) {
+            pwt_input.setAttribute('type', 'text');
+            pwt_input2.setAttribute('type', 'text');
+            visibilityToggle.innerHTML = 'visibility';
+        } else {
+            pwt_input.setAttribute('type', 'password');
+            pwt_input2.setAttribute('type', 'password');
+            visibilityToggle.innerHTML = 'visibility_off';
+        }
+        password = !password;
+
+    });
+
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR LOGIN FAILURE
+    var isError = "{{ myDictionary.is_error }}";
+
+    if (isError == 'True') {
+        function showDiv() {
+            document.getElementById('error-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('error-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 5000);
+    }
+</script>
+
+
+{% endblock %}

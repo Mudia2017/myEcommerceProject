@@ -1,0 +1,174 @@
+{% extends 'homePage/homepage.html' %}
+
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        min-width: 1000px;
+        overflow-y: hidden;
+        
+    }
+
+
+    /* START OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+    .hover-underline-animation {
+        display: inline-block;
+        position: relative;
+        color: #0087ca;
+        }
+
+        .hover-underline-animation:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: #0087ca;
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+        }
+
+        .hover-underline-animation:hover:after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+        }
+
+        /* END OF AMINATION UNDERLINE EFFECT. USEFUL FOR TEXT LINK  */
+
+        
+        ul .no-bullets {
+            list-style-type: none; /* Remove bullets */
+            padding: 2% 0% 2% 0%; /* Remove padding */
+            margin: 0; /* Remove margins */
+        }
+
+        ul li .link_decoration {
+            text-decoration: none;
+            color: black;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+            color: #0087ca;
+        }
+
+        .ellipse {
+
+            -webkit-line-clamp: 2; /* number of lines to show */
+            
+            overflow: hidden;
+            text-overflow: ellipsis; 
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+
+        .textclip {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+</style>
+
+<div style="margin-top: 4rem; margin-bottom: 0rem; padding: 0% 2% 0% 2%;">
+
+    <div style="background-color: rgb(246, 166, 171); display: flex;">
+        <span style="width: 90%; background-color: rgb(238, 124, 127); display: flex;">
+            <span style="width: 80%; background-color: rgb(93, 82, 105); padding-bottom: 1rem;">
+                <h2 style="color: rgb(246, 166, 171); padding: 2% 0% 0% 2%;">{{ titleCategory }}</h2>
+            </span>
+        </span>
+    </div>
+
+    <div style="display: flex; ">
+        <div style="width: 25%; margin-right: 2%; " id="scrollable">
+            <label style="font-weight: 700;">All Category</label>
+            <br>
+            
+            {% for category in categories %}
+            {% if category.level == 0 and category.parent_id == NULL %}
+            <hr style="margin: 0px;">
+            <div style="width: 100%; display: -webkit-flex; justify-content: space-between; padding: 1rem 0rem 1rem 0rem;">
+                <a style="font-size: 14px; text-decoration: none;" class="hover-underline-animation textclip" href="{% url 'all_category' category.id %}">{{ category }}</a>
+          </div>
+            {% endif %}
+            {% endfor %}
+         
+        </div>
+        
+            
+        <div style="width: 75%;" id="_scrollable">
+            <label style="font-size: 20px; font-weight: 700; padding-left: 0%; display: flex;">Shop by Category</label>
+            <div class="row " style="width: 99%; margin-left: 1%;">
+
+                <div class="row row-cols-1 row-cols-md-3 g-3">
+                    {% for catRecord in categoryListRecord %}
+                    <div class="col">
+                        <div class="card h-100" style="border: none;">
+                            <div class="card-header bg-transparent border-dark ellipse" style="padding: 0px; margin-bottom: 1%; font-weight: 500; color: brown; min-height: 50px; font-size: 15px;">
+                                
+                                {{ catRecord.catSubTitle }}
+                                
+                            </div>
+                            <div style="">
+                                {% if catRecord.imageURL %}
+                                <img src="{{ catRecord.imageURL }}" style="height: 8.7rem; object-fit: contain;" class="card-img-top" alt="...">
+                                {% else %}
+                                <img src="{% static 'images/default_image_icon.png' %}" style="height: 8.7rem;" class="card-img-top" alt="...">
+                                {% endif %}
+                                
+                            </div>
+                            <div class="card-body" style="padding: 0px; ">
+                                <ul style="font-size: 11px; padding: 0%;">
+                                    
+                                    {% for catRecordList in catRecord.levelTwos %}
+                                    <li class="no-bullets">
+                                        <div class="textclip">
+                                            <a class="link_decoration" href="{% url 'category_items' catRecordList.id %}">
+                                                {{ catRecordList.category }}
+                                            </a>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                    
+                                </ul>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if not categoryListRecord %}
+
+                <center><p style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 13%;">
+                    No record</p></center>
+
+                {% endif %}
+
+                
+            </div>
+            
+            
+
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    let height = screen.availHeight;
+    height = height - 260
+    console.log(height)
+
+    document.getElementById('scrollable').style.height = height +'px';
+    document.getElementById('scrollable').style.overflowY = 'auto'
+    document.getElementById('_scrollable').style.height = height + 'px';
+    document.getElementById('_scrollable').style.overflowY = 'auto'
+
+</script>
+{% endblock content %}

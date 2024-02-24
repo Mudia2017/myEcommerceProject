@@ -1,0 +1,744 @@
+{% extends 'homePage/homepage.html' %}
+{% load static %}
+{% block acctDetail %}
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://ajax.googleapis.com/ajax/libs/d3js/6.6.0/d3.min.js"></script>
+
+<style type="text/css">
+    .address-label {
+        text-align: center;
+        font-size: 23px;
+        color: orange;
+    }
+
+    form .account-btn {
+        text-decoration: none;
+        box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+        background-color: #fff;
+        width: 100%;
+        padding: 3%;
+        display: block;
+        font-size: 20px;
+    }
+
+    .btn-logout {
+        width: 100%;
+        background-color: rgb(235, 102, 53);
+        color: #fff;
+        border: none;
+        padding: 7px;
+        font-size: 18px;
+        text-decoration: none;
+        display: block;
+        padding-left: 40%;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+    .alert-warning {
+        display: none;
+    }
+
+
+    @media only screen and (max-width: 540px) {
+        /* ._box-element {
+            margin: 5rem 0% 1rem 0%;
+        } */
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+        #styling-ptd-info {
+            width: 1000rem;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: start;
+            padding-left: 1%;
+        }
+
+        .ellipse {
+
+            white-space: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
+
+            font-size: 18px;
+            color: skyblue;
+            font-weight: 500;
+        }
+
+        .pending-review-btn {
+            display: inline-flex;
+            width: 100%;
+            border: none;
+            background-color: white;
+            text-decoration: none;
+        }
+    }
+
+    @media only screen and (max-width: 767px) {
+        /* ._box-element {
+            margin: 5rem 0% 1rem 0%;
+        } */
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+        #styling-ptd-info {
+            width: 1000rem;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: start;
+            padding-left: 1%;
+        }
+
+        .ellipse {
+
+            white-space: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
+
+            font-size: 18px;
+            color: skyblue;
+            font-weight: 500;
+        }
+
+        .pending-review-btn {
+            display: inline-flex;
+            width: 100%;
+            border: none;
+            background-color: white;
+            text-decoration: none;
+        }
+    }
+
+    /* @media only screen and (min-width: 768px) {
+      
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+
+        #styling-ptd-info {
+            width: 1000rem;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: start;
+            padding-left: 1%;
+        }
+
+        .ellipse {
+
+            white-space: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+
+            font-size: 18px;
+            color: skyblue;
+            font-weight: 500;
+        }
+
+        .pending-review-btn {
+            display: inline-flex;
+            width: 100%;
+            border: none;
+            background-color: white;
+            text-decoration: none;
+        }
+    } */
+
+
+    /* @media only screen and (min-width: 992px) { */
+
+        /* ======== CSS TO PLACE THE FORM ON THE RIGHT SIDE OF THE SCREEN =========== */
+        .box-element-right {
+            margin-top: 4rem;
+            margin-left: 1%;
+            margin-right: 1%;
+            background: rgb(250, 248, 248); 
+            border: groove rgb(210, 210, 212); 
+            border-width: 1px; 
+            border-radius: 15px; 
+            /* padding: 0%; */
+            width: 100%;
+
+            /* position: relative; */
+        }
+
+        #address-form {
+            margin: 1%;
+            /* white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden; */
+
+        }
+
+        /* ======== CSS TO PLACE THE FORM ON THE LEFT SIDE OF THE SCREEN =========== */
+        /* ._box-element {
+            margin-top: 2rem;
+            margin-right: 1%;
+            width: 30%;
+        } */
+
+        div form .account-btn:hover {
+            background-color: rgb(184, 178, 178);
+        }
+
+        div form .btn-logout:hover {
+            background-color: rgb(177, 81, 2);
+            color: #fff;
+        }
+
+        .display-mode {
+            display: flex;
+            position: absolute;
+            left: 250px;
+            /* width: 90%; */
+        }
+
+        .ellipse {
+
+            white-space: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* number of lines to show */
+            -webkit-box-orient: vertical;
+            
+            font-size: 18px;
+            color: skyblue;
+            font-weight: 500;
+        }
+
+        #styling-ptd-info {
+            width: 1000rem;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: start;
+            padding-left: 1%;
+        }
+
+        .pending-review-btn {
+            display: inline-flex;
+            width: 90%;
+            border: none;
+            background-color: white;
+            text-decoration: none;
+        }
+
+    /* } */
+
+    #wishList_btn:visited {
+        background-color: rgb(204, 199, 199);
+    }
+
+    body {
+        min-width: 280px;
+    }
+
+    a.disabled {
+        pointer-events: none;
+    }
+
+
+    /* ===== START OF POPUP INFO ========= */
+    .message-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+    .modal-open-info {
+            display: flex;
+        }
+
+        .modal-info-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-ok-button {
+            background-color: rgb(50, 135, 245);
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        /* ============ END OF POPUP INFO ========== */
+
+    /* ============= START OF TEXT FONT DESIGN ============ */
+    /* .contentTextDesign {
+            font-size: small; 
+            font-family: sora;
+        } */
+        .contentTextDesign1 {
+            font-family: Niramit; 
+            font-weight: 300;
+            font-size: 15px;
+        }
+        .noRecordDesign {
+            font-size: 30px; 
+            font-weight: 700; 
+            color: rgb(246, 166, 171); 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 0%;
+        }
+
+        /* ============= END OF TEXT FONT DESIGN ============ */
+
+</style>
+
+
+
+<div class="display-mode">
+
+    <!-- <div class="_box-element"> -->
+
+        <!-- <form action="" id="button-form"> -->
+            <!-- <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'customer_acct_card' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                    </svg>My eShopper Account
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'my_order' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-cart-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                        <path
+                            d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>My Order
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a id="pending-btn" class="account-btn" href="{% url 'pending_review' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person-lines-fill" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                    </svg>My Pending Reviews
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a id="wishList_btn" class="account-btn" href="{% url 'wishList' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-list-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path fill-rule="evenodd"
+                            d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                    </svg>My WatchList
+                </a>
+            </div> -->
+
+            <!-- <div class="left-btn-col">
+                <a class="account-btn address-btn" href=" {% url 'updatecustomerAddress' request.user.id %} "
+                    onclick="">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-geo-alt" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    </svg>My Address
+                </a>
+            </div> -->
+
+            <!-- <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'login_Security' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-file-lock" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1zm2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224zM6.105 8.125A.637.637 0 0 1 6.5 8h3a.64.64 0 0 1 .395.125c.085.068.105.133.105.175v2.4c0 .042-.02.107-.105.175A.637.637 0 0 1 9.5 11h-3a.637.637 0 0 1-.395-.125C6.02 10.807 6 10.742 6 10.7V8.3c0-.042.02-.107.105-.175z" />
+                        <path
+                            d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                    </svg>Login & Security
+                </a>
+            </div> -->
+
+            <!-- THE STORE IS ONLY FOR STAFF. THOSE THAT HAVE STORE IN THE SITE -->
+            <!-- {% if user.is_staff %}
+            <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'trader_store' request.user.id %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-shop" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z" />
+                    </svg>Trader Store
+                </a>
+
+                <a id="product-btn" class="account-btn" href=" {% url 'product_over_view' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-box-seam" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
+                    </svg>Product
+                </a>
+
+                <a id="my-admin-btn" class="account-btn" href=" {% url 'admin_session' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-ui-checks" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                      </svg>Admin
+                </a>
+
+            </div>
+            {% endif %}
+            <a id="settings_btn" class="account-btn" href=" {% url 'settings' %} ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 20px">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                </svg>Settings
+            </a>
+
+            <hr />
+
+            <div class="left-btn-col">
+                <a class="btn-logout" href="{% url 'logout' %}"> Logout </a>
+            </div> -->
+        <!-- </form> -->
+    <!-- </div> -->
+
+    <!-- ============ SEPERATION BETWEEN LEFT AND RIGHT FORM ================== -->
+
+    <div class="box-element-right">
+        <form action="" id="address-form" class="edit-address-form" method="POST">
+            {% csrf_token %}
+
+            <div style="width: 60%; margin-top: 0%; display: flex; justify-content: space-between;">
+                <div style="display: flex; width: 50%; height: 5vh;">
+                    <label for="inputEmail4" class="form-label contentTextDesign1" style="margin-right: 2%;">Action</label>
+                    <select name="select_comboBox" class="form-select form-select-sm shadow-none" id="specificSizeSelect" style="font-size: 12px; font-weight: 500;">
+                        <option name="opt_selected" value="False" selected>------</option>
+                        <option name="opt_selected" value="Delete">Delete</option>
+                        <option name="opt_selected" value="add_to_cart">Add to Cart</option>
+                    </select>
+
+                    <input name="delete_btn" type="submit" value="Go" id="go_btn"
+                        style="margin-left: 3%; width: 55%;">
+                </div>
+
+                <div class="address-label">
+                    <label>WishList</label>
+                </div>
+            </div>
+
+            <!-- WARNING MESSAGE OF DELETED PRODUCT. COMING FROM EDIT PRODUCT FORM -->
+            <div id="warning-alert" class="alert alert-warning" role="alert">
+                <center><strong>{{ myDictionary.warning_msg }} </strong></center>
+            </div>
+
+
+            <!-- SUCCESS ALERT MESSAGE FOR FOR PRODUCT REVIEW SUCCESSFULLY SAVED -->
+            <!-- I DISPLAY THE SUCCESS MESSAGE HERE BECAUSE ONCE THE RECORD IS SAVED, 
+                THE SYSTEM WILL AUTOMATICALLY REDIRECT THE PAGE HERE... -->
+            <div id="success-alert" class="alert alert-success" role="alert">
+                <center><strong> {{ myDictionary.success_msg }} </strong></center>
+            </div>
+
+            <hr style="margin-bottom: 0%;">
+
+            {% for wishList in wishLists %}
+
+            
+            
+            <input style="margin-left: 0.2%;" data-is_active_ptd="{{ wishList.product.active }}" data-is_out_of_stock="{{ wishList.product.out_of_stock }}" data-is_active_store="{{ wishList.product.store.active }}" id="id_checkbox" name="chk_box_action" value="{{ wishList.id }}" class="form-check-input checkboxes shadow-none" type="checkbox">
+            <div class="row g-0" style="margin-left: 3%;  padding: 8px;" >
+                
+                <a class="col-md-3" href="{% url 'product_details' wishList.product_id %}" class="pending-review-btn">
+                    {% if wishList.product.imageURL %}
+                    <img style=" object-fit: contain; width: 15rem; height: 12rem; background-color: transparent;" src="{{ wishList.product.imageURL }}" class="img-fluid rounded-start" alt="...">
+                    {% else %}
+                    <img style=" object-fit: contain; width: 15rem; height: 12rem; background-color: transparent;" src="{% static 'images/default_image_icon.png' %}" class="img-fluid rounded-start" alt="...">
+                    {% endif %}
+                </a>
+                <div class="col-md-9" style="display: flex;">
+                    <div style=" width: 80%; padding: 0px 5px 0px 5px;">
+                        <div>
+                            <p style="margin-bottom: 0%; font-family: Niramit; font-size: 20px; color: rgb(34, 118, 173);" class="ellipse">{{ wishList.product.name }}</p>
+                            <br>
+                            {% if wishList.product.mfgDate %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; color: darkgray; font-family: Niramit; font-weight: 200;">
+                                <p style="margin-bottom: 0%;"> MfgDate: {{ wishList.product.mfgDate }} </p>
+                                <p style="margin-bottom: 0%;"> ExpDate: {{ wishList.product.expDate }} </p>
+                            </span>
+        
+                            {% endif %}
+
+                            {% if wishList.product.discount > 0 %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; font-family: Niramit;">
+                                <p style="margin-bottom: 0%; font-size: 22px; font-weight: bold;">&#8358; {{ wishList.product.get_unit_price }}</p>
+                                <p style="margin-bottom: 0%; text-decoration: line-through; color: gray; font-size: 15px;">&#8358;
+                                    {{ wishList.product.price }}</p>
+                                <p style="margin-bottom: 0%;">- {{ wishList.product.discount }} %</p>
+                            </span>
+
+                            {% else %}
+                            <span style="font-size: 22px; font-weight: bold; font-family: Niramit;">
+                                &#8358; {{ wishList.product.price }}
+                            </span>
+                            {% endif %}
+
+                            <div>
+                                {% if wishList.product.active == False or wishList.product.store.active == False %}
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;">
+                                    <span class="badge text-bg-danger" style="background-color: RGB(255, 22, 12);">Currently unavailable</span>
+                                </p>
+                                {% elif wishList.product.out_of_stock  == True %}
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;">
+                                    <span class="badge text-bg-danger" style="background-color: RGB(255, 22, 12);">Out of Stock</span>
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 20%; height: auto; display: flex; align-items: center;">
+                        
+                        <div >
+                                {% if wishList.product.active == False or wishList.product.out_of_stock  == True or wishList.product.store.active == False %}
+                            <button style="font-size: 13px; width: 100%; margin-bottom: 10px;" type="submit" class="btn btn-outline-primary shadow-none" disabled>Add to Cart</button>
+                            {% else %}
+                            <button style="font-size: 13px; width: 100%; margin-bottom: 10px;" type="submit" class="btn btn-outline-primary update-cart shadow-none" data-product="{{ wishList.product.id }}" data-action="add" data-value="{{ wishList.product.out_of_stock }}">Add to Cart</button>
+                            
+                            {% endif %}
+                            
+                            {% if wishList.product.store.active == False %}
+                                
+                                    <a href="{% url 'all_seller_items' wishList.product.store.id %}" style="text-decoration: none; width: 100%; font-size: 12px; margin-bottom: 10px;" class="btn btn-outline-primary disabled shadow-none">
+                                        View Seller's Other Items
+                                    </a>
+                                
+                            {% else %}
+                           
+                                <a href="{% url 'all_seller_items' wishList.product.store.id %}" style="text-decoration: none; width: 100%; font-size: 12px; margin-bottom: 10px;" class="btn btn-outline-primary shadow-none">
+                                    View Seller's Other Items
+                                </a>
+                          
+                            {% endif %}
+                            
+                            
+                                <a href="{% url 'category_items' wishList.product.category.id %}" style="text-decoration: none; width: 100%; font-size: 12px; margin-bottom: 10px;" class="btn btn-outline-primary shadow-none">
+                                    View Similar Items
+                                </a>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                    
+                
+                </div>
+
+                
+            </div>
+               
+
+            <hr style="margin: 0%;">
+            {% endfor %}
+
+            <!-- DISPLAY IF THERE ARE NO WISH LIST FOR THIS CUSTOMER YET -->
+            {% if myDictionary.isWishList == False %}
+            <p
+                style="margin-top: 13%;" class="noRecordDesign">
+                No WishList </p>
+            {% endif %}
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ======= POPUP MESSAGE INFORMATION ========== -->
+<div id="information" class="message-modal-container">
+    <div class="modal_form">
+        <section>
+            <header >
+                <h2 class="modal-header">Warning</h2>
+            </header>
+            <section >
+                <h5 class="modal_content" id="modal_info_content_id"></h5>
+            </section>
+            <footer class="modal-info-footer">
+                
+                <button class="modal-ok-button" onclick="onCancelInfoForm()">Ok</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP MESSAGE INFORMATION ========== -->
+
+
+<script>
+
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSaved = "{{ myDictionary.isSuccess }}";
+
+    if (isSaved == 'True') {
+        function showdiv() {
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 5000);
+    }
+
+
+    // THIS IS USED TO SHOW AND HIDE WARNING MESSAGE
+    var isWarning = "{{ myDictionary.isWarning }}";
+
+    if (isWarning == 'True') {
+        function showdiv() {
+            document.getElementById('warning-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('warning-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 8000);
+    }
+
+    
+    // THIS FUNCTION IS USED TO VALIDATE THE FOLLOWING:
+    // 1. IF THE DROPDOWN OPTION WAS SELECTED.
+    // 2. IF AT LEAST ONE CHECK BOX WAS SELECTED.
+    // 3. IF 'ADD TO CART' WAS THE OPTION SELECTED, CHECK IF THE ITEM(S) SELECTED ARE ACTIVE & IN STOCK
+   var goBtn = document.getElementById('go_btn')
+   goBtn.addEventListener('click', function(e) {
+       var dropdownSelected = 'Yes';
+       var isCheck = false;
+       var isActivePtd = true;
+       var isOutOfStock = false;
+       var isActiveStore = true;
+       const dropdown_selected = document.querySelectorAll('option[name="opt_selected"]');
+        for (const select of dropdown_selected){
+            
+            if (select.selected) {
+                if (select.value == 'False'){
+                    dropdownSelected = 'No'
+                    
+                } else {
+                    dropdownSelected = select.value;
+                }
+
+            }
+        }
+        var check_boxes = document.getElementsByClassName('checkboxes');
+        for (var x = 0; x < check_boxes.length; x++) {
+            if (check_boxes[x].checked){
+                isCheck = true;
+                if (check_boxes[x].dataset.is_active_ptd == 'False' && dropdownSelected == 'add_to_cart') {
+                    isActivePtd = false;
+                    break;
+                } else if (check_boxes[x].dataset.is_out_of_stock == 'True' && dropdownSelected == 'add_to_cart') {
+                    isOutOfStock = true;
+                    break;
+                } else if (check_boxes[x].dataset.is_active_store == 'False' && dropdownSelected == 'add_to_cart') {
+                    isActiveStore = false;
+                    break;
+                }
+                
+            }
+        }
+        if (dropdownSelected == 'No') {
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'No action was selected!';
+        
+        }else if (isCheck == false) {
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'Kindly select checkbox before proceeding';
+        
+        } else if (isActivePtd == false || isActiveStore == false) {
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'At least one of the selected item is currently unavailable';
+        
+        } else if (isOutOfStock == true) {
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'At least one of the item selected is out of stock';
+        
+        } 
+   })
+
+
+   // ============= SCRIPT FOR POPUP INFORMATION MESSAGE ===========
+
+   function onPopInfoForm() {
+         let info = document.getElementById('information');
+         if (!info.classList.contains('modal-open-info')) {
+             info.classList.add('modal-open-info');
+            }
+    }
+
+    function onCancelInfoForm() {
+        let information = document.getElementById('information');
+        information.classList.remove("modal-open-info");
+    }
+    // ============= END OF SCRIPT FOR INFORMATION MESSAGE ==========
+
+
+</script>
+
+
+{% endblock acctDetail %}

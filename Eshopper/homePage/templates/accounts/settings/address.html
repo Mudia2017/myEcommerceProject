@@ -1,0 +1,710 @@
+{% extends 'homePage/homepage.html' %}
+
+{% block content %}
+
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous" />
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script src="https://ajax.googleapis.com/ajax/libs/d3js/6.6.0/d3.min.js"></script>
+
+<style type="text/css">
+    /* ===================== CSS FOR INPUT FIELD NAME ===================== */
+
+    .first-row {
+        display: flex;
+    }
+
+    .name-row {
+        width: 100%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .name {
+        width: 50%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .input-name-field {
+        width: 100%;
+        height: 100%;
+        color: #595f6e;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        border: none;
+        outline: none;
+        padding-left: 1%;
+    }
+
+    .label-name {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-bottom: 1px solid black;
+    }
+
+    .label-name::after {
+        content: "";
+        position: absolute;
+        left: 0px;
+        bottom: -1px;
+        width: 100%;
+        height: 100%;
+        border-bottom: 3px solid #5fa8d3;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .content-name {
+        position: absolute;
+        bottom: 5px;
+        left: 2%;
+        transition: all 0.3s ease;
+    }
+
+    .input-name-field:focus+.label-name .content-name,
+    .input-name-field:valid+.label-name .content-name {
+        transform: translateY(-100%);
+        font-size: 13px;
+        color: #5fa8d3;
+    }
+
+    .input-name-field:focus+.label-name::after,
+    .input-name-field:valid+.input-name-field::after {
+        transform: translateX(0%);
+    }
+
+    /* ======================= END OF INPUT FIELD NAME ========================= */
+
+    .address-label {
+        text-align: center;
+        font-size: 23px;
+        color: orange;
+    }
+
+    .btn-address {
+        margin-left: 5%;
+        width: 90%;
+    }
+
+    form .account-btn {
+        text-decoration: none;
+        box-shadow: hsl(0, 0%, 80%) 0 0 16px;
+        background-color: #fff;
+        width: 100%;
+        padding: 3%;
+        display: block;
+        font-size: 20px;
+    }
+
+    .btn-logout {
+        width: 100%;
+        background-color: rgb(235, 102, 53);
+        color: #fff;
+        border: none;
+        padding: 7px;
+        font-size: 18px;
+        text-decoration: none;
+        display: block;
+        padding-left: 40%;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+    .alert-danger {
+        display: none;
+    }
+
+    .updateAddress_wrapper {
+        display: none;
+    }
+
+    @media only screen and (max-width: 540px) {
+        .box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 767px) {
+        .box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+    }
+
+    @media only screen and (min-width: 768px) {
+        .box-element {
+            margin: 5rem 0% 1rem 0%;
+        }
+
+        .display-mode {
+            display: block;
+            margin: 2% 5%;
+        }
+
+    }
+
+
+    @media only screen and (min-width: 992px) {
+
+        /* ======== CSS TO PLACE THE FORM ON THE RIGHT SIDE OF THE SCREEN =========== */
+        .box-element-right {
+            margin-top: 4rem;
+            margin-left: 1%;
+            margin-right: 1%;
+            /* box-shadow: hsl(0, 0%, 80%) 0 0 16px; */
+            background-color: #fff;
+            border-radius: 4px;
+            padding: 1%;
+            width: 70%;
+        }
+
+        /* ======== CSS TO PLACE THE FORM ON THE LEFT SIDE OF THE SCREEN =========== */
+        .box-element {
+            margin-top: 4rem;
+            margin-right: 1%;
+            width: 30%;
+        }
+
+        div form .account-btn:hover {
+            background-color: rgb(184, 178, 178);
+        }
+
+        div form .btn-logout:hover {
+            background-color: rgb(177, 81, 2);
+            color: #fff;
+        }
+
+        .display-mode {
+            display: inline-flex;
+            width: 90%;
+        }
+    }
+    #address-btn:visited {
+        background-color: rgb(204, 199, 199);
+    }
+    body {  min-width:280px; }
+</style>
+
+
+
+<div class="display-mode" style="display: flex; justify-content: center;">
+
+    <!-- <div class="box-element">
+
+        <form action="" id="button-form">
+            <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'customer_acct_card' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                    </svg>My eShopper Account
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'my_order' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-cart-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                        <path
+                            d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                    </svg>My Order
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'pending_review' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-person-lines-fill" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                    </svg>My Pending Reviews
+                </a>
+            </div>
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'wishList' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-list-check" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path fill-rule="evenodd"
+                            d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                    </svg>My WatchList
+                </a>
+            </div>
+
+            
+
+            <div class="left-btn-col">
+                <a class="account-btn" href="{% url 'login_Security' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        class="bi bi-file-lock" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path
+                            d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1zm2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224zM6.105 8.125A.637.637 0 0 1 6.5 8h3a.64.64 0 0 1 .395.125c.085.068.105.133.105.175v2.4c0 .042-.02.107-.105.175A.637.637 0 0 1 9.5 11h-3a.637.637 0 0 1-.395-.125C6.02 10.807 6 10.742 6 10.7V8.3c0-.042.02-.107.105-.175z" />
+                        <path
+                            d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                    </svg>Login & Security
+                </a>
+            </div>
+
+              THE STORE IS ONLY FOR STAFF. THOSE THAT HAVE STORE IN THE SITE 
+            {% if user.is_staff %}
+            <div class="left-btn-col">
+                <a class="account-btn" href=" {% url 'trader_store' request.user.id %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"/>
+                      </svg>Trader Store
+                </a>
+
+                <a id="product-btn" class="account-btn" href=" {% url 'product_over_view' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+                      </svg>Product
+                </a>
+
+                <a id="my-admin-btn" class="account-btn" href=" {% url 'admin_session' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-ui-checks" viewBox="0 0 16 16" style="margin-right: 20px">
+                        <path d="M7 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zM2 1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm0 8a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H2zm.854-3.646a.5.5 0 0 1-.708 0l-1-1a.5.5 0 1 1 .708-.708l.646.647 1.646-1.647a.5.5 0 1 1 .708.708l-2 2zm0 8a.5.5 0 0 1-.708 0l-1-1a.5.5 0 0 1 .708-.708l.646.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2zM7 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-1zm0-5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                      </svg>Admin
+                </a>
+
+                <a id="settings_btn" class="account-btn" href=" {% url 'settings' %} ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 20px">
+                      <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                      <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                    </svg>Settings
+                </a>
+                
+                <hr />
+            </div>
+            {% endif %}
+
+            <div class="left-btn-col">
+                <a class="btn-logout" href="{% url 'logout' %}"> Logout </a>
+            </div>
+        </form>
+    </div> -->
+
+    <!-- ============ SEPERATION BETWEEN LEFT AND RIGHT FORM ================== -->
+
+    <div class="box-element-right">
+        <!-- <form action="" id="address-form" class="edit-address-form" method="POST">
+            {% csrf_token %}
+            <div class="address-label">
+                <label>Shipping Address</label>
+            </div>
+
+            SUCCESS ALERT MESSAGE FOR SAVE/UPDATE
+            <div id="success-alert" class="alert alert-success" role="alert">
+                <strong> {{ myDictionary.successmsg }} </strong>
+            </div>
+
+            ERROR ALERT MESSAGE
+            <div id="error-alert" class="alert alert-danger" role="alert">
+                <strong> {{ myDictionary.errorMessage }} </strong>
+                
+            </div>
+
+            <hr>
+
+            <div class="first-row">
+
+                <div class="name">
+
+                    <input value="{{ form.full_name }}" class="input-name-field" type="text" name="full_name"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Full Name</span>
+                    </label>
+                </div>
+
+                <div class="name" style="margin-left: 5%;">
+                    <input value="{{ form.email }}" class="input-name-field" type="text" name="email" autocomplete="" />
+                    <label for="email" class="label-name">
+                        <span class="content-name">Email</span>
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="first-row" style="margin-top: 2%;">
+                <div class="name">
+                    <input value="{{ form.mobile }}" class="input-name-field" type="tel" name="mobile" id="phone"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Mobile</span>
+                    </label>
+                </div>
+
+                <div class="name" style="margin-left: 5%;">
+                    <input value="{{ form.home_tel }}" class="input-name-field" type="tel" name="home_tel" id="phone"
+                        autocomplete="" />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Home</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="first-row" style="margin-top: 2%;">
+                <div class="name-row">
+                    <input value="{{ form.address }}" class="input-name-field" type="text" name="address" id="address"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Address</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="first-row" style="margin-top: 2%;">
+                <div class="name">
+                    <input value="{{ form.city }}" class="input-name-field" type="text" name="city" id="city"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">City</span>
+                    </label>
+                </div>
+
+                <div class="name" style="margin-left: 5%;">
+                    <input value="{{ form.state }}" class="input-name-field" type="text" name="state" id="state"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">State</span>
+                    </label>
+                </div>
+            </div>
+
+            <hr>
+
+            <input id="form-button" class="btn btn-success btn-block btn-address" name="saveAddress" type="submit" value="Save">
+
+
+
+
+        </form> -->
+
+        <div id="display_addAddress_wrapper">
+            
+        
+            <form action="" id="address-form" class="edit-address-form" method="POST">
+                {% csrf_token %}
+                <div class="address-label">
+                    <label>Add Address</label>
+                    <input type="text" name="address_type" value="Shipping Address" style="display: none;">
+                </div>
+
+                <!-- SUCCESS ALERT MESSAGE FOR SAVE/UPDATE -->
+                <div id="success-alert" class="alert alert-success" role="alert">
+                    <strong> {{ myDictionary.successmsg }} </strong>
+                </div>
+
+                <!-- ERROR ALERT MESSAGE -->
+                <div id="error-alert" class="alert alert-danger" role="alert">
+                    <strong> {{ myDictionary.errorMessage }} </strong>
+                    
+                </div>
+
+                <hr>
+
+                
+                <div class="first-row" style="margin-top: 2%;">
+                    <div class="name">
+                        <input value="" class="input-name-field" type="text" name="name" id="fullName"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Full Name</span>
+                        </label>
+                    </div>
+
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="" class="input-name-field" type="tel" name="mobile" id="mobile"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Mobile</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="first-row" style="margin-top: 2%;">
+                    
+                    <div class="name-row">
+                        <input value="" class="input-name-field" type="text" name="address" id="address"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Address</span>
+                        </label>
+                    </div>
+                    
+                </div>
+
+
+                <div class="first-row" style="margin-top: 2%;">
+                    <div class="name">
+                        <input value="" class="input-name-field" type="text" name="city" id="city"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">City</span>
+                        </label>
+                    </div>
+
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="" class="input-name-field" type="text" name="state" id="state"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">State</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="first-row" style="margin-top: 2%;">
+
+                    <div class="name">
+                        <input value="" class="input-name-field" type="number" name="zipcode" id="zipcode"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Zip Code</span>
+                        </label>
+                    </div>
+                    
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="" class="input-name-field" type="tel" name="altMobile" id="phone"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Alt Mobile</span>
+                        </label>
+                    </div>
+                </div>
+
+                <hr>
+                <div style="display: flex; justify-content: space-around;">
+                    
+
+                    <input onclick="" id="cancelBtnId" class="btn btn-secondary btn-sm" name="cancelAddress" type="submit" value="Cancel" style="padding-left: 5%; padding-right: 5%;">
+                    <input id="form-button" class="btn btn-success btn-sm" name="saveAddress" type="submit" value="Save" style="padding-left: 5%; padding-right: 5%;">
+                </div>
+
+
+            </form>
+        </div>
+
+        <!-- UPDATE ADDRESS BEGIN HERE -->
+        <div id="display_updateAddress_wrapper" class="updateAddress_wrapper">
+            
+        
+            <form action="" id="address-form" class="edit-address-form" method="POST">
+                {% csrf_token %}
+                <div class="address-label">
+                    <label>Update Address</label>
+                    <input type="text" name="address_type" value="Shipping Address" style="display: none;">
+                    <input type="text" name="customer" value="{{ form.customer.id }}" style="display: none;">
+                </div>
+
+                <!-- SUCCESS ALERT MESSAGE FOR SAVE/UPDATE -->
+                <div id="success-alert" class="alert alert-success" role="alert">
+                    <strong> {{ myDictionary.successmsg }} </strong>
+                </div>
+
+                <!-- ERROR ALERT MESSAGE -->
+                <div id="error-alertUpdate" class="alert alert-danger" role="alert">
+                    <strong> {{ myDictionary.errorMessage }} </strong>
+                    
+                </div>
+
+                <hr>
+
+                
+                <div class="first-row" style="margin-top: 2%;">
+                    <div class="name">
+                        <input value="{{ form.name }}" class="input-name-field" type="text" name="name" id="fullName"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Full Name</span>
+                        </label>
+                    </div>
+
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="{{ form.mobile }}" class="input-name-field" type="tel" name="mobile" id="mobile"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Mobile</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="first-row" style="margin-top: 2%;">
+                    
+                    <div class="name-row">
+                        <input value="{{ form.address }}" class="input-name-field" type="text" name="address" id="address"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Address</span>
+                        </label>
+                    </div>
+                    
+                </div>
+
+
+                <div class="first-row" style="margin-top: 2%;">
+                    <div class="name">
+                        <input value="{{ form.city }}" class="input-name-field" type="text" name="city" id="city"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">City</span>
+                        </label>
+                    </div>
+
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="{{ form.state }}" class="input-name-field" type="text" name="state" id="state"
+                            autocomplete="" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">State</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="first-row" style="margin-top: 2%;">
+                    {% if form.zipcode != None %}
+                    <div class="name">
+                        <input value="{{ form.zipcode }}" class="input-name-field" type="number" name="zipcode" id="zipcode"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Zip Code</span>
+                        </label>
+                    </div>
+                    {% else %}
+                    <div class="name">
+                        <input value="" class="input-name-field" type="number" name="zipcode" id="zipcode"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Zip Code</span>
+                        </label>
+                    </div>
+                    {% endif %}
+
+                    {% if form.altMobile != None %}
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="{{ form.altMobile }}" class="input-name-field" type="tel" name="altMobile" id="phone"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Alt Mobile</span>
+                        </label>
+                    </div>
+                    {% else %}
+                    <div class="name" style="margin-left: 5%;">
+                        <input value="" class="input-name-field" type="tel" name="altMobile" id="phone"
+                            autocomplete="" />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Alt Mobile</span>
+                        </label>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <hr>
+                <div style="display: flex; justify-content: space-around;">
+                    
+
+                    <input onclick="" id="cancelUpdateBtnId" class="btn btn-secondary btn-sm" name="cancelUpdateAddress" type="submit" value="Cancel" style="padding-left: 5%; padding-right: 5%;">
+                    <input id="form-button" class="btn btn-success btn-sm" name="updateAddress" type="submit" value="Update" style="padding-left: 5%; padding-right: 5%;">
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSaved = "{{ myDictionary.success }}";
+
+    if (isSaved == 'True') {
+        function showdiv() {
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 4000);
+    }
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR CHANGE PASSWORD ERROR MESSAGE
+    var isError = "{{ myDictionary.error }}";
+    
+    if (isError == 'True') {
+        function showDiv() {
+            document.getElementById('error-alert').style.display = "block";
+            document.getElementById('error-alertUpdate').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('error-alert').style.display = "none";
+            document.getElementById('error-alertUpdate').style.display = "none";
+        }
+        setTimeout("hideDiv()", 8000);
+    }
+
+    // FUNCTION USED TO DISABLE REQUIRED FIELD WHEN CANCEL BUTTON IS CLICKED ON
+    document.getElementById('cancelBtnId').addEventListener('click', function(){
+
+        document.getElementById('fullName').required = false;
+        document.getElementById('mobile').required = false;
+        document.getElementById('address').required = false;
+        document.getElementById('city').required = false;
+        document.getElementById('state').required = false;
+    })
+
+    // FUNCTION USED TO DISABLE REQUIRED FIELD WHEN CANCEL BUTTON IS CLICKED ON FOR UPDATE FORM
+    document.getElementById('cancelUpdateBtnId').addEventListener('click', function(){
+
+        document.getElementById('fullName').required = false;
+        document.getElementById('mobile').required = false;
+        document.getElementById('address').required = false;
+        document.getElementById('city').required = false;
+        document.getElementById('state').required = false;
+    })
+
+
+    // THIS FUNCTION IS USED TO CHECK IF SHIPPING UPDATE FORM SHOULD DISPLAY
+    var isUpdateShippingAddressForm = "{{ myDictionary.updateShippingAddressForm }}";
+    
+    if (isUpdateShippingAddressForm == 'True') {
+        
+        document.getElementById('display_addAddress_wrapper').style.display = "none";
+        document.getElementById('display_updateAddress_wrapper').style.display = "block";
+    }
+</script>
+{% endblock %}

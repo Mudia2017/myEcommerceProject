@@ -1,0 +1,248 @@
+{% extends 'homePage/homepage.html' %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS -->
+{% load static %}
+{% block content %}
+
+
+<style>
+    .ellipse {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+
+
+     /* ========== POPUP CONFIRMATION FORM ============= */
+
+     .modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-open {
+            display: flex;
+        }
+        
+        .modal_form {
+            max-width: 700px;
+            max-height: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+        }
+
+        .modal-button {
+            text-transform: uppercase;
+            padding: 0.5em 1em;
+            border: none;
+            color: white;
+            background-color: grey;
+            border-radius: 3px;
+            margin-left: 0.5em;
+        }
+
+        .modal-confirm-button {
+            background-color: tomato;
+        }
+
+        .modal-header {
+            
+            color: orange;
+        }
+
+        .modal-header h2 {
+            padding: 0.5em;
+        }
+
+        .modal_content {
+            padding: 1em;
+            color:  rgba(168, 167, 167);
+            text-align: center;
+        }
+
+        .modal-footer {
+            padding: 1em;
+            background-color: rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* =========== END OF POPUP CONFIRMATION FORM ========== */
+
+</style>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<div style="padding-left: 1rem; padding-right: 1rem; margin-top: 4rem; float: left; width: inherit;">
+    <hr style="margin-top: 8rem; ">
+    <div style="float: right; width: 80%;">
+        <div style=" justify-content: space-between; display: flex;">
+            <div>
+
+                <label style="font-size: 25px; font-weight: bold; ">Recently viewed</label>
+                <a class="btn btn-outline-dark" href=" {% url 'homePage' %}">&#x2190; back</a>
+            </div>
+            {% if not recentViewItems %}
+            
+                <button type="button" class="btn btn-outline-danger" id="clear_all" disabled>Clear all</button>
+            
+            {% else %}
+                <button type="button" class="btn btn-outline-danger" id="clear_all">Clear all</button>
+
+            {% endif %}
+        </div>
+        
+        <label for=""> <span style="font-weight: 500;">{{ counter }}</span> <span style="font-size: 15px;">Items in total</span></label>
+        <div style="margin-top: 0.3rem;" class="row row-cols-1 row-cols-md-3 g-4">
+            {% for recentViewItem in recentViewItems %}
+            <div class="col">
+                <div class="card h-100">
+                    <a style="text-decoration-line: none;" href="{% url 'product_detail' recentViewItem.product.id %}">
+                        {% if recentViewItem.product.imageURL %}
+                        <img style="height: 16rem; object-fit: contain; background-color: rgb(242, 242, 242);" src="{{ recentViewItem.product.imageURL }}" class="card-img-top" alt="...">
+                        {% else %}
+                        <img style="height: 16rem; object-fit: contain; background-color: rgb(242, 242, 242);" src="{% static 'images/default_image_icon.png' %}" class="card-img-top" alt="...">
+                        {% endif %}
+                        <br>
+                      <div style="padding: 0% 2% 0% 2%; font-size: 15px;" class="ellipse">
+                          <span for="">{{ recentViewItem.product.name }}</span>
+
+                      </div>
+                    </a>
+                    <div style="padding: 0% 2% 0% 2%;">
+                        {% if recentViewItem.product.discount > 0 %}
+                        <label style="font-weight: bold; font-size: 24px;" for="">&#8358; {{ recentViewItem.product.new_price }}</label>
+                        {% else %}
+                        <label style="font-weight: bold; font-size: 24px;" for="">&#8358; {{ recentViewItem.product.price }}</label>
+                        {% endif %}
+                        <br>
+                        {% if recentViewItem.product.discount > 0 %}
+                        <label style="color: grey; text-decoration: line-through; font-size: 15px;" for="">&#8358; {{ recentViewItem.product.price }}</label>
+                        
+                        <label style="font-size: 15px; margin-left: 5%;" for="">{{ recentViewItem.product.discount }} Off</label>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not recentViewItems %}
+            <div
+                style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 5%; margin-bottom: 5%; width: 100%;">
+                No Record!</div>
+            
+            {% endif %}
+        </div>
+
+
+        
+        
+        <br>
+            <div class="paginator">
+                <span class="step-links">
+                    {% if recentViewItems.has_previous %}
+                        <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                        <a href="{% my_url recentViewItems.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                    {% endif %}
+        
+                    <span class="current">
+                        Page {{ recentViewItems.number }} of {{ recentViewItems.paginator.num_pages }}
+                    </span>
+        
+                    {% if recentViewItems.has_next %}
+                        <a href="{% my_url recentViewItems.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                        <a href="{% my_url recentViewItems.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                    {% endif %}
+                </span>
+        
+            </div>
+        
+        <br>
+    </div>
+</div>
+
+
+<!-- ======= POPUP CONFIRMATION TEMPLATE ========== -->
+<div id="confirmation" class="modal-container">
+    <div class="modal_form">
+        <section>
+            <header >
+                <h2 class="modal-header">Warning</h2>
+            </header>
+            <section >
+                <h5 class="modal_content" id="modal_content_id"></h5>
+            </section>
+            <footer class="modal-footer">
+                <button class="modal-button" onclick="onCancel()" id="cancelBtnId">Cancel</button>
+                <button class="modal-button modal-confirm-button" onclick="onConfirmBtn()" id="confirmBtnId">Confirm</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP CONFIRMATION TEMPLATE ========== -->
+
+
+
+<script>
+
+    var clearAll = document.getElementById('clear_all')
+    clearAll.addEventListener('click', function(e) {
+        e.preventDefault()
+        onPopConfirmForm();
+        document.getElementById('modal_content_id').innerHTML = 'Confirm to delete all recently viewed items';
+    })
+
+    // FUNCTION CALL THAT WILL SEND COMMEND TO THE BACKEND
+    function submitData() {
+        var url = '/all_recent_view/';
+        fetch(url, {
+            method:'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body:JSON.stringify({'call': 'deleteAll'})
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data == 'success') {
+                location.reload()
+            }
+        })
+    }
+
+
+    // =========== SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+    function onPopConfirmForm() {
+        let confirmation = document.getElementById('confirmation');
+        if (!confirmation.classList.contains('modal-open')) {
+            confirmation.classList.add("modal-open");
+        }
+    }
+
+    function onCancel() {
+        let confirmation = document.getElementById('confirmation');
+        confirmation.classList.remove("modal-open");
+    }
+
+    function onConfirmBtn() {
+        onCancel();
+        submitData()
+        
+    }
+    
+    // =========== END OF SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+
+</script>
+
+{% endblock %}

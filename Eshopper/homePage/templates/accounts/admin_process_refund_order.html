@@ -1,0 +1,986 @@
+{% extends 'homePage/homepage.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        min-width: 1000px;
+    }
+    .display-mode {
+        display: flex;
+        width: 100%;
+        /* margin-top: 4rem; */
+        /* margin-bottom: 2rem; */
+        font-family: Niramit;
+    }
+
+    ._box-element {
+        padding: 0% 1%;
+        width: 70%;
+        margin-top: 4rem;
+        font-size: 12px;
+        overflow: scroll;
+        height: 100vh;
+        padding-bottom: 5%;
+    }
+
+    .box-element-right {
+        width: 30%;
+        margin-right: 1%;
+        margin-top: 7.3rem;
+    }
+
+    .image-parent {
+        max-width: 40px;
+        max-height: 40px;
+    }
+
+    div .right_element{
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 3px;
+  /* margin-top: 7.2rem; */
+}
+
+    .alert-danger {
+        display: none;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+    /* ================== CSS FOR LOAD EVENT SPINNER ====================== */
+    /* .loader,
+        .loader:after {
+            border-radius: 50%;
+            width: 10em;
+            height: 10em;
+        }
+        .loader {            
+            margin: 60px auto;
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+            border-left: 1.1em solid #ffffff;
+            margin-top: 5rem;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: load8 1.1s infinite linear;
+            animation: load8 1.1s infinite linear;
+        }
+        @-webkit-keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        #loadingDiv {
+            position:absolute;;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color:rgb(53, 49, 49);
+            opacity: 0.75;
+        } */
+        /* ================== END CSS FOR LOAD EVENT SPINNER ====================== */
+
+
+
+        /* .LockOn {
+        display: block;
+        visibility: visible;
+        position: absolute;
+        z-index: 999;
+        top: 0px;
+        left: 0px;
+        width: 105%;
+        height: 105%;
+        background-color:white;
+        vertical-align:bottom;
+        padding-top: 20%; 
+        filter: alpha(opacity=75); 
+        opacity: 0.75; 
+        font-size:large;
+        color:blue;
+        font-style:italic;
+        font-weight:400;
+        background-image: url("../Common/loadingGIF.gif");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    } */
+
+    /* ==================================================== */
+
+
+    /* ========== POPUP CONFIRMATION FORM ============= */
+
+    .modal-container {
+        z-index: 9999;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-open {
+        display: flex;
+    }
+    
+    .modal_form {
+        max-width: 700px;
+        max-height: 800px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 3px;
+    }
+
+    .modal-button {
+        text-transform: uppercase;
+        padding: 0.5em 1em;
+        border: none;
+        color: white;
+        background-color: grey;
+        border-radius: 3px;
+        margin-left: 0.5em;
+    }
+
+    .modal-confirm-button {
+        background-color: tomato;
+    }
+
+    .modal-header {
+        
+        color: orange;
+    }
+
+    .modal-header h2 {
+        padding: 0.5em;
+    }
+
+    .modal_content {
+        padding: 1em;
+        color:  rgba(168, 167, 167);
+        text-align: center;
+    }
+
+    .modal-footer {
+        padding: 1em;
+        background-color: rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* =========== END OF POPUP CONFIRMATION FORM ========== */
+
+    /* ===== START OF POPUP INFO ========= */
+    .message-modal-container {
+        z-index: 9999;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-open-info {
+        display: flex;
+    }
+
+    .modal-info-footer {
+        padding: 1em;
+        background-color: rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .modal-ok-button {
+        background-color: rgb(50, 135, 245);
+        text-transform: uppercase;
+        padding: 0.5em 1em;
+        border: none;
+        color: white;
+        border-radius: 3px;
+        margin-left: 0.5em;
+    }
+
+    /* ============ END OF POPUP INFO ========== */
+
+    /* =========== START OF TOAST SUCCESSFUL MESSAGE ============= */
+    .toast-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success_toast_modal_form {
+            max-width: 700px;
+            max-height: 800px;
+            background-color: rgba(2, 56, 2, 0.9);
+            border-radius: 3px;
+        }
+
+        .toast_modal_content {
+            padding: 0.5em;
+            color:  white;
+            text-align: center;
+        }
+
+        .modal-open-toast {
+            display: flex;
+        }
+
+        .error_toast_modal_form {
+            max-width: 700px;
+            max-height: 800px;
+            background-color: rgba(56, 2, 2, 0.9);
+            border-radius: 3px;
+        }
+
+        /* =========== END OF TOAST SUCCESSFUL MESSAGE ============= */
+
+         /* =========== START OF WINDOW SPINNER ============= */
+    .spin-modal-container {
+            z-index: 9999;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner_modal_content {
+            padding: 0.5em;
+            color:  white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .modal-open-load {
+            display: flex;
+        }
+
+    /* ========== STARTING FROM HERE LOADING EFFECT COPY FROM WEB ============ */
+    .loading {
+        display: flex;
+    }
+    .loading .dot {
+        position: relative;
+        width: 2em;
+        height: 2em;
+        margin: 0.8em;
+        border-radius: 50%;
+    }
+    .loading .dot::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        border-radius: inherit;
+        animation: wave 2s ease-out infinite;
+    }
+    .loading .dot:nth-child(1) {
+        background: #7ef9ff;
+    }
+    .loading .dot:nth-child(1)::before {
+        animation-delay: 0.2s;
+    }
+    .loading .dot:nth-child(2) {
+        background: #89cff0;
+    }
+    .loading .dot:nth-child(2)::before {
+        animation-delay: 0.4s;
+    }
+    .loading .dot:nth-child(3) {
+        background: #4682b4;
+    }
+    .loading .dot:nth-child(3)::before {
+        animation-delay: 0.6s;
+    }
+    .loading .dot:nth-child(4) {
+        background: #0f52ba;
+    }
+    .loading .dot:nth-child(4)::before {
+        animation-delay: 0.8s;
+    }
+    .loading .dot:nth-child(5) {
+        background: #000080;
+    }
+    .loading .dot:nth-child(5)::before {
+        animation-delay: 1s;
+    }
+
+    @keyframes wave {
+    50%, 75% {
+        transform: scale(2.5);
+    }
+    80%, 100% {
+        opacity: 0;
+    }
+    }
+    /* END OF LOADING EFFECT */
+
+        /* =========== END OF WINDOW SPINNER ============= */
+
+</style>
+
+<div class="display-mode">
+
+    <form action="" style="width: 100%; display: flex; overflow: hidden; height: 100vh;" method="POST">
+        {% csrf_token %}
+        <div class="_box-element">
+
+            <div style="display: flex; width: 100%; justify-content: space-between;">
+                <a id="back_to_order_id" class="btn btn-outline-dark shadow-none" href="#">&#x2190; Back
+                    to Order</a>
+
+                {% if refundOrder.reason_for_refund %}
+                <label style="margin-top: 1%; font-weight: 600; font-size: 18px; color: red;" for=""> <span style="color: black; font-weight: 400; font-size: 15px;">Status:</span> CLOSED</label>
+                {% else %}
+                <label style="margin-top: 1%; font-weight: 600; font-size: 18px; color: green;" for=""> <span style="color: black; font-weight: 400; font-size: 15px;">Status:</span> OPEN</label>
+                {% endif %}
+            </div>
+            
+
+               
+
+            <div style="background-color: rgb(245, 248, 245); margin-top: 2%; padding: 2%;">
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <div>
+                        <label style="font-size: 25px; font-weight: 700;" for="">Refund Order No: <span
+                                style="color: coral;" id="label_trans_id" data-trans_id="{{ refundOrder.transaction_id }}">{{ refundOrder.transaction_id }}</span></label>
+                    </div>
+                    <div>
+                        <label style="font-weight: 500;" for="">Reason for refund</label>
+                        <select style="width: 100%;" name="action_comboBox_selected" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
+                            {% if refundOrder.reason_for_refund %}
+                            
+                            {% if refundOrder.reason_for_refund == 'Could not ship' %}
+                            <option name="opt_selected" value="Could not ship" selected>Could not ship</option>
+                            {% elif refundOrder.reason_for_refund == 'Customer return' %}
+                            <option name="opt_selected" value="Customer return" selected>Customer return</option>
+                            {% elif refundOrder.reason_for_refund == 'Buyer cancelled' %}
+                            <option name="opt_selected" value="Buyer cancelled" selected>Buyer cancelled</option>
+                            {% elif refundOrder.reason_for_refund == 'Different item' %}
+                            <option name="opt_selected" value="Different item" selected>Different item</option>
+                            {% elif refundOrder.reason_for_refund == 'Delivered late by carrier' %}
+                            <option name="opt_selected" value="Delivered late by carrier" selected>Delivered late by carrier</option>
+                            {% elif refundOrder.reason_for_refund == 'Product not as described' %}
+                            <option name="opt_selected" value="Product not as described" selected>Product not as described</option>
+                            {% elif refundOrder.reason_for_refund == 'Shipping address undeliverable' %}
+                            <option name="opt_selected" value="Shipping address undeliverable" selected>Shipping address undeliverable</option>
+                            {% elif refundOrder.reason_for_refund == 'No inventory' %}
+                            <option name="opt_selected" value="No inventory" selected>No inventory</option>
+                            {% elif refundOrder.reason_for_refund == 'Order not received' %}
+                            <option name="opt_selected" value="Order not received" selected>Order not received</option>
+                            {% elif refundOrder.reason_for_refund == 'Pricing error' %}
+                            <option name="opt_selected" value="Pricing error" selected>Pricing error</option>
+                            {% elif refundOrder.reason_for_refund == 'Others' %}
+                            <option name="opt_selected" value="Others" selected>Others</option>
+                            {% endif %}
+
+                            {% else %}
+                            <div id="refund_reason_id">
+                                <option name="opt_selected" value="False" selected>------</option>
+                                <option name="opt_selected" value="Could not ship">Could not ship</option>
+                                <option name="opt_selected" value="Customer return">Customer return</option>
+                                <option name="opt_selected" value="Buyer cancelled">Buyer cancelled</option>
+                                <option name="opt_selected" value="Different item">Different item</option>
+                                <option name="opt_selected" value="Delivered late by carrier">Delivered late by carrier</option>
+                                <option name="opt_selected" value="Product not as described">Product not as described</option>
+                                <option name="opt_selected" value="Shipping address undeliverable">Shipping address undeliverable</option>
+                                <option name="opt_selected" value="No inventory">No inventory</option>
+                                <option name="opt_selected" value="Order not received">Order not received</option>
+                                <option name="opt_selected" value="Pricing error">Pricing error</option>
+                                <option name="opt_selected" value="Others">Others</option>
+
+                            </div>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SUCCESS ALERT MESSAGE -->
+                <div id="success-alert" class="alert alert-success" role="alert">
+                    <strong>
+                        <center> {{ myDictionary.success_msg }} </center>
+                    </strong>
+                </div>
+            </div>
+
+            <!-- WARNING ALERT MESSAGE -->
+            <div id="danger-alert" class="alert alert-danger" role="alert">
+                <strong>
+                    <center>{{ myDictionary.warning_msg }}</center>
+                </strong>
+            </div>
+
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Store Name</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">Line total</th>
+                        <th scope="col">Amt to refund</th>
+
+                        {% if refundOrder.reason_for_refund %}
+                        <th scope="col"><input disabled data-action="full_refund" type="checkbox" class="form-check-input refund_all" style="position: relative;"> Refund full amount</th>
+                        {% else %}
+                        <th scope="col"><input id="full_refund_checked" data-action="full_refund" type="checkbox" class="form-check-input refund_all" style="position: relative;"> Refund full amount</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for refundItem in refundItems %}
+                    <tr>
+                        <th scope="row">
+                            <div class="image-parent">
+                                {% if refundItem.product.imageURL %}
+                                <img style="height: 4rem; width: 4rem; object-fit: contain;" src="{{ refundItem.product.imageURL }}" class="img-fluid" alt="quixote">
+                                {% else %}
+                                <img style="height: 4rem; width: 4rem; object-fit: contain;" src="{% static 'images/default_image_icon.png' %}" class="img-fluid" alt="quixote">
+                                {% endif %}
+                            </div>
+                        </th>
+                        <td>{{ refundItem.product.name }}</td>
+                        <td>{{ refundItem.store_name }}</td>
+                        <td>{{ refundItem.quantity }}</td>
+                        <td>&#8358; {{ refundItem.line_total }}</td>
+                        {% if refundOrder.reason_for_refund %}
+                        <td>
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">&#8358;</span>
+                                <input disabled value="{{refundItem.refundAmt }}" id="{{ refundItem.id }}"  data-row_id="{{ refundItem.id }}" name="refund_amt" type="text" class="form-control refund_value">
+                            </div>
+                        </td>
+                        {% else %}
+                        <td>
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">&#8358;</span>
+                                <input value="{{refundItem.refundAmt }}" id="{{ refundItem.id }}"  data-row_id="{{ refundItem.id }}" name="refund_amt" type="text" class="form-control refund_value shadow-none">
+                            </div>
+                        </td>
+                        {% endif %}
+
+                        {% if refundOrder.reason_for_refund %}
+
+                        <td >&#8358; {{refundItem.refundAmt }} <br> <input disabled style="color: rgb(255, 191, 67); background-color: rgb(0, 0, 0); font-weight: 700; border-radius: 5px;" id="{{ refundItem.id }}"  data-row_id="{{ refundItem.id }}" data-max_value="{{ refundItem.line_total }}" value="COPY MAX" type="button" class="max"> </td>
+                        {% else %}
+
+                        <td >&#8358; {{refundItem.refundAmt }} <br> <input style="color: rgb(255, 191, 67); background-color: rgb(0, 0, 0); font-weight: 700; border-radius: 5px;" id="{{ refundItem.id }}"  data-row_id="{{ refundItem.id }}" data-max_value="{{ refundItem.line_total }}" value="COPY MAX" type="button" class="max"> </td>
+                   
+                        {% endif %}
+
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <label style="font-weight: 700;" for="">Total</label>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="font-weight: 800;">&#8358; {{ myDictionary.totalAmt }}</td>
+                        <td id="totalRefund_id" style="font-weight: 800; color: crimson;">&#8358; {{ myDictionary.totalRefund }}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="mb-3">
+                <label style="font-size: 12px; font-weight: 700;" for="private_note_textarea1"
+                    class="form-label">Private Note</label>
+                    {% if refundOrder.reason_for_refund %}
+                <textarea disabled name="private_note" class="form-control" id="private_note_textarea2" rows="5" style="font-size: 13px;">{{ refundOrder.refund_private_note }}</textarea>
+                    {% else %}
+                    <textarea id="private_note_id" name="private_note" class="form-control shadow-none" rows="5" style="font-size: 13px;"></textarea>
+                    {% endif %}
+            </div>
+        </div>
+
+
+        <div class="box-element-right">
+            <div class="right_element">
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <label style="margin-top: 3%; font-weight: 800; font-size: 22px; padding-left: 0px;" for="">Refund Summary</label>
+
+            </div>
+                <div style="background-color: white; width: 100%;">
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        
+                        <label style="padding-left: 2%; font-size: 13px;" for="">Total Amount</label>
+                    
+                        <div>
+                            <label style="font-weight: 800;" for="">&#8358; {{ myDictionary.totalAmt }}</label>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        
+                            <label style="padding-left: 2%; font-size: 13px;" for="">Amount to refund</label>
+                        
+                        <div>
+                            <label style="font-weight: 800; color: crimson;" for="">&#8358; {{ myDictionary.totalRefund }}</label>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        
+                        <label style="padding-left: 2%; font-size: 13px;" for="">Balance</label>
+                    
+                        <div>
+                            <label style="font-weight: 800; color: rgb(220, 127, 20);" for="">&#8358; {{ myDictionary.difference }}</label>
+                        </div>
+                    </div>
+                    
+
+                    <div style="width: 100%; display: flex; justify-content: space-evenly; margin-top: 3rem;">
+                        {% if refundOrder.reason_for_refund %}
+                        <a style="padding-left: 2.5rem; padding-right: 2.5rem; pointer-events: none; display: inline-block;" class="btn btn-secondary btn-sm" >Cancel</a>
+                        <input disabled id="submitRefund_id_btn" style="font-weight: 700;" type="button" class="btn btn-warning btn-sm" value="Submit Refund" name="refund_btn">
+                        {% else %}
+                        <a id="cancelBtn_id" style="padding-left: 2.5rem; padding-right: 2.5rem;" class="btn btn-secondary btn-sm" href="#">Cancel</a>
+                        <input id="submitRefund_id_btn" style="font-weight: 700;" type="button" class="btn btn-warning btn-sm " value="Submit Refund" name="refund_btn">
+                        {% endif %}
+                    </div>
+                      
+
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<!-- ======= POPUP CONFIRMATION TEMPLATE ========== -->
+<div id="confirmation" class="modal-container">
+    <div class="modal_form">
+        <section>
+            <header >
+                <h2 class="modal-header">Warning</h2>
+            </header>
+            <section >
+                <h5 class="modal_content" id="modal_content_id"></h5>
+            </section>
+            <footer class="modal-footer">
+                <button class="modal-button" onclick="onCancel()" id="cancelBtnId">Cancel</button>
+                <button class="modal-button modal-confirm-button" onclick="onConfirmBtn()" id="confirmBtnId">Confirm</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP CONFIRMATION TEMPLATE ========== -->
+
+<!-- ======= POPUP MESSAGE INFORMATION ========== -->
+<div id="information" class="message-modal-container">
+    <div class="modal_form">
+        <section>
+            <header >
+                <h2 class="modal-header">Warning</h2>
+            </header>
+            <section >
+                <h5 class="modal_content" id="modal_info_content_id"></h5>
+            </section>
+            <footer class="modal-info-footer">
+                
+                <button class="modal-ok-button" onclick="onCancelInfoForm()">Ok</button>
+            </footer>
+        </section>
+    </div>
+</div>
+<!-- ======= END OF POPUP MESSAGE INFORMATION ========== -->
+
+<!-- ===== TOAST MESSAGE NOTIFICATION FOR SUCCESS AND ERROR MESSAGE ======= -->
+<div id="successToast" class="toast-modal-container">
+    <div id="toast_modal_id" class="">
+        <section>
+            
+            <section >
+                <h5 class="toast_modal_content" id="modal_toast_content_id"></h5>
+            </section>
+            
+        </section>
+    </div>
+</div>
+<!-- ====== END OF TOAST NOTIFICATION FOR SUCCESS AND ERROR MESSAGE ====== -->
+
+<!-- ===== WINDOW SPINNER ======= -->
+<div id="windowSpinner" class="spin-modal-container">
+    <div id="spinner_modal_id" class="bar">
+        <section>
+            
+            <section class="spinner_modal_content">
+                <div class="loading">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                
+                <p style="font-family: Lucida Handwriting; font-size: 20px; font-weight: bold;">Loading... <span style="font-family: Bradley Hand; font-size: 20px;">please wait</span></p>
+            </section>
+            
+        </section>
+    </div>
+</div>
+<!-- ====== END OF WINDOW SPINNER ====== -->
+
+
+<script>
+    let lab_tag = document.getElementById('label_trans_id')
+    let tran_id = lab_tag.dataset.trans_id;
+    let selectedVal;
+    let refund_btn;
+    let privateNote;
+    let sessionStorageMsg;
+
+    // CHECK BOX FUNCTION IS TO ASSIGN FULL REFUND TO ALL ITEMS IN THE LIST
+    var checked_refund = document.getElementsByClassName('refund_all')
+    for (var i = 0; i < checked_refund.length; i++){
+        checked_refund[i].addEventListener('click', function(){
+            let inputValue = this.dataset.action
+            refundRequested(row_id = '', inputValue, tran_id, callBtn = '', selectedVal = '', privateNote = '')
+            
+        })
+    }
+
+
+    // ============== GET THE MAXIMUM AMOUNT ON A ROW ==================
+    var max_btn = document.getElementsByClassName('max');
+    for (var x = 0; x < max_btn.length; x++){
+        max_btn[x].addEventListener('click', function(){
+            var row_id = this.dataset.row_id;
+            let max_value = this.dataset.max_value;
+
+            refundRequested(row_id, max_value, tran_id, callBtn = 'max', selectedVal = '', privateNote = '')
+
+        })
+    }
+
+
+    // THIS BLOCK OF CODE IS USED TO PROCESS REFUND AMOUNT INPUTTED BY THE USER
+    var input_amt = document.getElementsByClassName('refund_value')
+    for (var i = 0; i < input_amt.length; i++){
+            input_amt[i].addEventListener('focusout', function(){
+               
+                var row_id = this.dataset.row_id;
+                    console.log( row_id)
+
+                    const rbs = document.querySelectorAll('input[name="refund_amt"]');
+                    let inputValue;
+                    for (const rb of rbs){
+                        if (rb.id == row_id){
+                            inputValue = rb.value;
+                            if (inputValue == ''){
+                                onPopInfoForm()
+                                document.getElementById('modal_info_content_id').innerHTML = 'Field most not be empty';
+                            }else{
+                                refundRequested(row_id, inputValue, tran_id, callBtn = 'inputVal', selectedVal = '', privateNote = '')
+                            }
+                            
+                        }
+                    
+                    }
+            })
+        }
+
+
+    function refundRequested(row_id, inputValue, transaction_id, callBtn, selectedVal, privateNote){
+        var url = '/update_refund/'
+        onPopWindowSpinner()
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({'row_id': row_id, 'inputValue': inputValue, 'transaction_id': transaction_id, 'callBtn': callBtn, 'selectedVal': selectedVal, 'privateNote': privateNote})
+        })
+
+        .then((response)=>{
+            return response.json()
+        })
+
+        .then((data)=>{
+            console.log('data:', data)
+            if (data === 'successful'){
+                var someVal = 'fromSuccessBlock';
+                sessionStorage.setItem('storeKey', someVal);
+            } else {
+                var someVal = 'fromErrorBlock';
+                sessionStorage.setItem('storeKey', someVal);
+                sessionStorage.setItem('errorKey', data);
+            }
+            location.reload()
+
+        })
+        
+    }
+
+    
+    window.addEventListener('DOMContentLoaded', function() {
+        sessionStorageMsg = sessionStorage.getItem('storeKey');
+        if (sessionStorageMsg === 'fromSuccessBlock') {
+            Toast.show('Successful', 'success');
+                
+            sessionStorage.removeItem('storeKey');
+        } else if (sessionStorageMsg === 'fromErrorBlock') {
+            var errorMsg = sessionStorage.getItem('errorKey');
+            Toast.show(errorMsg, 'error');
+            
+            sessionStorage.removeItem('storeKey');
+            sessionStorage.removeItem('errorKey');
+        }
+        
+    })
+
+
+    // USED TO DISPLAY ALERT IF REFUND PROCESS WAS NOT COMPLETED BEFORE LEAVING THE PAGE
+    var isIncompleteRefundProcess = "{{ myDictionary.isIncompleteRefundProcess }}"
+    isRelocate = false;
+    let backBtn = document.getElementById('back_to_order_id')
+    let cancelBtn = document.getElementById('cancelBtn_id')
+    backBtn.addEventListener('click', function(e){
+        if (isIncompleteRefundProcess === 'True'){
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'Refund process was not complete...!';
+            isRelocate = true;
+        } else {
+            window.location.replace("{% url 'admin_edit_order' refundOrder.transaction_id %}")
+        }
+    })
+
+    cancelBtn.addEventListener('click', function(e){
+        if (isIncompleteRefundProcess === 'True'){
+            e.preventDefault()
+            onPopInfoForm()
+            document.getElementById('modal_info_content_id').innerHTML = 'Refund process was not complete...!';
+            isRelocate = true;
+        } else {
+            window.location.replace("{% url 'admin_edit_order' refundOrder.transaction_id %}")
+        }
+    })
+    
+    // CONFIRM IF AMOUNT TO REFUND AND REASON FOR REFUND HAVE BEEN SELECTED BEFORE PROCESSING...
+    var submitRefund_id_btn = document.getElementById('submitRefund_id_btn')
+    let isPaid = "{{ refundOrder.paid }}"
+    
+    submitRefund_id_btn.addEventListener('click', function(e){
+        const totalRefund = "{{ myDictionary.totalRefund }}"
+        const reason_for_refund = document.querySelectorAll('option[name="opt_selected"]');
+        privateNote = document.getElementById('private_note_id').value;
+        
+        for (const select of reason_for_refund){
+            if (select.selected){
+                selectedVal = select.value;
+                if (select.value == 'False'){
+                    e.preventDefault();
+                    onPopInfoForm()
+                    document.getElementById('modal_info_content_id').innerHTML = 'Select reason for refund';
+                }else if (isPaid == 'False'){
+                    e.preventDefault()
+                    onPopInfoForm()
+                    document.getElementById('modal_info_content_id').innerHTML = 'Payment was not received on this order. If payment was made, '+
+                    'kindly update the order status as "Complete" in Edit Order form and process the refund again.';
+                } else if (totalRefund < 0.01){
+                    e.preventDefault()
+                    onPopInfoForm()
+                    document.getElementById('modal_info_content_id').innerHTML = 'No amount to refund!';
+                }else{
+                    // e.preventDefault()
+                    onPopConfirmForm();
+                    document.getElementById('modal_content_id').innerHTML = 'You are about to submit refund. This process is irreversible. '+
+                    'Do you want to proceed?';
+                    refund_btn = submitRefund_id_btn.value;
+                    
+                }
+                
+            }
+        }
+    })
+
+    
+    
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSuccessMsg = "{{ myDictionary.isSuccessMsg }}";
+
+    if (isSuccessMsg == 'True') {
+        function showdiv() {
+            
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 8000);
+    }
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR WARNING MESSAGE
+
+    else if (isSuccessMsg == 'False') {
+        
+        function showDiv() {
+            
+            document.getElementById('danger-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('danger-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 15000);
+    }
+
+
+    // =========== SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+        function onPopConfirmForm() {
+        let confirmation = document.getElementById('confirmation');
+        if (!confirmation.classList.contains('modal-open')) {
+            confirmation.classList.add("modal-open");
+        }
+    }
+
+    function onCancel() {
+        let confirmation = document.getElementById('confirmation');
+        confirmation.classList.remove("modal-open");
+    }
+
+    function onConfirmBtn() {
+        onCancel();
+        if (refund_btn === 'Submit Refund') {
+            refundRequested(row_id = '', inputValue = '', tran_id, refund_btn, selectedVal, privateNote)
+        }
+        
+    }
+    
+    // =========== END OF SCRIPT FOR POPUP CONFIRMATION MESSAGE ==========
+
+
+    // ============= SCRIPT FOR POPUP INFORMATION MESSAGE ===========
+
+    function onPopInfoForm() {
+         let info = document.getElementById('information');
+         if (!info.classList.contains('modal-open-info')) {
+             info.classList.add('modal-open-info');
+            }
+    }
+
+    function onCancelInfoForm() {
+        let information = document.getElementById('information');
+        information.classList.remove("modal-open-info");
+        if (isRelocate === true) {
+            window.location.replace("{% url 'admin_edit_order' refundOrder.transaction_id %}")
+            isRelocate = false;
+        }
+    }
+    // ============= END OF SCRIPT FOR INFORMATION MESSAGE ==========
+
+    // ============= SCRIPT FOR POPUP TOAST NOTIFICATION ===========
+
+    function onPopToastNotify() {
+        let info = document.getElementById('successToast');
+        if (!info.classList.contains('modal-open-toast')) {
+            info.classList.add('modal-open-toast');
+        }
+    }
+
+    function onCancelToastNotify() {
+        let information = document.getElementById('successToast');
+        information.classList.remove("modal-open-toast");
+    }
+    // ============= END OF SCRIPT FOR TOAST NOTIFICATION ==========
+    
+
+    // ============== FOR TOAST NOTIFICATION MESSAGE ===================
+    const Toast = {
+    
+        show(message, state) {
+            clearTimeout(this.hideTimeout);
+            let toastForm = document.getElementById('toast_modal_id')
+            if (state === 'success') {
+                console.log(state)
+                if (!toastForm.classList.contains('success_toast_modal_form')) {
+                    toastForm.classList.add('success_toast_modal_form');
+                }
+                onPopToastNotify();
+                setTimeout('onCancelToastNotify()', 1500);
+                
+            } else if (state === 'error') {
+                if (!toastForm.classList.contains('error_toast_modal_form')) {
+                    toastForm.classList.add('error_toast_modal_form');
+                }
+                onPopToastNotify()
+                setTimeout('onCancelToastNotify()', 3000);
+            }
+            document.getElementById('modal_toast_content_id').innerHTML = message;
+            
+        }
+    }
+
+    // ============== END OF TOAST NOTIFICATION MESSAGE ===================
+
+    // ============= SCRIPT FOR WINDOW SPINNER ===========
+
+    function onPopWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        if (!spin.classList.contains('modal-open-load')) {
+            spin.classList.add('modal-open-load');
+        }
+    }
+
+    function onCancelWindowSpinner() {
+        let spin = document.getElementById('windowSpinner');
+        spin.classList.remove("modal-open-load");
+    }
+    // ============= END OF SCRIPT FOR WINDOW SPINNER ==========
+
+</script>
+
+{% endblock %}

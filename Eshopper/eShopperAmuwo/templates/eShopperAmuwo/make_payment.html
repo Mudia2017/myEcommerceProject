@@ -1,0 +1,60 @@
+{% extends 'eShopperAmuwo/amuwo_main.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="d-flex row justify-content-center align-items-center py-md-5 py-3">
+        <div class="col-12">
+            <h5 style="margin-top: 4rem;">Make payment for: NGN {{ payment.amount }}</h5>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %}
+               
+                <script src="https://js.paystack.co/v1/inline.js"></script>
+                <button class="btn btn-large btn-success" onclick="paywithPayStack()" id="django-paystack-button">Make Payment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // document.getElementById('django-paystack-button').addEventListener('click', function(e){
+    //     e.preventDefault();
+    //     let ref = "{{ payment.ref }}";
+    //     if (ref){
+
+    //     }else{
+    //         continue
+    //     }
+
+    //     console.log('Ref: ', ref)
+    // })
+
+    function paywithPayStack(){
+        
+        let currency = "NGN";
+        let plan = "";
+        let ref = "{{ payment.ref }}";
+        console.log(ref)
+        let obj = {
+            key: "{{ paystack_public_key }}",
+            email: "{{ payment.email }}",
+            amount: "{{ payment.amount }}",
+            ref: ref,
+            callback: function(response){
+                window.location.href = "{% url 'verify-payment' payment.ref %}";
+            }
+        }
+        if (Boolean(currency)){
+            obj.currency = currency.toUpperCase()
+        }
+        if (Boolean(plan)){
+            obj.plan = plan;
+        }
+        var handler = PaystackPop.setup(obj);
+        handler.openIframe();
+    }
+</script>
+
+{% endblock content %}

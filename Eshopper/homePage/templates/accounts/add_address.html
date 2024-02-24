@@ -1,0 +1,232 @@
+{% extends 'homePage/homepage.html' %}
+
+{% block content %}
+
+<style>
+    .display_mode {
+        display: flex;
+        justify-content: center;
+    }
+
+    .box_element {
+        margin-top: 5rem;
+        margin-left: 1%;
+        margin-right: 1%;
+        width: 70%;
+    }
+
+    .address-label {
+        text-align: center;
+        font-size: 23px;
+        color: orange;
+    }
+
+    .alert-danger {
+        display: none;
+    }
+
+    /* ================ INPUT FIELD DESIGN ============= */
+    .first-row {
+        display: flex;
+    }
+
+    .input-name-field {
+        width: 100%;
+        height: 100%;
+        color: #595f6e;
+        padding-top: 20px;
+        border: none;
+        outline: none;
+        padding-left: 1%;
+    }
+
+    .input-name-field:focus+.label-name .content-name,
+    .input-name-field:valid+.label-name .content-name {
+        transform: translateY(-140%);
+        font-size: 14px;
+        color: #5fa8d3;
+    }
+
+    .input-name-field:focus+.label-name::after,
+    .input-name-field:valid+.input-name-field::after {
+        transform: translateX(0%);
+    }
+
+    .name-row {
+        width: 100%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .name {
+        width: 50%;
+        position: relative;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .label-name {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-bottom: 1px solid black;
+    }
+
+    .label-name::after {
+        content: "";
+        position: absolute;
+        left: 0px;
+        bottom: -1px;
+        width: 100%;
+        height: 100%;
+        border-bottom: 3px solid #5fa8d3;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .content-name {
+        position: absolute;
+        bottom: 5px;
+        left: 2%;
+        transition: all 0.3s ease;
+    }
+
+    /* ================ END OF INPUT FIELD DESIGN ======= */
+</style>
+<div class="display_mode">
+    <div class="box_element">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="address-label">
+                <label>Add Address</label>
+                <input type="text" name="address_type" value="Shipping Address" style="display: none;">
+            </div>
+
+            <!-- SUCCESS ALERT MESSAGE FOR SAVE/UPDATE -->
+            <div id="success-alert" class="alert alert-success" role="alert">
+                <strong> {{ myDictionary.successmsg }} </strong>
+            </div>
+
+            <!-- ERROR ALERT MESSAGE -->
+            <div id="error-alert" class="alert alert-danger" role="alert">
+                <strong> {{ myDictionary.errorMessage }} </strong>
+                
+            </div>
+
+            <hr>
+
+            <div class="first-row" style="margin-top: 2%;">
+                <div class="name">
+                    <input value="" class="input-name-field" type="text" name="name" id="fullName"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Full Name</span>
+                    </label>
+                </div>
+
+                <div class="name" style="margin-left: 5%;">
+                    <input value="" class="input-name-field" type="tel" name="mobile" id="mobile"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Mobile</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="first-row" style="margin-top: 2%;">
+                
+                <div class="name-row">
+                    <input value="" class="input-name-field" type="text" name="address" id="address"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Address</span>
+                    </label>
+                </div>
+                
+            </div>
+
+            <div class="first-row" style="margin-top: 2%;">
+                <div class="name">
+                    <input value="" class="input-name-field" type="text" name="city" id="city"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">City</span>
+                    </label>
+                </div>
+
+                <div class="name" style="margin-left: 5%;">
+                    <input value="" class="input-name-field" type="text" name="state" id="state"
+                        autocomplete="" required />
+                    <label for="name" class="label-name">
+                        <span class="content-name">State</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="first-row" style="margin-top: 2%;">
+
+                <div class="name">
+                    <input value="" class="input-name-field" type="number" name="zipcode" id="zipcode"
+                        autocomplete="" />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Zip Code</span>
+                    </label>
+                </div>
+                
+                <div class="name" style="margin-left: 5%;">
+                    <input value="" class="input-name-field" type="tel" name="altMobile" id="phone"
+                        autocomplete="" />
+                    <label for="name" class="label-name">
+                        <span class="content-name">Alt Mobile</span>
+                    </label>
+                </div>
+            </div>
+
+            <hr>
+            <div style="display: flex; justify-content: space-around;">
+                <input onclick="" id="cancelBtnId" class="btn btn-secondary btn-sm" name="cancelAddress" type="submit" value="Cancel" style="padding-left: 5%; padding-right: 5%;">
+
+                <input id="form-button" class="btn btn-success btn-sm" name="saveAddress" type="submit" value="Save" style="padding-left: 5%; padding-right: 5%;">
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSaved = "{{ myDictionary.success }}";
+
+    if (isSaved == 'True') {
+        function showdiv() {
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 4000);
+    }
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR CHANGE PASSWORD ERROR MESSAGE
+    var isError = "{{ myDictionary.error }}";
+
+    if (isError == 'True') {
+        function showDiv() {
+            document.getElementById('error-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('error-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 8000);
+    }
+</script>
+
+{% endblock %}

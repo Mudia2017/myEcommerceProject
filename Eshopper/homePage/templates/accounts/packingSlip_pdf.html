@@ -1,0 +1,103 @@
+{% load static %}
+<html>
+    
+<head>
+    <meta charset="utf-8">
+    <title>Packing Slip</title>
+   
+    <style>
+        @page {
+            size: A4;
+            
+            @frame content_frame {
+                left: 50pt;
+                width: 512pt;
+                top: 50pt;
+                height: 692pt;
+                    /* for debugging the layout */
+            }
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+
+        /* background-image: url('static/milo.jpg'); */
+        }
+        
+       
+    </style>
+</head>
+
+<body>
+
+    <div id="header_content">
+
+        <div style="background-color: rgb(224, 227, 230); text-align: center; padding: 0.5cm 0cm 0.2cm 0cm; font-size: 20px; color: rgb(129, 129, 129);">
+            <h2>Packing Slip for Order No: {{ order.transaction_id }}</h2>
+        </div>
+        
+        
+        <table class="table table-success table-hover">
+            <tr style="font-size: 12px;">
+               
+            </tr>
+
+            <div>
+                <tr>
+                    <td style="text-align: center;"><img height="80px" width="50px" src="static/images/shopper_logo.png" alt=""> <br> <span style="color: gray;">Happy Shoppers Co.</span> </td>
+                    <!-- <td><img height="80px" width="50px" src="{% static '20210419_111102.jpg' %}" alt=""> </td> -->
+                    <td style="font-size: 13px;"><p><b style="font-size: 16px;">Happy Shoppers Co.</b> <br> 34 Isolo Road <br>Off Ajao Estate, <br>Isolo Way, <br>Lagos.</p></td>
+                </tr>
+
+            </div>
+        </table>
+
+        <table style="margin-top: 1cm;">
+           
+            <tr>
+                <td style="font-size: 13px; "><b style="font-size: 15px;">Ship To:</b> <br> <span style="color: rgb(0, 126, 245); font-size: 14px;">{{ shipping_address.name }}</span> <br> {{ shipping_address.address }}, <br> {{shipping_address.city }}, <br> {{ shipping_address.state }}. <br><b style="font-size: 15px; color: navy;">Phone: </b> {{ shipping_address.mobile }} <br><b style="font-size: 15px; color: navy;">Alt Phone: </b> {{ shipping_address.altMobile }} <br> <b style="font-size: 15px; color: navy;">Email: </b>{{ order_obj.user_email }} <br> <b style="font-size: 15px; color: navy;">Customer Note:</b> <br> {{ shipping_address.optional_note }}</td>
+                <td style="font-size: 13px; margin-left: 0.5cm; "><b style="font-size: 15px; color: navy;">Order No: </b>{{ order.transaction_id }} <br><b style="font-size: 15px; color: navy;">Order Date: </b> {{ order.date_order }} <br><b style="font-size: 15px; color: navy;">Shipping Method: </b> <br><b style="font-size: 15px; color: navy;">Payment Method: </b>{{ order_obj.payment_option }}</td>
+            </tr>
+        </table>
+
+        <table id="content_frame" style="margin-top: 1cm;">
+            <thead>
+                <tr style="background-color: rgb(255, 175, 71); padding: 0.15cm 0cm 0.07cm 0cm; font-size: 14px;">
+                    <th style="text-align: left; padding-left: 0.1cm;">Item Image</th>
+                    <th>Item</th>
+                    <th>Store Location</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for orderItem in orderItems %}
+                <tr style="font-size: 13px; text-align: center; padding-top: 0.2cm;">
+                    {% if orderItem.product.imageURL %}
+                    <td style="text-align: left; padding-left: 0.1cm;"><img height="60px" width="60px" src="{{ orderItem.product.image.path }}" alt=""> </td>
+                    {% else %}
+                    <td style="text-align: left; padding-left: 0.1cm;"><img height="60px" width="60px" src="static/images/default_image_icon.png" alt=""> </td>
+                    {% endif %}
+                    <td>{{ orderItem.product.name }} </td>
+                    <td>{{ orderItem.product.store.store_name }}, {{ orderItem.product.store.store_address }}, {{ orderItem.product.store.LGA }} </td>
+                    <td>{{ orderItem.quantity }} </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+        <!-- <hr> -->
+        
+       
+    </div>
+
+    <div id="footer_content" style="font-size: 13px;">(c) - page <pdf:pagenumber>
+        of <pdf:pagecount>
+
+        <span style="color: lightgray;">Powered by Happy Shoppers</span>
+    </div>
+
+</body>
+
+</html>

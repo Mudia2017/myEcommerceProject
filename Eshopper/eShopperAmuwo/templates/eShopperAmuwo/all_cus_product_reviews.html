@@ -1,0 +1,938 @@
+{% extends 'eShopperAmuwo/amuwo_main.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">   <!-- USED FOR STAR RATING DISPLAY -->
+
+
+<style>
+    .box-element {
+        margin-top: 5rem;
+    }
+
+    .first-row-content {
+        display: flex;
+    }
+
+    .first-column {
+        width: 30%;
+    }
+
+    .second-column {
+        width: 70%;
+        margin-left: 2%;
+    }
+
+    /* ##################################################################### */
+    /* For Chrome or Safari */
+    progress::-webkit-progress-bar {
+        background-color: #c9c4c4;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #FFA442 !important;
+    }
+
+
+    /* For Firefox */
+    progress {
+        background-color: rgb(185, 182, 182);
+    }
+
+    progress::-moz-progress-bar {
+        background-color: #FFA442 !important;
+    }
+
+    /* For IE10 */
+    progress {
+        background-color: rgb(192, 189, 189);
+    }
+
+    progress {
+        background-color: #FFA442;
+    }
+
+    .stars-inner1 {
+        color: rgb(255, 164, 66);
+    }
+
+    .img-thumbnail {
+        width: 10rem;
+        margin-right: 10px;
+    }
+
+    .ellipse {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 22px;
+        color: skyblue;
+        font-weight: 500;
+    }
+
+    .second-row-content {
+        display: flex;
+    }
+
+    .positive-comment {
+        color: #007FF6;
+        border-style: none;
+        /* border: none; */
+        background-color: white;
+        font-size: 14px;
+        /* outline: none; */
+    }
+
+    .positive-comment:hover {
+        text-decoration: underline;
+        color: #0261b9;
+    }
+
+    .styling:hover {
+        text-decoration: underline;
+    }
+    .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    .cancel-btn {
+        border: none;
+    }
+    .cancel-btn:hover {
+        border-style: solid;
+        border-color: navy;
+        border-radius: 5px;
+        border-width: 2px;
+    }
+
+    @media only screen and (max-width: 991px) {
+        .second-column {
+            width: 70%;
+            margin-left: 1%;
+        }
+
+        .first-column {
+            width: 35%;
+        }
+        .box-element{
+            font-size: x-small;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .second-column {
+            width: 70%;
+            margin-left: 1%;
+        }
+
+        .first-column {
+            width: 50%;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+
+    @media only screen and (max-width: 540px) {
+        .second-column {
+            width: 70%;
+            margin-left: 1%;
+        }
+
+        .first-column {
+            width: 50%;
+        }
+        .box-element{
+            font-size: small;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+
+    @media only screen and (max-width: 511px){
+        .first-column {
+            width: 55%;
+        }
+        .box-element{
+            font-size: x-small;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    @media only screen and (max-width: 487px){
+        .first-column {
+            width: 60%;
+        }
+        .box-element{
+            font-size: x-small;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    @media only screen and (max-width: 466px){
+        .first-column {
+            width: 40%;
+        }
+        .box-element{
+            font-size: x-small;
+            width: 150%;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+
+    @media only screen and (max-width: 414px) {
+        .second-column {
+            width: 70%;
+            margin-left: 1%;
+        }
+
+        .first-column {
+            width: 45%;
+        }
+        .box-element{
+            font-size: small;
+            width: 150%;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    
+    @media only screen and (max-width: 375px) {
+        .second-column {
+            width: 70%;
+            margin-left: 1%;
+        }
+
+        .first-column {
+            width: 45%;
+        }
+        .box-element{
+            font-size: x-small;
+            width: 150%;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    @media only screen and (max-width: 370px){
+        .first-column {
+            width: 60%;
+        }
+        .box-element{
+            font-size: x-small;
+            width: 150%;
+        }
+        .cus-review {
+            font-size: 25px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    @media only screen and (max-width: 320px){
+        .first-column {
+            width: 60%;
+        }
+        .box-element{
+            font-size: x-small;
+            width: 150%;
+        }
+        .cus-review {
+            font-size: 20px;
+            color: #D35400;
+            font-weight: 400;
+        }
+    }
+    body {  min-width:280px; }
+</style>
+
+<div class="box-element">
+    <div class="first-row-content">
+        <div class="first-column">
+            <p class="cus-review"> Customer Reviews </p>
+            <hr>
+
+            <div style="padding-left: 1%;">
+                <div style="display: flex;">
+
+                    {% if myDictionary.weighted_average_rating > 1 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 1.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif myDictionary.weighted_average_rating > 1.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 2.9 %}
+                    <span><i class="fa fa-star stars-inner1 "></i></span>
+                    {% elif myDictionary.weighted_average_rating > 2.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 3.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif myDictionary.weighted_average_rating > 3.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+
+                    {% if myDictionary.weighted_average_rating > 4.9 %}
+                    <span><i class="fa fa-star stars-inner1"></i></span>
+                    {% elif myDictionary.weighted_average_rating > 4.4 %}
+                    <span><i class="fa fa-star-half-full stars-inner1"></i></span>
+                    {% else %}
+                    <span><i style="color: orange;" class="fa fa-star-o"></i></span>
+                    {% endif %}
+                    &nbsp;
+                    <span>
+                        {% if myDictionary.weighted_average_rating == None %}
+                        <p style="font-size: 20px;">0 out of 5</p>
+                        {% else %}
+                        <p style="font-size: 20px;">{{ myDictionary.weighted_average_rating | floatformat:1 }} out of 5
+                        </p>
+                        {% endif %}
+                    </span>
+                </div>
+
+                <p>Ratings ({{myDictionary.counter }})</p>
+
+                <div>
+                    <div style="display: flex;">
+                        <p style="margin-bottom: 0%;">5
+                            <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                            &nbsp;
+                            <span><progress value="{{ myDictionary.five_star_percent }}" max="100"></progress></span>
+                            &nbsp;
+                            <span>
+                                {% if myDictionary.five_star_percent == 0 or myDictionary.five_star_percent == None %}
+                                <p style="margin-bottom: 0%;">0%</p>
+                                {% else %}
+                                <p style="margin-bottom: 0%;"> {{ myDictionary.five_star_percent | floatformat:0 }}%</p>
+                                {% endif %}
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <div style="display: flex;">
+                        <p style="margin-bottom: 0%;">4
+                            <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                            &nbsp;
+                            <progress value="{{ myDictionary.four_star_percent }}" max="100"></progress>
+                            &nbsp;
+                            <span>
+                                {% if myDictionary.four_star_percent == 0 or myDictionary.four_star_percent == None %}
+                                <p style="margin-bottom: 0%;">0%</p>
+                                {% else %}
+                                <p style="margin-bottom: 0%;"> {{ myDictionary.four_star_percent | floatformat:0 }}%</p>
+                                {% endif %}
+                            </span>
+                        </p>
+
+                    </div>
+
+                    <div style="display: inline-flex;">
+                        <p style="margin-bottom: 0%;">3
+                            <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                            &nbsp;
+                            <span><progress value="{{ myDictionary.three_star_percent }}" max="100"></progress></span>
+                            &nbsp;
+                            <span>
+                                {% if myDictionary.three_star_percent == 0 or myDictionary.three_star_percent == None %}
+                                <p style="margin-bottom: 0%;">0%</p>
+                                {% else %}
+                                <p style="margin-bottom: 0%;"> {{ myDictionary.three_star_percent | floatformat:0 }}%
+                                </p>
+                                {% endif %}
+                            </span>
+                        </p>
+
+                    </div>
+                    <br>
+                    <div style="display: inline-flex;">
+                        <p style="margin-bottom: 0%;">2
+                            <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                            &nbsp;
+                            <progress value="{{ myDictionary.two_star_percent }}" max="100"></progress>
+                            &nbsp;
+                            <span>
+                                {% if myDictionary.two_star_percent == 0 or myDictionary.two_star_percent == None %}
+                                <p style="margin-bottom: 0%;">0%</p>
+                                {% else %}
+                                <p style="margin-bottom: 0%;"> {{ myDictionary.two_star_percent | floatformat:0 }}%</p>
+                                {% endif %}
+                            </span>
+                        </p>
+
+                    </div>
+                    <br>
+                    <div style="display: flex;">
+                        <p style="margin-bottom: 0%; margin-left: 1%;">1
+                            <span><i class="fa fa-star" aria-hidden="true" style="color: rgb(255, 164, 66);"></i></span>
+                            &nbsp;
+                            <progress value="{{ myDictionary.one_star_percent }}" max="100"></progress>
+                            &nbsp;
+                            <span>
+                                {% if myDictionary.one_star_percent == 0 or myDictionary.one_star_percent == None %}
+                                <p style="margin-bottom: 0%;">0%</p>
+                                {% else %}
+                                <p style="margin-bottom: 0%;"> {{ myDictionary.one_star_percent | floatformat:0 }}%</p>
+                                {% endif %}
+                            </span>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="second-column">
+            <a class="btn btn-outline-dark" href="{% url 'product_detail' product.id %}">&#x2190;
+                Product Detail</a>
+            <br>
+            <hr>
+            <div style="display: flex;">
+                <img src="{{ product.imageURL }}" alt="..." class="img-thumbnail">
+                <p class="ellipse">{{ product.name }}</p>
+            </div>
+
+        </div>
+
+
+    </div>
+    <hr>
+
+    <div class="second-row-content">
+
+        <!-- POSITIVE CUSTOMER REVIEW SECTION -->
+        <div style="width: 50%; margin-right: 2%;">
+            <p style="margin-bottom: 0%; font-weight: 600; font-size: 24px;">Upmost positive reviews</p>
+
+            {% for comment in myDictionary.positive_comment %}
+            <div>
+                <!-- POSITIVE STARS RATE -->
+                <div class="stars-outer">
+                    {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                                style="font-weight: bold; color: darkblue;">
+                                {{ comment.customer.name}}</span>
+
+                        </p>
+                        <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg></p>
+                    </div>
+
+                    <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                    <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                    <p style="margin: 0%;"> {{ comment.comment }} </p>
+                </div>
+            </div>
+
+
+            {% endfor %}
+
+            {% if myDictionary.isPositive_comment == False %}
+            <p
+                style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; ">
+                None</p>
+            {% endif %}
+        </div>
+
+        <!-- CRITICAL CUSTOMER REVIEW SECTION -->
+        <div style="width: 50%;">
+            <p style="margin-bottom: 0%; font-weight: 600; font-size: 24px;">Upmost critical reviews</p>
+
+            {% for comment in myDictionary.critical_comment %}
+            <div>
+
+                <!-- CRITICAL STARS RATE -->
+                <div class="stars-outer">
+                    {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                </div>
+
+                <div>
+
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                                style="font-weight: bold; color: darkblue;">
+                                {{ comment.customer.name}}</span>
+
+                        </p>
+                        <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg></p>
+                    </div>
+
+                    <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                    <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                    <p style="margin: 0%;"> {{ comment.comment }} </p>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            {% if myDictionary.isCritical_comment == False %}
+            <p
+                style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; ">
+                None</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div style="display: flex;">
+        {% if myDictionary.isPositive_comment == True %}
+        <form action="" method="GET" style="width: 50%; margin-right: 1%;">
+
+            <a class="styling" href="{% url 'all_cus_ptd_comments' product.id %}"><button name="all-positive-comment"
+                    type="submit" class="positive-comment" id="button-id" value="yes">view more positive reviews
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                        class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+                        <path fill-rule="evenodd"
+                            d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </button>
+            </a>
+
+        </form>
+        {% endif %}
+
+        <!-- I HAD TO PUT THIS CONDITION HERE IN CASE THE FIRST CONDITION IS NOT MEANT, I DON'T -->
+        <!-- WNAT THE CRITICAL REVIEW TO DISPLAY ON THE LEFT SIDE OF THE FORM -->
+        {% if myDictionary.isPositive_comment == False %}
+        <p style="width: 50%; margin-right: 1%;"></p>
+        {% endif %}
+
+        {% if myDictionary.isCritical_comment == True %}
+        <form action="" method="GET">
+
+            <a class="styling" href="{% url 'all_cus_ptd_comments' product.id %}"><button name="all-critical-comment"
+                    type="submit" class="positive-comment" id="button-id" value="yes">view more critical reviews
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                        class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+                        <path fill-rule="evenodd"
+                            d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                </button>
+            </a>
+
+        </form>
+        {% endif %}
+
+
+    </div>
+
+    <hr style="margin-top: 0%;  border-width: 0.2rem; border-color: gray;">
+
+
+    {% if myDictionary.isAll_positive_comment == True %}
+
+    <!-- ALL POSITIVE REVIEW SECTION -->
+    <div style="margin-right: 30%;">
+        <p style="font-weight: 600; font-size: 20px; color: darkgrey;">All positive reviews
+
+        <form action="">
+            <a href="{% url 'all_cus_ptd_comments' product.id %}"> <button class="cancel-btn"
+                    style="background-color: white;" name="cancel-filter" value="yes">
+                    <span style="color: rgb(109, 5, 5); font-weight: 600;">cancel
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-octagon" viewBox="0 0 16 16">
+                            <path
+                                d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </span>
+                </button>
+            </a>
+        </form>
+
+        </p>
+
+        <hr>
+
+        {% for comment in myDictionary.positive_comments %}
+        <div>
+            <!-- ALL POSITIVE REVIEWS -->
+            <div class="stars-outer">
+                {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+            </div>
+
+            <div>
+
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                            style="font-weight: bold; color: darkblue;">
+                            {{ comment.customer.name}}</span>
+
+                    </p>
+                    <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        </svg></p>
+                </div>
+
+                <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                <p style="margin: 0%;"> {{ comment.comment }} </p>
+            </div>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% elif myDictionary.isAll_critical_comment == True %}
+
+    <!-- ALL CRITICAL REVIEW SECTION -->
+    <div style="margin-right: 30%;">
+        <p style="font-weight: 600; font-size: 20px; color: darkgrey;">All critical reviews
+
+        <form action="">
+            <a href="{% url 'all_cus_ptd_comments' product.id %}"> <button class="cancel-btn"
+                    style="background-color: white;" name="cancel-filter" value="yes">
+                    <span style="color: rgb(109, 5, 5); font-weight: 600;">cancel
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-x-octagon" viewBox="0 0 16 16">
+                            <path
+                                d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353L4.54.146zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1H5.1z" />
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </span>
+                </button>
+            </a>
+        </form>
+
+        </p>
+
+        <hr>
+
+        {% for comment in myDictionary.critical_comments %}
+        <div>
+            <!-- ALL CRITICAL REVIEWS -->
+            <div class="stars-outer">
+                {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+            </div>
+
+            <div>
+
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                            style="font-weight: bold; color: darkblue;">
+                            {{ comment.customer.name}}</span>
+
+                    </p>
+                    <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        </svg></p>
+                </div>
+
+                <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                <p style="margin: 0%;"> {{ comment.comment }} </p>
+            </div>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+
+    <!-- ALL CUSTOMER REVIEW SECTION -->
+    <div style="margin-right: 30%;">
+        <p style="font-weight: 600; font-size: 20px; color: darkgrey;">All customer reviews</p>
+
+        <hr>
+
+        {% for comment in comments %}
+        <div>
+            <!-- ALL CUSTOMER REVIEWS -->
+            <div class="stars-outer">
+                {% if comment.rate > 0.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 1.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 1.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 2.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 2.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 3.9 %}
+                    <i class="fa fa-star stars-inner1 "></i>
+                    {% elif comment.rate > 3.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+                    {% if comment.rate > 4.9 %}
+                    <i class="fa fa-star stars-inner1"></i>
+                    {% elif comment.rate > 4.4 %}
+                    <i class="fa fa-star-half-full stars-inner1"></i>
+                    {% else %}
+                    <i style="color: orange;" class="fa fa-star-o"></i>
+                    {% endif %}
+
+            </div>
+
+            <div>
+
+                <div style="display: flex; width: 100%; justify-content: space-between;">
+                    <p style=" margin-bottom: 0%; color: gray;">Reviwed by <span
+                            style="font-weight: bold; color: darkblue;">
+                            {{ comment.customer.name}}</span>
+
+                    </p>
+                    <p style="color: darkgreen; font-size: 12px; margin-bottom: 0%;">Verified Purchase <svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        </svg></p>
+                </div>
+
+                <p style="margin-top: 0%; color: gray;"> {{ comment.created_at }}</p>
+
+                <p style="margin-bottom: 0%; font-weight: bold; color: cadetblue;"> {{ comment.subject }} </p>
+                <p style="margin: 0%;"> {{ comment.comment }} </p>
+            </div>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+</script>
+
+{% endblock content %}

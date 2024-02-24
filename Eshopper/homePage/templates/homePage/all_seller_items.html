@@ -1,0 +1,182 @@
+{% extends 'homePage/homepage.html' %}
+{% load myapp_extras %}  <!-- THIS IS FROM TEMPLATE TAGS -->
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        min-width: 1000px;
+    }
+    .ellipse {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        margin-bottom: 0%;
+    }
+
+    /* #example {
+        width: 100%;
+        min-width: 550px;
+        max-width: 100%;
+        overflow: scroll;
+        overflow-x: scroll;
+        background-color: pink;
+         width: inherit;
+    } */
+</style>
+
+
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+
+<div style="margin-top: 4rem; padding: 0rem 1rem;" >
+    <hr style="margin-top: 8rem; ">
+    <div style="width: 100%; display: flex;">
+        <div style="width: 20%;">
+            <!-- <label for="">Other Brands</label> -->
+        </div>
+        <div style="width: 80%; float: right; padding-left: 10px;">
+            <label style="font-size: 25px; font-weight: bold; ">Seller's Store</label>
+            <a style="margin-left: 8px;" class="btn btn-outline-dark shadow-none" href="{% url 'wishList' %}">&#x2190; Back</a>
+            <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%; font-family: Niramit;"><span style="font-weight: bold; font-size: 15px;">{{ count }} </span><span style="font-size: 13px;">Items in total</span></p>
+            <hr>
+    
+            <div class="card mb-3" style="width: 100%; border: none;">
+                {% for oneStoreItem in oneStoreItems %}
+                <div class="" style="display: flex; width: 100%; ">
+                    <a href="{% url 'product_detail' oneStoreItem.id %}" class="col-md-3">
+                        {% if oneStoreItem.imageURL %}
+                        <img style="margin-bottom: 5px; object-fit: contain; width: 14rem; height: 10rem; " src="{{ oneStoreItem.imageURL }}" class="img-fluid rounded-start" alt="...">
+                        {% else %}
+                        <img style="margin-bottom: 5px; object-fit: contain; width: 14rem; height: 10rem; " src="{% static 'images/default_image_icon.png' %}" class="img-fluid rounded-start" alt="...">
+                        {% endif %}
+                    </a>
+                    <div style="display: flex; width: 100%; justify-content: space-between;">
+                        
+                        <div style=" width: 80%; margin-bottom: 5px; margin-right: 5px; padding: 0px 4px; font-family: Niramit;">
+                           
+                            <p class="card-text ellipse">{{ oneStoreItem.name }}</p>
+                            
+                            <br>
+                            {% if oneStoreItem.mfgDate %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; color: darkgray;">
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;"> MfgDate: {{ oneStoreItem.mfgDate }} </p>
+                                <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;"> ExpDate: {{ oneStoreItem.expDate }} </p>
+                            </span>
+        
+                            {% endif %}
+    
+                            {% if oneStoreItem.discount > 0 %}
+                            <span style="display: flex; width: 100%; justify-content: space-between; ">
+                                <p style="margin-bottom: 0%; font-size: 22px; font-weight: bold;">&#8358; {{ oneStoreItem.new_price }}</p>
+                                <p style="margin-bottom: 0%; text-decoration: line-through; color: gray; font-size: 15px;">&#8358;
+                                    {{ oneStoreItem.price }}</p>
+                                <p style="margin-bottom: 0%;">- {{ oneStoreItem.discount }} %</p>
+                            </span>
+    
+                            {% else %}
+                            <span style="font-size: 22px; font-weight: bold;">
+                                &#8358; {{ oneStoreItem.price }}
+                                
+                            </span>
+                            {% endif %}
+                            
+                            {% if oneStoreItem.out_of_stock == True %}
+                            <p style="margin-bottom: 0%; margin-top: 0%; padding: 0%;">
+                                <span class="badge text-bg-danger" style="background-color: RGB(255, 22, 12);">Out of Stock</span>
+                            </p>
+                            {% endif %}
+                            
+                        </div>
+    
+                        <div style="width: 20%; display: flex; align-items: center; text-align: -webkit-center;">
+                            <div>
+                                {% if oneStoreItem.out_of_stock == True %}
+                                <button style="font-size: 13px; width: 100%; margin-bottom: 10px;" type="button" class="btn btn-outline-primary" disabled>Add to Cart</button><br>
+                                {% else %}
+                                <button style="font-size: 13px; width: 100%; margin-bottom: 10px;" type="submit" class="btn btn-outline-primary update-cart shadow-none" data-product="{{ oneStoreItem.id }}" data-action="add" data-value="{{ oneStoreItem.out_of_stock }}">Add to Cart</button>
+                                
+                                {% endif %}
+                                <a href="{% url 'category_items' oneStoreItem.category.id %}" style="text-decoration: none; width: 100%; font-size: 12px;" class="btn btn-outline-primary shadow-none">
+                                    View Similar Items
+                                </a>
+                                
+                                {% if oneStoreItem.isHeartFill %}
+                                <input type="image" data-product="{{ oneStoreItem.id }}" data-action="heart" class="chg-quantity update-favorite"
+                                src="{% static 'images/heartfill.png' %}" style="width: 40px;">
+                                {% else %}
+                                <input type="image" data-product="{{ oneStoreItem.id }}" data-action="fillHeart" class="chg-quantity update-favorite"
+                                src="{% static 'images/heart_hallow.png' %}" style="width: 40px;">
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+    
+            <br>
+                <div class="paginator">
+                    <span class="step-links">
+                        {% if oneStoreItems.has_previous %}
+                            <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo; First</a>
+                            <a href="{% my_url oneStoreItems.previous_page_number 'page' request.GET.urlencode %}"> Previous</a>
+                        {% endif %}
+            
+                        <span class="current">
+                            Page {{ oneStoreItems.number }} of {{ oneStoreItems.paginator.num_pages }}
+                        </span>
+            
+                        {% if oneStoreItems.has_next %}
+                            <a href="{% my_url oneStoreItems.next_page_number 'page' request.GET.urlencode %}">Next</a>
+                            <a href="{% my_url oneStoreItems.paginator.num_pages 'page' request.GET.urlencode %}">&raquo; Last</a>
+                        {% endif %}
+                    </span>
+            
+                </div>
+            
+            <br>
+    
+            
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // USED TO UPDATE FAVORITE ITEM 
+    var favorite = document.getElementsByClassName('update-favorite')
+    for (var i = 0; i < favorite.length; i++) {
+        favorite[i].addEventListener('click', function(){
+            var ptdId = this.dataset.product;
+            var action = this.dataset.action;
+
+            updateWishList(ptdId, action)
+        })
+    }
+
+    function updateWishList(ptdId, action) {
+        var url = '/update_favorite/'
+        fetch(url, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken':csrftoken
+            },
+            body:JSON.stringify ({'ptdId': ptdId, 'action': action})
+        })
+
+        .then((response)=>{
+                return response.json()
+            })
+
+        .then((data)=>{
+                console.log('data:', data)
+                location.reload()
+            })
+    }
+</script>
+{% endblock %}

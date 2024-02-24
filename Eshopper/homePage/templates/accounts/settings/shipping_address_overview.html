@@ -1,0 +1,178 @@
+
+{% extends 'homePage/homepage.html' %}
+{% block content %}
+
+<style>
+    .box_element {
+        margin-top: 4rem;
+        padding: 1%;
+        /* background-color: lightpink; */
+    }
+
+    .alert-success {
+        display: none;
+        text-align: center;
+    }
+
+    .alert-danger {
+        display: none;
+        text-align: center;
+    }
+</style>
+
+<div class="box_element">
+    <form action="" method="">
+        <!-- {% csrf_token %} -->
+        <div style="display: flex; width: 100%; background-color: blanchedalmond;">
+            <div style="margin-left: 2%;"><a class="btn btn-outline-dark" href=" {% url 'settings' %} ">&#x2190; Back </a></div>
+
+            <div style="margin-left: 30%;"><h3>Shipping address</h3></div>
+        </div>
+
+        <br>
+        <!-- SUCCESS ALERT MESSAGE FOR SAVE/UPDATE -->
+        <div id="success-alert" class="alert alert-success" role="alert">
+            <strong> {{ myDictionary.successmsg }} </strong>
+        </div>
+
+        <!-- ERROR ALERT MESSAGE -->
+        <div id="error-alert" class="alert alert-danger" role="alert">
+            <strong> {{ myDictionary.errorMessage }} </strong>
+            
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+
+            <div class="card border-primary col-sm-5">
+
+                {% for cus_address in cus_addresses %}
+                <div class="card-header" style="display: flex; justify-content: space-between;">
+                    <h6>{{ cus_address.name }}</h6>
+                    <div style="display: flex;">
+                        
+                        <div class="form-check">
+                            {% if cus_address.default == True %}
+                            <input checked data-address_id="{{ cus_address.id }}" class="form-check-input radio_button" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            {% else %}
+                            <input data-address_id="{{ cus_address.id }}" class="form-check-input radio_button" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            {% endif %}
+                            <label style="font-size: 10px; margin-right: 1%;" class="form-check-label" for="flexRadioDefault1">
+                              set as default
+                            </label>
+                        </div>
+                          <a class="pen" href="{% url 'updatecustomerAddress' cus_address.id %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                            class="bi bi-pen" viewBox="0 0 16 16">
+                            <path
+                            d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                            </svg></a>
+                    </div>
+                    
+                </div>
+                <div class="card-body text-primary">
+                   
+                    <label style="font-size: 11px;">
+                        {{ cus_address.address }} <br>
+                        {{ cus_address.city }} <br>
+                        {{ cus_address.state }}
+                        {% if cus_address.zipcode != None %}
+                        - {{ cus_address.zipcode }} <br>
+                        {% endif %}
+                        {{ cus_address.mobile }} <br>
+                        {% if cus_address.altMobile != None %}
+                        {{ cus_address.altMobile }}
+                        {% endif %}
+                   
+                    </label>
+                </div>
+                <hr style="margin-right: 3%; margin-left: 3%; margin-top: 0%;">
+
+                {% endfor %}
+                <div style="display: flex; justify-content: right;">
+                   
+                    <a  href="{% url 'updatecustomerAddress' 0 %}" style="margin-right: 3%;">
+                        add another address
+                    </a>
+                   
+                
+                        <!-- <button style="border: none; background-color: white; color: rgb(0, 126, 245); text-decoration: underline;" name="addAnotherAddressBtn" value="add address" type="submit">
+                            
+                        </button> -->
+                    </a>
+                </div>
+            </div>
+        </div>
+            
+    </form>
+</div>
+
+
+<script>
+    // BACK FUNCTION
+    function goBack() {
+        window.history.back();
+    }
+
+    // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
+    var isSaved = "{{ myDictionary.success }}";
+
+    if (isSaved == 'True') {
+        function showdiv() {
+            document.getElementById('success-alert').style.display = "block";
+        }
+        setTimeout("showdiv()", 0);
+
+        function hidediv() {
+            document.getElementById('success-alert').style.display = "none";
+        }
+        setTimeout("hidediv()", 4000);
+    }
+
+    // THIS IS USED TO SHOW AND HIDE ALERT FOR CHANGE PASSWORD ERROR MESSAGE
+    var isError = "{{ myDictionary.error }}";
+
+    if (isError == 'True') {
+        function showDiv() {
+            document.getElementById('error-alert').style.display = "block";
+        }
+        setTimeout("showDiv()", 0);
+
+        function hideDiv() {
+            document.getElementById('error-alert').style.display = "none";
+        }
+        setTimeout("hideDiv()", 8000);
+    }
+
+
+    var isRadioBtn = document.getElementsByClassName('radio_button');
+    for (var x = 0; x < isRadioBtn.length; x++) {
+        isRadioBtn[x].addEventListener('click', function(){
+            var address_id = this.dataset.address_id;
+
+            updateOverviewShipAddress(address_id)
+        })
+    }
+
+    // FUNCTION CALL TO UPDATE DEFAUL SHIPPING ADDRESS
+    function updateOverviewShipAddress(addressId){
+        
+        var url = '/update_overviewAddress/'
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({'addressId': addressId, 'addressType': 'Shipping Address'})
+        })
+        .then((response)=>{
+            return response.json()
+        })
+        .then((data)=>{
+            location.reload()
+        })
+    }
+
+</script>
+
+{% endblock %}
