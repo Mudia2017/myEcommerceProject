@@ -851,7 +851,6 @@ def productOverView(request):
     acctMenu = 'acctMenu' # USED TO DISPLAY ACCT MENU ON THE TEMPLATE.
     selectedMenu = 'myProduct' # USED TO HIGHLIGHT THE SELECTED MENU ON THE TEMPLATE
     
-
     # THIS BLOCK OF CODE IS USED TO DEACTIVATE/ACTIVATE SELECTED PRODUCT(S)
     if request.method == 'POST':
         if request.POST.get('continue') == 'Continue':
@@ -907,10 +906,10 @@ def productOverView(request):
         trader_stores.append(t_store.id)
     if trader_stores:
         products = Product.objects.all().order_by('-id')
-        if request.method == 'POST':
-            if request.POST.get('continue') == 'Continue':
-                searched = request.POST['search_value']
-                products = Product.objects.filter(name__contains=searched).order_by('-id')
+        # if request.method == 'POST':
+        #     if request.POST.get('continue') == 'Continue':
+        #         searched = request.POST['search_value']
+        #         products = Product.objects.filter(name__contains=searched).order_by('-id')
         for store_id in trader_stores:
             for trader_ptd in products:
                 if trader_ptd.store_id == store_id:
@@ -919,19 +918,19 @@ def productOverView(request):
                         'name': trader_ptd.name,
                         'description': trader_ptd.description,
                         'brand': trader_ptd.brand,
-                        'price': trader_ptd.price,
-                        'discount': trader_ptd.discount,
-                        'mfgDate': trader_ptd.mfgDate,
-                        'expDate': trader_ptd.expDate,
+                        'price': float(trader_ptd.price),
+                        'discount': float(trader_ptd.discount),
+                        'mfgDate': (trader_ptd.mfgDate),
+                        'expDate': (trader_ptd.expDate),
                         'store': trader_ptd.store,
                         'active':trader_ptd.active
                     }
                     ptd_list.append(ptd_dic)
+                    
                     ptd_counter += 1
-    
     context = {'trader_ptds': ptd_list, 'ptd_counter': ptd_counter, 'myDictionary': myDictionary, 
     'cartItems': cartItems, 'categoryDropdownList': data['categoryList'], 'acctMenu': acctMenu,
-    'selectedMenu': selectedMenu}
+    'selectedMenu': selectedMenu,}
     return render(request, 'accounts/product_over_view.html', context)
 
 
@@ -1644,7 +1643,7 @@ def wishList(request):
 # @allowed_users(allowed_roles=['Admin group'])
 def adminSession(request):
     myDictionary = {}
-    myDictionary['isOrderList'] = False
+    # myDictionary['isOrderList'] = False
     orderData = ''
 
     data = cartData(request)
@@ -1658,48 +1657,50 @@ def adminSession(request):
         orderData = Order.objects.filter (Q(status='Processing') | Q(status='On hold') | Q(status='Shipped')).order_by('-date_order')
     else:
         orderData = Order.objects.filter (Q(status='Processing') | Q(status='On hold') | Q(status='Shipped')).order_by('-date_order')
-        myDictionary['isOrderList'] = True
-    if request.method == 'POST':
+        # myDictionary['isOrderList'] = True
+    # if request.method == 'POST':
         # FILTER CONDITIONS
         
-        searched_value = request.POST.get('searched_value')
-        if searched_value:
-            orderData = Order.objects.filter(Q(customer__name__contains=str(searched_value)) | Q(transaction_id__contains=str(searched_value))).order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'complete':
-            orderData = Order.objects.filter (status='Completed').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'processing':
-            orderData = Order.objects.filter (status='Processing').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'on_hold':
-            orderData = Order.objects.filter (status='On hold').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'shipped':
-            orderData = Order.objects.filter (status='Shipped').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'cancelled':
-            orderData = Order.objects.filter (status='Cancelled').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'refunded':
-            orderData = Order.objects.filter (status='Refunded').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'rejected':
-            orderData = Order.objects.filter (status='Rejected').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'failed':
-            orderData = Order.objects.filter (status='Failed').order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        elif request.POST.get('action_comboBox_selected') == 'False':
-            orderData = Order.objects.filter (Q(status='Processing') | Q(status='On hold') | Q(status='Shipped')).order_by('-date_order')
-            myDictionary['isOrderList'] = True
-        try:
-            data = json.loads(request.body)
-            myDictionary['isOrderList'] = True
-            if data['admin_order'] == 'get_admin_order':
-                return JsonResponse('admin order', safe=False)
-        except:
-            pass
+        # searched_value = request.POST.get('searched_value')
+        # if searched_value:
+        #     orderData = Order.objects.filter(Q(customer__name__contains=str(searched_value)) | Q(transaction_id__contains=str(searched_value))).order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+
+        # if request.POST.get('action_comboBox_selected') == 'complete':
+        #     orderData = Order.objects.filter (status='Completed').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'processing':
+        #     orderData = Order.objects.filter (status='Processing').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'on_hold':
+        #     orderData = Order.objects.filter (status='On hold').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'shipped':
+        #     orderData = Order.objects.filter (status='Shipped').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'cancelled':
+        #     orderData = Order.objects.filter (status='Cancelled').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'refunded':
+        #     orderData = Order.objects.filter (status='Refunded').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'rejected':
+        #     orderData = Order.objects.filter (status='Rejected').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'failed':
+        #     orderData = Order.objects.filter (status='Failed').order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+        # elif request.POST.get('action_comboBox_selected') == 'False':
+        #     orderData = Order.objects.filter (Q(status='Processing') | Q(status='On hold') | Q(status='Shipped')).order_by('-date_order')
+        #     myDictionary['isOrderList'] = True
+
+        # try:
+        #     data = json.loads(request.body)
+        #     myDictionary['isOrderList'] = True
+        #     if data['admin_order'] == 'get_admin_order':
+        #         return JsonResponse('admin order', safe=False)
+        # except:
+        #     pass
 
     # LET'S LOOP TO GET THE TOTAL NUMBER OF ALL ORDER, PROCESSING ORDER AND TOTAL ORDER
     counter = 0
@@ -1723,8 +1724,8 @@ def adminSession(request):
                 'counter': counter,
             }
             order_data.append(order_record)
-    myDictionary['counter'] = counter
-    context = {'orderData': order_data, 'myDictionary': myDictionary, 'cartItems': cartItems,
+    # myDictionary['counter'] = counter
+    context = {'orderData': order_data, 'counter': counter, 'cartItems': cartItems,
     'categoryDropdownList': data['categoryList'], 'acctMenu': acctMenu, 'selectedMenu': selectedMenu}
     
     return render(request, 'accounts/admin_processing_session.html', context)

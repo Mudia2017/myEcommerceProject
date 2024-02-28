@@ -7,8 +7,12 @@
         padding: 1%;
         position: absolute;
         left: 250px;
-        width: calc(100vw - 250px )
-        /* background-color: lightpink; */
+        width: calc(100vw - 250px );
+        border: groove rgb(210, 210, 212);
+        border-width: 1px;
+        border-radius: 15px;
+        background: rgb(250, 248, 248);
+        min-width: 500px;
     }
 
     .display_mode {
@@ -31,14 +35,10 @@
       background-color: rgb(184, 178, 178);
     }
 
-    #address_btn {
-    background-color: rgb(204, 199, 199);
-    color: #fff;
-  }
 
     .row_element {
-        display: flex;
-        width: 100%;
+        /* display: flex;
+        width: 100%; */
         margin-top: 2rem;
         /* background-color: lime; */
     }
@@ -67,6 +67,48 @@
         padding-left: 3%;
     }
 
+
+    /* ========= START GENERAL SETTING TAB ======== */
+
+    /* body {
+        min-width: 1000px;
+    } */
+    .hide {
+        display: none;
+    }
+    .show {
+        display: block;
+    }
+
+    .generalTabContainer {
+        margin-top: 4rem;
+        padding: 1%;
+    }
+
+    .display_mode_general {
+        display: flex;
+        margin-top: 1%;
+    }
+
+    div .right_element_gen {
+        border-radius: 5px;
+        background-color: turquoise;
+        width: 30%;
+        padding: 3px;
+    }
+
+    .alert-success {
+        display: none;
+    }
+
+    /* ========= END GENERAL SETTING TAB =========== */
+
+    /* ========= START OF ADMIN TAB ================= */
+
+
+
+
+    /* ========== END OF ADMIN TAB ================== */
   
 </style>
 
@@ -74,49 +116,54 @@
 
 
 
-<div class="box_element">
-    <form action="" method="GET">
+<div class="box_element" >
     
-        <div style="display: flex; width: 100%; background-color: blanchedalmond;">
-            <div style="margin-left: 2%;"><a class="btn btn-outline-dark" href=" {% url 'my_order' %} ">&#x2190; Back </a></div>
 
-            <div style="margin-left: 40%;"><h3>Settings</h3></div>
+    <div style="display: flex; width: 100%; background-color: blanchedalmond;">
+
+        <div style="margin-left: 40%;"><h2>Settings</h2></div>
+    </div>
+
+    
+
+    <!-- SUCCESS ALERT MESSAGE -->
+    <div id="success-alert" class="alert alert-success" role="alert">
+        <p style="text-align: center; font-weight: 700; font-size: 18px; margin: 0%;">
+            Record updated 
+        </p>
+    </div>
+
+    <div style="display: flex; width: 100%; padding: 8px 0px;">
+        <div >
+            <!-- ADDRESS BUTTON -->
+            <button id="address_btn" style="width: 11rem; font-size: 13px;" type="button"
+                class="btn btn-outline-secondary shadow-none nav_btn">Address</button>
+    
+            <!-- GENERAL TAB BUTTON -->
+            <button id="general_btn" style="width: 11rem; font-size: 13px;" type="button"
+                class="btn btn-outline-secondary shadow-none">General Setting
+            </button>
+    
+            <!-- ADMIN SETTING BUTTON -->
+            <button id="admin_btn" style="width: 11rem; font-size: 13px;" type="button"
+                class="btn btn-outline-secondary shadow-none">Admin Setting
+            </button>
+    
+            <button id="security_btn" style="width: 11rem; font-size: 13px;" type="button"
+                class="btn btn-outline-secondary shadow-none">Security
+            </button>
+    
         </div>
+    </div>
 
-        
+    <!-- ======================== START OF ADDRESS TAB ======================== -->
 
-        <!-- SUCCESS ALERT MESSAGE -->
-        <div id="success-alert" class="alert alert-success" role="alert">
-            <p style="text-align: center; font-weight: 700; font-size: 18px; margin: 0%;">
-               Record updated 
-            </p>
-        </div>
-
-        <div style="display: flex; width: 100%; padding: 8px 0px;">
-            <div >
-                <!-- ADDRESS BUTTON -->
-                <button id="address_btn" style="width: 11rem; font-size: 13px;" type="button"
-                    class="btn btn-outline-secondary shadow-none nav_btn">Address</button>
-        
-                <!-- GENERAL TAB BUTTON -->
-                <button id="config_btn" style="width: 11rem; font-size: 13px;" type="button"
-                    class="btn btn-outline-secondary shadow-none">General Setting
-                </button>
-        
-                <!-- ADMIN SETTING BUTTON -->
-                <button id="cus_review" style="width: 11rem; font-size: 13px;" type="button"
-                    class="btn btn-outline-secondary shadow-none">Admin Setting
-                </button>
-        
-                
-        
-            </div>
-        </div>
-
-        <div class="row_element">
-            <div class="" style="width: 30%;">
+    
+    <div id="addressTabId" class="row_element">
+        <form action="" method="GET" >
+            <!-- <div class="" style="width: 30%;">
                 <a id="address_btn" class="account_btn" href=" #">
-                  Address
+                Address
                 </a>
                 <a id="general_setting_btn" class="account_btn" href="{% url 'generalSetting' %}">
                     General Setting
@@ -124,10 +171,10 @@
                 {% if user.is_staff %}
                 <a class="account_btn" href=" {% url 'adminSetting' %} ">
                     Admin Setting
-                  </a>
+                </a>
                 {% endif %}
-            </div>
-            <div style="width: 70%;">
+            </div> -->
+            <div style="width: 100%;">
                 <div class="right_element_info" >
                     <h3 >
                         Addresses
@@ -141,9 +188,9 @@
                             font-size: 12px;">This is where you'd like to receive items you purchase.</span>
                             
                         </h6>
-                      
+                    
                         <input style="width: 20%;" type="submit" name="shippingAddressBtn" class="btn btn-outline-dark" value="Edit">
-                       
+                    
                     </div>
 
                     <hr style="color: red;">
@@ -159,22 +206,123 @@
 
                     <hr style="color: red;">
                 </div>
-                  
+                
             </div>
-            
-        </div>
+        </form>
+    </div>
+    
+    
+    <!-- ========================== END OF ADDRESS TAB =================== -->
 
+
+    <!-- ========================= START OF GENERAL SETTING TAB =============== -->
+
+
+    <div class="generalTabContainer" id="generalTabId">
+        <form action="" method="POST">
+        
+            <div style="display: flex; width: 100%; background-color: blanchedalmond;">
+                <div style="margin-left: 2%;"><a class="btn btn-outline-dark" href=" {% url 'settings' %} ">&#x2190; Back </a></div>
+
+                <div style="margin-left: 40%;"><h3>General Setting</h3></div>
+            </div>
+
+            <!-- SUCCESS ALERT MESSAGE -->
+            <div id="success-alert" class="alert alert-success" role="alert">
+                <p style="text-align: center; font-weight: 700; font-size: 18px; margin: 0%;">
+                Record updated 
+                </p>
+            </div>
+
+            
+            <div class="display_mode_general">
+                <div class="right_element_gen">
+                    <div style="width: 100%; ">
+                        <label style="margin-top: 0%; font-weight: 800; font-size: 15px; padding-left: 0px;" for="">Category set filter</label>
+                            
+                        <div style="background-color: white; width: 100%; display: flex; justify-content: space-between;">
+                            
+
+                            <div>
+                                <h6>
+                                    Filter product of same or lower or higher category level
+                                </h6>
+                            </div>
+
+                            <div class="form-check form-switch" style="margin-left: 10px;">
+                    
+                                <input name="verify" class="form-check-input" type="checkbox" id="flexSwitchCheck_id"  >
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+        
+            </div>
+            <input id="updateSetting_id_btn" style="font-weight: 700; margin-top: 5rem;" type="button" class="btn btn-warning btn-sm" value="Update" name="update_btn">
+        </form>
+    </div>
+
+
+    <!-- ======================= END OF GENERAL SETTING TAB =============== -->
+
+
+    <!-- ====================== START OF ADMIN TAB ======================== -->
+
+    <form action="" method="GET" id="adminTabId">
+        <div class="display_mode">
+            <div class="right_element_admin">
+                <div style="width: 100%; ">
+                    <label style="margin-top: 0%; font-weight: 800; font-size: 15px; padding-left: 0px;" for="">Verify Store</label>
+                        
+                    <div style="background-color: white; width: 100%; display: flex; justify-content: space-between;">
+                        
+
+                        <select id="mySelect" name="category" class="form-select form-select-sm" >
+                            <option name="opt_selected" value="" selected>---- </option>
+                            {% for store_name in store_names %}
+                            <option value="{{ store_name.id }}">{{ store_name }}</option>
+                           {% endfor %}
+                        </select>
+
+                        <div class="form-check form-switch" style="margin-left: 10px;">
+                   
+                            <input name="verify" class="form-check-input" type="checkbox" id="flexSwitchCheck_id"  >
+                           
+                            <label class="form-check-label" for="flexSwitchCheckChecked" style="font-size: 10px;">Verified Store</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+       
+        </div>
+        <input id="updateSetting_id_btn" style="font-weight: 700; margin-top: 5rem;" type="button" class="btn btn-warning btn-sm" value="Update" name="update_btn">
     </form>
+
+    <!-- ============================ END OF ADMIN TAB ======================== -->
 </div>
 
 
+
+
 <script>
+    let addressTab = document.getElementById('addressTabId');
+    let genTab = document.getElementById('generalTabId');
+    let adminTab = document.getElementById('adminTabId');
 
     // THIS ON-CHANGE FUNCTION IS EXECUTED WHEN EVER A USER SELECT OR CHANGE THE LIST OF STORES
-    document.getElementById('mySelect').onchange = function() {
-        var selectedStore_id = document.getElementById("mySelect").value;
-        updateSettings(selectedStore_id, flexSwitchBox = '')
-        console.log(selectedStore_id)
+    let el = document.getElementById('mySelect');
+    if (el) {
+
+        document.getElementById('mySelect').onchange = function() {
+            var selectedStore_id = document.getElementById("mySelect").value;
+            updateSettings(selectedStore_id, flexSwitchBox = '')
+            console.log(selectedStore_id)
+        }
     }
 
     // THIS FUNCTION IS EXECUTED WHEN THE UPDATE BUTTON IS CLICKED ON
@@ -242,7 +390,121 @@
         location.reload()
     }
 
+
+    // ============ ADDRESS TAB START HERE ==================
+
+    // ONCE THIS SETTING PAGE IS FIRST DISPLAYED, SET THE BACKGROUND COLOR OF SETTING BUTTON
+        document.getElementById('address_btn').style.background = 'rgb(132, 132,132)'
+        document.getElementById('address_btn').style.color = 'rgb(255, 255,255)' 
+
+    // SHOW THE ADDRESS TEMPLATE WHEN THE BUTTON IS CLICK ON AND HIDE EVERY OTHER TEMPLATE
+    document.getElementById('address_btn').addEventListener('click', function() {
+        
+        // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+       // REMOVE COLOR BACKGROUND OF OTHER TABS
+       // CHANGE THE TEMPLATE TAB
+        configFirstRowBtnTab('address_btn', 'admin_btn', 'general_btn') 
+
+        // USE THE BROWSER SESSION STORAGE TO STORE THE CURRENT TAB. IF THE 
+        // BROWSER IS REFRESHED, IT SHOULD DISPLAY THAT SAME TAB
+        sessionStorage.setItem('isAddress_tab', true);
+        sessionStorage.setItem('isGeneral_tab', false);
+        sessionStorage.setItem('isAdmin_tab', false);
+    })
+
+    // ============ ADDRESS TAB END HERE ==================
+
+
+    // ============ GENERAL TAB START HERE ==================
+
     
+    // BY DEFAULT WHEN THE PAGE FIRST LOAD UP, HIDE THE GENERAL TEMPLATE
+    genTab.classList.add('hide');
+
+    // SHOW THE GENERAL TEMPLATE WHEN THE BUTTON IS CLICK ON AND HIDE ANY OTHER TEMPLATE
+    document.getElementById('general_btn').addEventListener('click', function() {
+       
+        // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+        // REMOVE COLOR BACKGROUND OF OTHER TABS
+        // CHANGE THE TEMPLATE TAB
+        configFirstRowBtnTab('general_btn', 'address_btn', 'admin_btn')
+
+        // USE THE BROWSER SESSION STORAGE TO STORE THE CURRENT TAB. IF THE 
+        // BROWSER IS REFRESHED, IT SHOULD DISPLAY THAT SAME TAB
+        sessionStorage.setItem('isAddress_tab', false);
+        sessionStorage.setItem('isGeneral_tab', true);
+        sessionStorage.setItem('isAdmin_tab', false);
+    })
+
+    // ============= GENERAL TAB END HERE ===================
+
+
+    // ============= ADMIN TAB START HERE ==================
+    // BY DEFAULT HIDE THE ADMIN TAB WHEN PAGE LOAD UP
+    adminTab.classList.add('hide')
+
+    // SHOW THE ADMIN TAB WHEN THE BUTTON IS CLICKED ON AND HIDE EVERY OTHER TEMPLATE TAB
+    document.getElementById('admin_btn').addEventListener('click', function() {
+        
+        // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+       // REMOVE COLOR BACKGROUND OF OTHER TABS
+       // CHANGE THE TEMPLATE TAB
+        configFirstRowBtnTab('admin_btn', 'address_btn', 'general_btn')
+
+        // USE THE BROWSER SESSION STORAGE TO STORE THE CURRENT TAB. IF THE 
+        // BROWSER IS REFRESHED, IT SHOULD DISPLAY THAT SAME TAB
+        sessionStorage.setItem('isAddress_tab', false);
+        sessionStorage.setItem('isGeneral_tab', false);
+        sessionStorage.setItem('isAdmin_tab', true);
+    })
+    // ============= END OF ADMIN TAB =====================
+    
+
+    // FUNCTION USED TO GET THE CURRENT TAB WHEN THE BROWSER WINDOW IS RELOADED
+    window.addEventListener('DOMContentLoaded', function() {
+        let isAddress_tab = sessionStorage.getItem('isAddress_tab');
+        let isGeneral_tab = sessionStorage.getItem('isGeneral_tab');
+        let isAdmin_tab = sessionStorage.getItem('isAdmin_tab');
+        
+        if (isGeneral_tab === 'true') {
+            // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+            // REMOVE COLOR BACKGROUND OF OTHER TABS
+            // CHANGE THE TEMPLATE TAB
+            configFirstRowBtnTab('general_btn', 'address_btn', 'admin_btn')
+        } else if (isAdmin_tab === 'true') {
+            // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+            // REMOVE COLOR BACKGROUND OF OTHER TABS
+            // CHANGE THE TEMPLATE TAB
+            configFirstRowBtnTab('admin_btn', 'address_btn', 'general_btn')
+        }
+    })
+
+    function configFirstRowBtnTab (activeBtn, inActiveBtn1, inActiveBtn2) {
+        // CHANGE THE BACKGROUND COLOR AND DEACTIVATE BACKGROUND COLOR OF OTHER BUTTONS
+        document.getElementById(activeBtn).style.background = 'rgb(132, 132,132)'
+        document.getElementById(activeBtn).style.color = 'rgb(255, 255,255)' 
+
+        // REMOVE COLOR BACKGROUND OF OTHER TABS
+        document.getElementById(inActiveBtn1).style.background = ''
+        document.getElementById(inActiveBtn1).style.color = '' 
+        document.getElementById(inActiveBtn2).style.background = ''
+        document.getElementById(inActiveBtn2).style.color = '' 
+
+        // SWITCHING THE TAB TO THE ACTIVE ONE AND HIDE THE OTHER TABS
+        if (activeBtn == 'address_btn') {
+            genTab.classList.add('hide');
+            adminTab.classList.add('hide')
+            addressTab.classList.remove('hide');
+        } else if (activeBtn == 'general_btn') {
+            adminTab.classList.add('hide')
+            addressTab.classList.add('hide')
+            genTab.classList.remove('hide')
+        } else if (activeBtn == 'admin_btn') {
+            genTab.classList.add('hide')
+            addressTab.classList.add('hide')
+            adminTab.classList.remove('hide')
+        }
+    }
 </script>
 
 

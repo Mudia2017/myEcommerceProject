@@ -29,7 +29,7 @@
                 <div class="input-group mb-3" >
                     <input id="searchInput" style="width: 60%; font-family: sora;" name="order_no" type="text" placeholder="Order No" class="form-control form-control-sm shadow-none">
                     <select style="width: auto;" name="action_comboBox_selected" class="form-select form-select-sm shadow-none" id="orderStatus">
-                        <option name="order_status" value="False" selected>------</option>
+                        <option id="defaultOpt" name="order_status" value="False" selected>------</option>
                         <option name="order_status" value="Complete">Complete</option>
                         <option name="order_status" value="Processing">Processing</option>
                         <option name="order_status" value="On hold">On hold</option>
@@ -139,13 +139,16 @@
         const filteredOrder = myOrderData.filter(myOrderData => {
             return myOrderData.status == selectedStatus;
         })
+
+        // IF A USER SELECT A DROP-DOWN FROM THE LIST, CLEAR THE SEARCH ORDER INPUT FIELD 
+        // SINCE THE USER CAN'T BE SEARCHING WITH BOTH PARAMETERS
+        let searchOrder = document.getElementById('searchInput');
+        searchOrder.value = '';
        
         var el = document.getElementById('hide_section');
         var innerEl = document.getElementById('inner_hide_section')
         if (selectedStatus != 'False') {
-            innerEl.classList.remove('displaySection');
-            el.classList.add('hideSection');
-
+            
             loadFilteredData(filteredOrder);
           
         } else {
@@ -177,6 +180,14 @@
     // IT WILL DISPLAY THE FILTERED RECORD.
 
     function loadFilteredData(orderRecs) {
+        // GET THE ELEMENT CONTAINERS AND HIDE THEM
+        var ele = document.getElementById('hide_section');
+        var innerEl = document.getElementById('inner_hide_section')
+
+        innerEl.classList.remove('displaySection');
+        ele.classList.add('hideSection');
+
+        // SHOW THE SECOND CONTAINER ELEMENT THAT WILL DISPLAY THE SEARCH/FILTERED RECORD.
         let el = document.getElementById('hideSection2');
         el.classList.remove('hideSection')
         el.classList.add('displaySection')
@@ -295,13 +306,34 @@
 
     // SEARCH FIELD INPUT 
     document.getElementById('searchInput').addEventListener('keyup', function(){
+        // SINCE WE CAN'T BE SEARCHING WITH BOTH INPUT AND DROP-DOWN OPTION AT THE SAME TIME,
+        // AT THE EVENT OF KEYUP, RESET THE DROP-DOWN OPTION 
+        const selected = document.querySelectorAll('option[name="order_status"]')
+        for (let select of selected) {
+            if (select.selected) {
+                if (select.value != 'False') {
+                    select.selected = false;
+                }
+                break;
+            }
+        }
+
+        // GET THE INPUT AND FILTER BASED ON VALUE PROVIDED. RETURN THE RESULT.
         let value = document.getElementById('searchInput').value
-        let searchRecords = myOrderData.sort(function (rec) {
-            return rec['transaction_id'] == value
-        }) 
+        let searchRecords = myOrderData.filter( (eventData) => {
+            if (value === '') {
+                return eventData
+            } else if (eventData.transaction_id.includes(value)) {
+                return eventData
+            }
+        })
+        // .map((object) => {
+            
+        // })
+        
+        loadFilteredData(searchRecords)
             
         
-        console.log(searchRecords)
     })
 
     

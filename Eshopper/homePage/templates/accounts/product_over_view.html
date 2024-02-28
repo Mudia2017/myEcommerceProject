@@ -129,6 +129,7 @@
             display: flex;
             position: absolute;
             left: 250px;
+            width: calc(100vw - 260px);
             /* width: 90%; */
         }
     /* } */
@@ -168,9 +169,10 @@
     }
 
     .horizontal-view {
-        display: flex;
+        /* display: flex; */
         overflow: scroll;
         font-family: Niramit;
+        width: 100%;
     }
     .addPtdBtn {
         margin-left: 2%; 
@@ -184,6 +186,12 @@
     .addPtdBtn:hover{
         background: rgb(34, 118, 173);
         color: #fff;
+    }
+    .hideContainer {
+        display: none;
+    }
+    .showContainer {
+        display: block;
     }
 </style>
 
@@ -318,7 +326,7 @@
                 <div style="display: flex; width: 100%; float: right;">
                     <div class="input-group mb-3" >
                         <!-- <label for="inputEmail4" class="form-label" style="margin-right: 2%;">Action</label> -->
-                        <input style="width: 50%;" type="search" name="search_value" placeholder="Product name" id="search_here" class="form-control form-control-sm shadow-none" />
+                        <input style="width: 50%;" type="search" name="search_value" placeholder="Product name" id="search_ptd" class="form-control form-control-sm shadow-none" />
                         <select name="action_comboBox_selected" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
                             <option value="False" selected>------</option>
                             <option value="inactive">Inactive</option>
@@ -376,13 +384,13 @@
                 
 
             </div>
-
-            <table class="horizontal-view">
-                <tr style="font-size: 12px;">
+            
+            <table class="horizontal-view" id="tableContainer">
+                <!-- <thead> -->
+                <tr style="font-size: 12px; width: 100%;">
                     <th></th>
                     <th>ID</th>
                     <th>NAME</th>
-                    <!-- <th>DESCRIPTION</th> -->
                     <th>BRAND</th>
                     <th>PRICE</th>
                     <th>DISCOUNT</th>
@@ -390,41 +398,46 @@
                     <th>EXPDATE</th>
                     <th>STORE</th>
                     <th>ACTIVE</th>
+                    <th style="display: none;">id</th> <!-- THIS WAS ADDED BECAUSE I COULD NOT READ THE VALUE THAT WAS NESTED INSIDE THE TAG. I NEEDED TO WORK WITH IT IN JAVASCRIPT TO DISPLAY FILTED REOCRD -->
+                    <th style="display: none;">active</th> <!-- THIS WAS ADDED BECAUSE I COULD NOT READ THE VALUE THAT WAS NESTED INSIDE THE TAG. I NEEDED TO WORK WITH IT IN JAVASCRIPT TO DISPLAY FILTED REOCRD -->
                 </tr>
+            <!-- </thead> -->
 
-                <div id="box">
-                    {% for trader_ptd in trader_ptds %}
-                    <tr style="font-size: 12px;">
-                        <td><input type="checkbox" name="check_box_action" value="{{ trader_ptd.id }}"></td>
-                        <td><a href="{% url 'edit_product' trader_ptd.id %}"
-                                style="text-decoration: none;">{{trader_ptd.id}}</a></td>
-                        <td>{{trader_ptd.name}}</td>
-                        <!-- <td>{{trader_ptd.description}}</td> -->
-                        <td>{{trader_ptd.brand}}</td>
-                        <td>&#8358; {{trader_ptd.price}}</td>
-                        <td>{{trader_ptd.discount}}</td>
-                        <td>{{trader_ptd.mfgDate}}</td>
-                        <td>{{trader_ptd.expDate}}</td>
-                        <td>{{trader_ptd.store}}</td>
-                        {% if trader_ptd.active == True %}
-                        <td style="color: limegreen;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                            </svg></td>
-                        {% else %}
-                        <td style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-                            </svg></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-
-                </div>
+                <tbody id="tableBody">
+                   
+                {% for trader_ptd in trader_ptds %}
+                <tr id="" style="font-size: 12px;">
+                    <td><input type="checkbox" name="check_box_action" value="{{ trader_ptd.id }}"></td>
+                    <td><a id="ptdId" href="{% url 'edit_product' trader_ptd.id %}"
+                            style="text-decoration: none;">{{trader_ptd.id}}</a></td>
+                    <td>{{trader_ptd.name}}</td>
+                    <td>{{trader_ptd.brand}}</td>
+                    <td>&#8358; {{trader_ptd.price}}</td>
+                    <td>{{trader_ptd.discount}}</td>
+                    <td>{{trader_ptd.mfgDate}}</td>
+                    <td>{{trader_ptd.expDate}}</td>
+                    <td>{{trader_ptd.store}}</td>
+                    {% if trader_ptd.active == True %}
+                    <td style="color: limegreen;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg></td>
+                    {% else %}
+                    <td style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                        </svg></td>
+                    {% endif %}
+                    <td style="display: none;">{{ trader_ptd.id }}</td> <!-- THIS WAS ADDED BECAUSE I COULD NOT READ THE VALUE THAT WAS NESTED INSIDE THE TAG. I NEEDED TO WORK WITH THE VALUE IN JAVASCRIPT TO DISPLAY FILTED REOCRD -->
+                    <td style="display: none;">{{ trader_ptd.active }}</td> <!-- THIS WAS ADDED BECAUSE I COULD NOT READ THE VALUE THAT WAS NESTED INSIDE THE TAG. I NEEDED TO WORK WITH THE VALUE IN JAVASCRIPT TO DISPLAY FILTED REOCRD -->
+                </tr>
+                {% endfor %}
+            </tbody>
+                
             </table>
-
+            <div id="dynamicTableContainer"></div>
             <hr>
              <!-- DISPLAY IF THERE ARE NO PRODUCT YET -->
              {% if not trader_ptds %}
@@ -432,7 +445,10 @@
                  style="font-size: 30px; font-weight: 700; color: rgb(197, 195, 195); display: flex; justify-content: center; margin-top: 5%;">
                  No product for this search in your store!</p>
              {% endif %}
-            <label style="font-size: 16px; font-family: Niramit;">{{ptd_counter}} products</label>
+             <div id="counterEl">
+                 <label id="counter" style="font-size: 16px; font-family: Niramit;">{{ptd_counter}} products</label>
+
+             </div>
         </form>
     </div>
 
@@ -440,6 +456,122 @@
 
 
 <script type="text/javascript">
+
+    // GET THE RECORD FROM THE DOM TABLE AND PASS IT TO 
+    // THE FUNCTION "TABLE-TO-JSON" TO CONVERT THE RECORD TO JSON 
+    let myJson = JSON.stringify (tableToJson (document.getElementById('tableContainer')));
+    const ptdData = (JSON.parse (myJson))
+   
+
+    function tableToJson (table) {
+        let data = [];
+        // FIRST ROW NEED TO BE HEADERS 
+        let headers = [];
+        for (let i = 0; i < table.rows[0].cells.length; i++) {
+            headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+        }
+        // GO THROUGH THE CELLS
+        for (let i = 1; i < table.rows.length; i++) {
+            let tableRow = table.rows[i];
+            let rowData = {};
+            for (let j = 0; j < tableRow.cells.length; j++) {
+
+                rowData[headers[j]] = tableRow.cells[j].innerHTML;
+              
+            }
+            data.push(rowData);
+        }
+        return data;
+
+    }
+
+    document.getElementById('search_ptd').addEventListener('keyup', function() {
+        let searchPtd = document.getElementById('search_ptd').value;
+        let searchedResult = ptdData.filter((eventData) => {
+            if (searchPtd === '') {
+                return eventData;
+            } else if (eventData.name.toLowerCase().includes(searchPtd.toLowerCase())) {
+                return eventData;
+            }
+        })
+        
+        displayFilteredTemplate(searchedResult);
+
+    })
+
+    // CREATE A TEMPLATE THAT WILL BE USED TO DISPLAY THE FILTERED PRODUCT
+    function displayFilteredTemplate (ptdData) {
+        // HIDE THE BODY OF THE TABLE 
+        console.log(ptdData)
+        document.getElementById('tableBody').classList.add('hideContainer');
+        document.getElementById('counter').classList.add('hideContainer');
+
+        const tContainer = document.getElementById('tableContainer');
+
+        // SINCE I NEED TO ALWAYS RELOAD THE NEW SEARCH RESULT, I NEED 
+        // TO CHECK IF THE ROW(S) EXIST AND DELETE THE PARENT ELEMENT
+        // BEFORE RECREATING THE BODY TABLE 
+        let rowId = document.getElementById('rowId')
+        if (rowId !== null) {
+            rowId.parentElement.remove()
+        }
+
+        let tBody = document.createElement('tbody');
+        tBody.setAttribute('id', 'tBody_id')
+
+        for (let ptd of ptdData) {
+            
+            let tr1 = document.createElement('tr');
+            tr1.style.fontSize = '12px';
+            tr1.setAttribute('id', 'rowId')
+
+            let url = "{% url 'edit_product' 1 %}"
+            url = url.replace(/1/g, ptd['id'])
+
+            tr1.innerHTML = `
+            <td><input type="checkbox" name="check_box_action" value="${ptd['id']}"></td>
+            <td><a id="" href="${url}" style="text-decoration: none;">${ptd['id']}</a></td>
+            <td>${ptd['name']}</td>
+            <td>${ptd['brand']}</td>
+            <td>${ptd['price']}</td>
+            <td>${ptd['discount']}</td>
+            <td>${ptd['mfgdate']}</td>
+            <td>${ptd['expdate']}</td>
+            <td>${ptd['store']}</td>
+            <td>${checkedCircle(ptd['active'])}</td>
+            <td style='display:none;'>${ptd['id']}</td>
+            <td style='display:none;'>${ptd['active']}</td>
+            `
+            tBody.appendChild(tr1)
+            
+            tContainer.appendChild(tBody)
+            
+        }
+
+        // DISPLAY THE NUMBER OF FILTERED PRODUCT
+        let counterEl = document.getElementById('counterEl');
+        counterEl.innerHTML = `<label id="counter" style="font-size: 16px; font-family: Niramit;">${ptdData.length} products</label>`
+    }
+    
+    function checkedCircle (isActive) {
+        console.log(isActive)
+        if (isActive === 'True'){
+            return `<span style="color: limegreen;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                        </svg></span>`
+        } else {
+            return `<span style="color: red;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                        </svg></span>`
+        }
+    }
+
+    // ====================================================
 
     // THIS IS USED TO SHOW AND HIDE ALERT OF SUCCESSFUL MESSAGE
     var isSaved = "{{ myDictionary.ptd_saved }}";
@@ -471,6 +603,8 @@
         }
         setTimeout("hidediv()", 8000);
     }
+
+
 
 
     

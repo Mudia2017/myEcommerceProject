@@ -104,7 +104,7 @@
             border-width: 1px; 
             border-radius: 15px;
             padding: 1%;
-            width: calc(100vw - 255px);
+            width: 100%;
         }
 
         /* ======== CSS TO PLACE THE FORM ON THE LEFT SIDE OF THE SCREEN =========== */
@@ -127,6 +127,7 @@
             display: flex;
             position: absolute;
             left: 250px;
+            width: calc(100% - 250px);
         }
     /* } */
 
@@ -141,6 +142,76 @@
     .horizontal-view {
         display: flex;
         overflow: scroll;
+    }
+
+
+    /* ======== START TABLE STYLING ======== */
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        width: 100%;
+        /* min-width: 100%; */
+        /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); */
+    }
+
+    .styled-table thead tr {
+        background-color: rgb(0, 161, 213);
+        color: #ffffff;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid rgb(0, 161, 213);
+    }
+
+    /* .styled-table tbody tr.active-row {
+        font-weight: bold;
+        color: rgb(0, 141, 194);
+    } */
+
+    tr:nth-child(even) {
+        /* font-weight: bold; */
+        color: rgb(0, 141, 194);
+        /* background-color: #dddddd; */
+    }
+
+    .first_col {
+        color: inherit;
+        /* blue colors for links too */
+        text-decoration: inherit;
+        /* no underline */
+
+    }
+
+    /* ======== END TABLE STYLING ======== */
+
+    .first_col {
+        color: inherit;
+        text-decoration: inherit;
+
+    }
+
+    .hideContainer {
+        display: none;
+    }
+    .showContainer {
+        display: block;
     }
 </style>
 
@@ -261,7 +332,7 @@
 
         <hr style="margin-top: 0%;">
 
-        <div class="card-row-wrapper" id="admin_over_view">
+        <!-- <div class="card-row-wrapper" id="admin_over_view">
 
             <div class="card border-primary col-sm-5">
                 <div class="card-header">
@@ -298,11 +369,11 @@
             </div>
 
 
-        </div>
+        </div> -->
 
         <!-- ==================  ORDER LIST SECTION ==================== -->
 
-        <div style="display: none;" id="order_list">
+        <div id="order_list">
             <div style="display: flex; width: 100%; justify-content: space-between;">
                 
                 <!-- <div style="display: flex;">
@@ -317,26 +388,26 @@
             </div>
 
             <div style="display: flex; ">
-                <div style="margin-right: 3%;">
-                    <label style="display: flex; font-family: Niramit;">All <span>({{ myDictionary.counter }})</span></label> 
+                <div id="counterContainer" style="margin-right: 3%;">
+                    <label id="counterId" style="display: flex; font-family: Niramit;">All <span>({{ counter }})</span></label> 
                     
                 </div>
 
                 <div style="display: flex; width: 95%; float: right;" >
                     <div class="input-group mb-3" >
                         <input style="width: 60%;" id="filter_input" name="searched_value" type="text" class="form-control shadow-none" aria-label="Text input with dropdown button" placeholder="Search by Customer Name, Order No">
-                        <select style="width: auto;" name="action_comboBox_selected" class="form-select form-select-sm shadow-none" id="specificSizeSelect">
-                            <option value="False" selected>Select Status</option>
-                            <option value="complete">Complete</option>
-                            <option value="processing">Processing</option>
-                            <option value="on_hold">On hold</option>
-                            <option value="shipped">Shipped</option>
-                            <option value="cancelled">Cancelled</option>
-                            <option value="refunded">Refunded</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="failed">Failed</option>
+                        <select id="statusOption" style="width: auto;" name="action_comboBox_selected" class="form-select form-select-sm shadow-none">
+                            <option name="orderStatus" value="False" selected>Select Status</option>
+                            <option name="orderStatus" value="Complete">Complete</option>
+                            <option name="orderStatus" value="Processing">Processing</option>
+                            <option name="orderStatus" value="On hold">On hold</option>
+                            <option name="orderStatus" value="Shipped">Shipped</option>
+                            <option name="orderStatus" value="Cancelled">Cancelled</option>
+                            <option name="orderStatus" value="Refunded">Refunded</option>
+                            <option name="orderStatus" value="Rejected">Rejected</option>
+                            <option name="orderStatus" value="Failed">Failed</option>
                         </select>
-                        <input class="btn btn-secondary" type="submit" value="Search Order" name="search_by_order_no">
+                        <!-- <input class="btn btn-secondary" type="submit" value="Search Order" name="search_by_order_no"> -->
                         
                   
                     </div>
@@ -345,21 +416,24 @@
             </div>
             
             <div style="margin-top: 2%; font-family: Niramit;">
-                <table class="table table-success table-hover">
-                    <tr style="font-size: 18px;">
-                        <th>#</th>
-                        <th>Order No</th>
-                        <th>Customer Name</th>
-                        <th>Created Date Time</th>
-                        <th>Status</th>
-                        <th>Total</th>
-                    </tr>
+                <table id="tableContainer" class="styled-table">
+                    <thead>
+                        <tr style="font-size: 18px;">
+                            <th>#</th>
+                            <th>Order No</th>
+                            <th>Customer Name</th>
+                            <th>Created Date Time</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th style="display: none;">order No</th>
+                        </tr>
+                    </thead>
 
-                    <div>
+                    <tbody id="tBodyId">
                         {% for order_data in orderData %}
-                        <tr style="font-size: 16px;">
+                        <tr id="rowId" style="font-size: 16px;">
                             <td>{{ order_data.counter }}</td>
-                            <td><a href="{% url 'admin_edit_order' order_data.transaction_id %}">{{ order_data.transaction_id }}</a></td>
+                            <td><a class="first_col" href="{% url 'admin_edit_order' order_data.transaction_id %}">{{ order_data.transaction_id }}</a></td>
                             <td>{{ order_data.customer_name }}</td>
                             <td>{{ order_data.date_order }}</td>
                             <!-- ========= STATUS CONDITION ON WHAT TO DISPLAY ======== -->
@@ -384,9 +458,10 @@
                             {% endif %}
 
                             <td>&#8358; {{ order_data.total }}</td>
+                            <td style="display: none;">{{ order_data.transaction_id }}</td>
                         </tr>
                         {% endfor %}
-                    </div>
+                    </tbody>
                 </table>
 
                 {% if not orderData %}
@@ -408,23 +483,165 @@
 
 <script type="text/javascript">
 
-var isOrderList = "{{ myDictionary.isOrderList }}";
-var admin_pen = document.getElementsByClassName('admin_pen')
-var filter_btn = document.getElementById('filter_btn')
+// var isOrderList = "{{ myDictionary.isOrderList }}";
+// var admin_pen = document.getElementsByClassName('admin_pen')
+// var filter_btn = document.getElementById('filter_btn')
 
-// document.getElementById('search_btn').addEventListener('click', function(e){
-//     var filter_input =  document.getElementById('filter_input')
-    
-// })
+
+
+
+    let myJson = JSON.stringify (tableToJson (document.getElementById('tableContainer')));
+    const orderData = (JSON.parse (myJson))
+    // console.log(orderData)
+
+    function tableToJson (table) {
+        let data = [];
+        // FIRST ROW NEED TO BE HEADERS 
+        let headers = [];
+        for (let i = 0; i < table.rows[0].cells.length; i++) {
+            headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+        }
+        // GO THROUGH THE CELLS
+        for (let i = 1; i < table.rows.length; i++) {
+            let tableRow = table.rows[i];
+            let rowData = {};
+            for (let j = 0; j < tableRow.cells.length; j++) {
+
+                rowData[headers[j]] = tableRow.cells[j].innerHTML;
+              
+            }
+            data.push(rowData);
+        }
+        return data;
+
+    }
+
+    document.getElementById('filter_input').addEventListener('keyup', function() {
+        // SINCE WE CAN'T BE SEARCHING WITH BOTH INPUT AND DROP-DOWN OPTION AT THE SAME TIME,
+        // AT THE EVENT OF KEYUP, RESET THE DROP-DOWN OPTION 
+        const selected = document.querySelectorAll('option[name="orderStatus"]')
+        for (let select of selected) {
+            if (select.selected) {
+                if (select.value != 'False') {
+                    select.selected = false;
+                }
+                break;
+            }
+        }
+
+        let searchRec = document.getElementById('filter_input').value;
+        let searchedResult = orderData.filter((eventData) => {
+            if (searchRec === '') {
+                return eventData;
+            } else if (eventData.orderno.toLowerCase().includes(searchRec.toLowerCase()) || eventData.customername.toLowerCase().includes(searchRec.toLowerCase())) {
+                return eventData;
+            }
+        })
+        
+        displayFilteredTemplate(searchedResult);
+
+    })
+
+    // CREATE A TEMPLATE THAT WILL BE USED TO DISPLAY THE FILTERED PRODUCT
+    function displayFilteredTemplate (recData) {
+        console.log(recData)
+        // HIDE THE BODY OF THE TABLE 
+        let tBodyId = document.getElementById('tBodyId')
+        if (tBodyId !== null) {
+            tBodyId.classList.add('hideContainer');
+            document.getElementById('counterId').classList.add('hideContainer');
+        }
+
+        const tContainer = document.getElementById('tableContainer');
+
+        // SINCE I NEED TO ALWAYS RELOAD THE NEW SEARCH RESULT, I NEED 
+        // TO CHECK IF THE ROW(S) EXIST AND DELETE THE PARENT ELEMENT
+        // BEFORE RECREATING THE BODY TABLE 
+        let rowId = document.getElementById('rowId')
+        if (rowId !== null) {
+            rowId.parentElement.remove()
+        }
+
+        let tBody = document.createElement('tbody');
+        tBody.setAttribute('id', 'tBody_id')
+
+        for (let rec of recData) {
+            let tr = document.createElement('tr');
+            tr.setAttribute('id', 'rowId');
+            tr.style.fontSize = '16px';
+
+            let url = " {% url 'admin_edit_order' 1 %} "
+            url = url.replace(/1/g, rec['orderno'])
+
+            tr.innerHTML = `
+            <td></td>
+            <td><a class="first_col" href="${url}">${rec['orderno']}</a></td>
+            <td>${rec['customername']}</td>
+            <td>${rec['createddatetime']}</td>
+            <td ${getStatusColor(rec['status'])} >${rec['status']}</td>
+            <td>${rec['total']}</td>
+            `
+            tBody.appendChild(tr)
+            tContainer.appendChild(tBody)
+        }
+        // DISPLAY THE NUMBER OF FILTERED RECORD
+        let counterEl = document.getElementById('counterContainer');
+        counterEl.innerHTML = `<label id="counterId" style="display: flex; font-family: Niramit;">All <span>(${recData.length})</span></label>`
+    }
+
+
+    function getStatusColor (status) {
+        if (status === 'Processing') {
+            return `style="font-size: 14px; font-weight: 600; color: rgb(4, 0, 218);"`
+        } else if (status === 'Shipped') {
+            return `style="font-size: 14px; font-weight: 600; color: rgb(148, 0, 161);"`
+        } else if (status === 'Completed') {
+            return `style="font-size: 14px; font-weight: 600; color: rgb(0, 117, 45);"`
+        } else if (status === 'On hold') {
+            return `style="font-size: 14px; font-weight: 600; color: rgb(255, 94, 0);"`
+        } else {
+            return `style="font-size: 14px; font-weight: 600; color: rgb(255, 0, 0);"`
+        }
+    }
+
+
+    // ========== THIS SECTION IS FOR THE USE OF DROP-DOWN OPTION =============
+    document.getElementById('statusOption').addEventListener('change', function() {
+        let selectedOption = '';
+        const selected = document.querySelectorAll('option[name="orderStatus"]')
+
+        for (let select of selected) {
+            if (select.selected) {
+                selectedOption = select.value;
+                break;
+            }
+        }
+        const filteredOrder = orderData.filter(orderRec => {
+            return orderRec.status == selectedOption;
+        })
+
+        // IF A USER SELECT A DROP-DOWN FROM THE LIST, CLEAR THE SEARCH ORDER INPUT FIELD 
+        // SINCE THE USER CAN'T BE SEARCHING WITH BOTH PARAMETERS
+        document.getElementById('filter_input').value = '';
+
+        if (selectedOption != 'False') {
+            displayFilteredTemplate(filteredOrder)
+        } else {
+            displayFilteredTemplate(orderData)
+        }
+        
+    })
+
+// ===================================================
 
 // VALIDATE FILTER INPUT FIELD
-function validateFilter(){
-    var filter_name = document.getElementById('filter_input').value;
-    if (filter_name == "" || filter_name == null){
-        alert("Name must not be empty");
-        return false;
-    }
-}
+// function validateFilter(){
+//     var filter_name = document.getElementById('filter_input').value;
+//     if (filter_name == "" || filter_name == null){
+//         alert("Name must not be empty");
+//         return false;
+//     }
+// }
 // function validateForm() {
 
 //     var x = document.forms["adminOrderForm"]["searched_value"].value;
@@ -441,61 +658,61 @@ function validateFilter(){
 // }
 
 
+// console.log(isOrderList)
 
-
-// USED TO DISPLAY DATA FILTERED BY CUSTOMER NAME
-if (isOrderList == 'True'){
-    document.getElementById('admin_over_view').style.display = "none";
-    document.getElementById('order_list').style.display = "block";
-}
+// // USED TO DISPLAY DATA FILTERED BY CUSTOMER NAME
+// if (isOrderList == 'True'){
+//     document.getElementById('admin_over_view').style.display = "none";
+//     document.getElementById('order_list').style.display = "block";
+// }
 
 
 // LOOP THROUGH THE PEN AND GET THE ONE THAT WAS CLICKED ON
-for (var i = 0; i < admin_pen.length; i++){
-    admin_pen[i].addEventListener('click', function(){
+// for (var i = 0; i < admin_pen.length; i++){
+//     admin_pen[i].addEventListener('click', function(){
         
-        var admin_order = this.dataset.action
+//         var admin_order = this.dataset.action
 
-        console.log('admin order:', admin_order)
+//         // console.log('admin order:', admin_order)
 
-        getCustomerOrder(admin_order)
-    })
-}
+//         getCustomerOrder(admin_order)
+//     })
+// }
 
-// SEND THE ACTION-DATA CLICKED ON TO THE BACKEND TO PROCESS REQUEST.
-// DATA PROCESSING DEPEND ON THE BUTTON CLICKED ON
-function getCustomerOrder(admin_order){
-    console.log('Admin processing customer order...')
-    var url = '/admin_session/'
+// // SEND THE ACTION-DATA CLICKED ON TO THE BACKEND TO PROCESS REQUEST.
+// // DATA PROCESSING DEPEND ON THE BUTTON CLICKED ON
+// function getCustomerOrder(admin_order){
+//     console.log(admin_order)
+//     var url = '/admin_session/'
 
-    fetch(url, {
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'X-CSRFToken':csrftoken
-        },
-        body:JSON.stringify ({'admin_order': admin_order})
-    })
+//     fetch(url, {
+//         method:'POST',
+//         headers:{
+//             'Content-Type':'application/json',
+//             'X-CSRFToken':csrftoken
+//         },
+//         body:JSON.stringify ({'admin_order': admin_order})
+//     })
 
-    .then((response) => response.json())
-        .then((data) => {
-            console.log('Success:', data);
-            // location.reload()
-            // window.location.href = "{% url 'admin_session' %}"
-            document.getElementById('admin_over_view').style.display = "none";
-            document.getElementById('order_list').style.display = "block";
-            // window.location.href = "{% url 'admin_session' %}"
+//     .then((response) => response.json())
+//         .then((data) => {
+//             // console.log('Success:', data);
+//             // location.reload()
+//             // window.location.href = "{% url 'admin_session' %}"
+//             document.getElementById('admin_over_view').style.display = "none";
+//             document.getElementById('order_list').style.display = "block";
+//             // window.location.href = "{% url 'admin_session' %}"
 
-    //         fetch(url, {
-    //     method:'POST',
-    //     headers:{
-    //         'Content-Type':'application/json',
-    //         'X-CSRFToken':csrftoken
-    //     },
-    //     body:JSON.stringify ({'admin_order': admin_order})
-    // })
-        })
-}
+//     //         fetch(url, {
+//     //     method:'POST',
+//     //     headers:{
+//     //         'Content-Type':'application/json',
+//     //         'X-CSRFToken':csrftoken
+//     //     },
+//     //     body:JSON.stringify ({'admin_order': admin_order})
+//     // })
+//         })
+// }
 
 
 </script>
