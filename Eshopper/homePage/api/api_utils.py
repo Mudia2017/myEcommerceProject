@@ -1,6 +1,7 @@
 from homePage.models import Customer, Product, Order, OrderItem
 from homePage.api.serializers import *
 from homePage.api.views import *
+from decouple import config
 
 
 def getCartItems(order):
@@ -18,7 +19,7 @@ def getCartItems(order):
             "name": item.product.name,
             "price": float(item.get_unit_price),
             "quantity": item.quantity,
-            "image": "http://192.168.43.50:8000"+item.product.imageURL,
+            "image": config('URL_ENDPOINT')+item.product.imageURL,
             "mfgDate": item.product.mfgDate,
             "expDate": item.product.expDate,
             "discount": float(item.product.discount),
@@ -172,7 +173,7 @@ def getSameCategoryPtdList(request, limit):
                 'brand': product.brand.brand, 
                 'price': product.price,
                 'new_price': product.get_unit_price,
-                'imageURL': "http://192.168.43.50:8000"+product.imageURL,
+                'imageURL': config('URL_ENDPOINT')+product.imageURL,
                 'mfgDate': (product.mfgDate),
                 'expDate': product.expDate,
                 'discount': product.discount,
@@ -316,7 +317,7 @@ def authHomepageData(request):
             viewItem = {
                 'id': recentViewItem.product.id,
                 'name': recentViewItem.product.name,
-                'imageURL': "http://192.168.43.50:8000"+recentViewItem.product.imageURL,
+                'imageURL': config('URL_ENDPOINT')+recentViewItem.product.imageURL,
                 'price': recentViewItem.product.price,
                 'discount': recentViewItem.product.discount,
                 'new_price': recentViewItem.product.get_unit_price,
@@ -335,7 +336,7 @@ def authHomepageData(request):
             watchPtd = {
                 'id': watchItem.product.id,
                 'name': watchItem.product.name,
-                'imageURL': "http://192.168.43.50:8000"+watchItem.product.imageURL,
+                'imageURL': config('URL_ENDPOINT')+watchItem.product.imageURL,
                 'price': watchItem.product.price,
                 'discount': watchItem.product.discount,
                 'new_price': watchItem.product.get_unit_price,
@@ -373,7 +374,7 @@ def publicRequest(request):
             item = {
                 'id': randomPtd.id,
                 'name': randomPtd.name,
-                'imageURL': "http://192.168.43.50:8000"+randomPtd.imageURL,
+                'imageURL': config('URL_ENDPOINT')+randomPtd.imageURL,
                 'price': randomPtd.price,
                 'discount': randomPtd.discount,
                 'new_price': randomPtd.get_unit_price,
@@ -392,7 +393,7 @@ def publicRequest(request):
                 'category': randomCat.category,
                 'tree_id': randomCat.tree_id,
                 'level': randomCat.level,
-                'image': "http://192.168.43.50:8000"+ randomCat.imgURL,
+                'image': config('URL_ENDPOINT')+ randomCat.imgURL,
                 'parent_id': randomCat.parent_id
             }
             dailyCat.append(_item)
@@ -420,7 +421,7 @@ def publicRequest(request):
                 'brand': ptd.brand.brand,
                 'price': ptd.price,
                 'new_price': ptd.get_unit_price,
-                'imageURL': "http://192.168.43.50:8000"+ptd.imageURL,
+                'imageURL': config('URL_ENDPOINT')+ptd.imageURL,
                 'mfgDate': ptd.mfgDate,
                 'expDate': ptd.expDate,
                 'discount': ptd.discount,
@@ -451,10 +452,10 @@ def customisePtdRecord(request, products, favoriteItems):
             'name': product.name,
             'description': product.description,
             'category': product.category.category,
-            'brand': product.brand.brand,
+            # 'brand': product.brand.brand,
             'price': product.price,
             'new_price': product.get_unit_price,
-            'imageURL': "http://192.168.43.50:8000"+product.imageURL,
+            'imageURL': config('URL_ENDPOINT')+product.imageURL,
             'mfgDate': product.mfgDate,
             'expDate': product.expDate,
             'discount': product.discount,

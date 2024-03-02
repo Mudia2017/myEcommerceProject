@@ -15,6 +15,7 @@ from django.db.models import Q
 import os
 import uuid
 from eShopperAmuwo.utils import manageRecentViewItm, getRecentlyViewItem
+from decouple import config
 
 
 @api_view(['POST'])
@@ -61,7 +62,7 @@ def api_allRecentView(request):
                 record = {
                     'id': recentViewItem.product.id,
                     'name': recentViewItem.product.name,
-                    'imageURL': "http://192.168.43.50:8000"+recentViewItem.product.imageURL,
+                    'imageURL': config('URL_ENDPOINT')+recentViewItem.product.imageURL,
                     'price': recentViewItem.product.price,
                     'discount': recentViewItem.product.discount,
                     'new_price': recentViewItem.product.get_unit_price,
@@ -364,7 +365,7 @@ def api_updateCartData(request):
                 # CALL THE FUNCTION WITH COMMENT RECORD TO PROCESS STAR RATING AND NUMBER OF COMMENT
                 averageRating = weightAverageRating(request, ptdComment)
                 wishListRecord = {
-                    'ptdImage': "http://192.168.43.50:8000"+wishList.product.imageURL,
+                    'ptdImage': config('URL_ENDPOINT')+wishList.product.imageURL,
                     'ptdName': wishList.product.name,
                     'ptdPrice': wishList.product.price,
                     'ptdNewPrice': wishList.product.get_unit_price,
@@ -414,7 +415,7 @@ def api_get_PtdDetail_SameCategoryPtd(request):
             'ptdId': ptd_detail.id,
             'ptdName': ptd_detail.name,
             'ptdDescription': ptd_detail.description,
-            'imageURL': "http://192.168.43.50:8000"+ptd_detail.imageURL,
+            'imageURL': config('URL_ENDPOINT')+ptd_detail.imageURL,
             'ptdPrice': ptd_detail.price,
             'newPrice': ptd_detail.get_unit_price,
             'discount': ptd_detail.discount,
@@ -809,7 +810,7 @@ def api_adminEditOrder(request):
             orderItemRecord = {
                 'itemRowId': orderItem.id,
                 'ptdId': orderItem.product.id,
-                'ptdImage': "http://192.168.43.50:8000"+orderItem.product.imageURL,
+                'ptdImage': config('URL_ENDPOINT')+orderItem.product.imageURL,
                 'ptdName' : orderItem.product.name,
                 'storeLocation': orderItem.store_name,
                 'price': orderItem.unit_price,
@@ -1029,7 +1030,7 @@ def api_adminProcessRefundOrder(request):
                 isRefundAmt = True # AN AMOUNT WILL DISPLAY ON THE FONT END. ELSE ZERO WILL DISPLAY
             orderItemRecord = {
                 'itemRowId': refundItem.id,
-                'ptdImage': "http://192.168.43.50:8000"+refundItem.product.imageURL,
+                'ptdImage': config('URL_ENDPOINT')+refundItem.product.imageURL,
                 'ptdName' : refundItem.product.name,
                 'storeName': refundItem.store_name,
                 'qty' : refundItem.quantity,
@@ -1202,7 +1203,7 @@ def api_updateMyOrder(request):
     for orderItm in orderItems:
         orderItem = {
                 'itemRowId': orderItm.id,
-                'ptdImage': "http://192.168.43.50:8000"+orderItm.product.imageURL,
+                'ptdImage': config('URL_ENDPOINT')+orderItm.product.imageURL,
                 'ptdName' : orderItm.product.name,
                 'price': orderItm.unit_price,
                 'qty' : orderItm.quantity,
@@ -1273,7 +1274,7 @@ def api_writePtdReview(request):
                     'ptd_review_id': pendingReview.ptd_review_id,
                     'order_date': pendingReview.order_date,
                     'product_name': pendingReview.product_name,
-                    'product_image': "http://192.168.43.50:8000"+pendingReview.product_image,
+                    'product_image': config('URL_ENDPOINT')+pendingReview.product_image,
                     'ptd_id': pendingReview.ptd_id,
                     'id': pendingReview.id,
                     'trans_id': pendingReview.transaction_id,
@@ -1318,7 +1319,7 @@ def api_wishList(request):
             averageRating = weightAverageRating(request, ptdComment)
           
             wishListRecord = {
-                'ptdImage': "http://192.168.43.50:8000"+wishList.product.imageURL,
+                'ptdImage': config('URL_ENDPOINT')+wishList.product.imageURL,
                 'ptdName': wishList.product.name,
                 'ptdPrice': wishList.product.price,
                 'ptdNewPrice': wishList.product.get_unit_price,
@@ -1568,7 +1569,7 @@ def api_editProduct(request):
                 'ptdCagetoryId': product.category.id,
                 'ptdBrand': getPtdBrand(product),
                 'price': product.price,
-                'image': "http://192.168.43.50:8000"+product.imageURL,
+                'image': config('URL_ENDPOINT')+product.imageURL,
                 'imageName': str(product.image),
                 'mfgDate': product.mfgDate,
                 'expDate': product.expDate,

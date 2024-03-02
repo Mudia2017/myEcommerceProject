@@ -2,4 +2,4 @@
 /.env
 
 # IGNORE EVERY FILE WITH EXTENTION OF .json
-.json
+*.json
