@@ -106,7 +106,7 @@ if databaseUsage == 1:
 elif databaseUsage == 2:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': config('DB_ENGINE'),
             'NAME': config('DB_NAME'),
             'USER': config('DB_USERNAME'),
             'PASSWORD': config('DB_PASSWORD'),
@@ -170,11 +170,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # SMTP Configuration
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
